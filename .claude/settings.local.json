@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@112.78.143.92 \"echo 'Connected! Hostname:'; hostname; echo 'Uptime:'; uptime; echo 'Disk:'; df -h / | tail -1\")",
+      "Read(//c/Users/dell/.ssh/**)",
+      "Bash(ssh -i ~/.ssh/claude_key -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@112.78.143.92 \"echo 'Connected!'; hostname; uptime\")",
+      "Bash(python3 -c \"import paramiko; print\\('paramiko available'\\)\")",
+      "Bash(\"/c/Python314/python.exe\" -)",
+      "Read(//c/Users/dell/**)",
+      "Bash(python3 -c ' *)",
+      "Bash(python -c ' *)",
+      "Bash(sshpass -p 'Jakarta2026%@' ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@112.78.143.92 \"ls -la && echo '---NODE---' && node --version && echo '---NPM---' && npm --version\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h localhost -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"SHOW TABLES;\\\\\" 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"sudo systemctl status mysql 2>&1 | head -20\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"docker ps 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"netstat -tlnp 2>/dev/null | grep -E \\\\\"3306|5005\\\\\" || ss -tlnp 2>/dev/null | grep -E \\\\\"3306|5005\\\\\"\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h 127.0.0.1 -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"SHOW TABLES;\\\\\" 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h 127.0.0.1 -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"DESCRIBE sekolahsukudinas;\\\\\" 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h 127.0.0.1 -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"DESCRIBE schoolprofiles;\\\\\" 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h 127.0.0.1 -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"SELECT table_name FROM information_schema.columns WHERE column_name LIKE '%domain%';\\\\\" 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h 127.0.0.1 -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"SELECT table_name FROM information_schema.columns WHERE column_name LIKE '%host%';\\\\\" 2>&1\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"head -20 /www/wwwroot/be-school-new/routes/index.js\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"fuser -k 5005/tcp 2>/dev/null; sleep 2; cd /www/wwwroot/be-school-new && node index.js &\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"netstat -tlnp 2>/dev/null | grep 5005 || ss -tlnp | grep 5005\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"kill -9 387510 2>/dev/null; sleep 3; ss -tlnp | grep 5005\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"curl -s http://127.0.0.1:5005/visi-misi --max-time 5 | head -c 200\")",
+      "Bash(plink -batch ubuntu@112.78.143.92 -pw \"Jakarta2026%@\" \"mysql -h 127.0.0.1 -u be-school_db -p'73ibH7GHpiknANyp' be-school_db -e \\\\\"SELECT schoolId, schoolName, domain FROM schoolprofiles LIMIT 5;\\\\\" 2>&1\")",
+      "Bash(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@112.78.143.92 \"cat /www/wwwroot/be-school-new/routes/index.js 2>/dev/null | head -200\")"
+    ]
+  }
+}
