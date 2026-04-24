@@ -1,14 +1,27 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
 // Asumsi schoolId dari config atau hardcode (ganti dengan nilai real dari DB/config/hook)
-const SCHOOL_ID = getSchoolId(); // <-- GANTI DENGAN SCHOOL ID REAL ANDA
+const SCHOOL_ID = getSchoolIdSync(); // <-- GANTI DENGAN SCHOOL ID REAL ANDA
 
 const BASE_URL = `${API_CONFIG.BASE_URL}/tata-tertib`;
 
@@ -79,7 +92,7 @@ const AturanTataTertib = ({ schoolName }: { schoolName: string }) => {
           setRules([]);
         }
       } catch (err: any) {
-        console.error("Fetch error:", err);
+        
         setError("Gagal memuat data aturan & tata tertib dari server");
       } finally {
         setLoading(false);
@@ -143,12 +156,13 @@ const AturanTataTertib = ({ schoolName }: { schoolName: string }) => {
  * PAGE UTAMA
  ********/
 const AturanTataTertibPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const schoolName = schoolInfo.fullName;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolName = profile?.schoolName || 'Sekolah';
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <NavbarComp theme={schoolInfo.theme} />
+      <NavbarComp theme={theme} />
 
       {/* Hero dengan intro dinamis */}
       <HeroComp titleProps="Aturan & Tata Tertib" id="#aturan" />

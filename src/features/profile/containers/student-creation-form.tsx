@@ -87,9 +87,9 @@ export const StudentCreationForm = () => {
 
   useEffect(() => {
     if (detail.data && detailKelas.data && resource.data) {
-      console.log("Detail Data Siswa:", detail.data);
-      console.log("Detail Kelas:", detailKelas.data);
-      console.log("Resource Kelas:", resource.data);
+      
+      
+      
 
       const validKelasId = detailKelas.data?.idKelas && resource.data.some(kelas => kelas.id === detailKelas.data.idKelas)
         ? String(detailKelas.data.idKelas)
@@ -98,7 +98,7 @@ export const StudentCreationForm = () => {
       // Gunakan detailKelas.data?.user?.name untuk field name
       const nameValue = detailKelas.data?.user?.name || detail.data?.name || "";
       
-      console.log("Mengatur nilai form, name:", nameValue);
+      
 
       form.reset({
         kelasId: validKelasId,
@@ -128,9 +128,9 @@ export const StudentCreationForm = () => {
 
   async function onSubmit(data: z.infer<typeof studentEditSchema>) {
     try {
-      console.log("kelas ID TERPILIH:", data.kelasId);
-      console.log("User ID yang akan diupdate:", decodeParams.id);
-      console.log("Data yang dikirim sebelum mapping:", data);
+      
+      
+      
 
       if (!data.kelasId || !resource.data?.some(kelas => String(kelas.id) === data.kelasId)) {
         alert.error("Kelas yang dipilih tidak valid");
@@ -160,7 +160,7 @@ export const StudentCreationForm = () => {
       if (data.isVerified !== undefined && data.isVerified !== detail.data?.isVerified) updatedData.isVerified = data.isVerified ? 1 : 0;
       updatedData.kelasId = Number(data.kelasId);
 
-      console.log("Data yang dikirim ke backend:", updatedData);
+      
       console.log("ID yang diupdate:", Number(decodeParams.biodataId));
 
       await creation.update(Number(decodeParams.biodataId), updatedData);
@@ -176,10 +176,10 @@ export const StudentCreationForm = () => {
           detailKelas.query.refetch(),
         ]);
       } catch (err) {
-        console.error("Error saat refetch:", err);
+        
       }
     } catch (err: any) {
-      console.error("Error saat update:", err);
+      
       alert.error(
         err?.message || lang.text("failUpdate", { context: lang.text("student") })
       );

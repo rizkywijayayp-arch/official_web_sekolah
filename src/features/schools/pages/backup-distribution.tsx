@@ -16,7 +16,7 @@ export const SchoolDistribution = () => {
   const [date, setDate] = useState<Date | undefined>();
   const profile = useProfile()
   const schools = useSchool()
-  // console.log('ROLE:', profile?.user)
+  ('ROLE:', profile?.user)
 
   const ROLE = profile.user?.role
 

@@ -2,9 +2,23 @@ import { API_CONFIG } from "@/config/api";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, Newspaper, Search, User, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL = API_CONFIG.BASE_URL;
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 const fmtDate = (iso: string) => 
   new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -20,12 +34,12 @@ const BeritaComp = () => {
     const fetchNews = async () => {
       try {
         setLoading(true);
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
         const response = await fetch(`${BASE_URL}/berita?schoolId=${schoolId}`);
         const result = await response.json();
         if (result.success) setNewsData(result.data);
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }

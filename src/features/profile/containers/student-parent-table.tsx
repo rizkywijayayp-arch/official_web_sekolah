@@ -41,7 +41,7 @@
 //     return parentColumnWithFilter();
 //   }, []);
 
-//   console.log('datas', datas)
+('datas', datas)
 
 //   return (
 //     <BaseDataTable

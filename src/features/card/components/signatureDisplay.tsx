@@ -19,7 +19,7 @@ export const SignatureDisplay = ({ signature }: { signature?: string }) => {
       setSchoolId(String(profileData.user.sekolah.id));
     }
   }, [profileData]);
-  // console.log("🚀 ~ SignatureDisplay ~ profileData:", profileData);
+  // 
 
   useEffect(() => {
     if (safeSignature && userID && schoolId) {
@@ -32,7 +32,7 @@ export const SignatureDisplay = ({ signature }: { signature?: string }) => {
           `schoolSignature_${userID}_${schoolId}`,
           safeSignature
         );
-        // console.log(
+        (
         //   "✅ Signature disimpan di localStorage untuk user:",
         //   userID,
         //   "dan schoolId:",

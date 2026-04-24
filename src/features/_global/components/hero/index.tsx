@@ -1,9 +1,4 @@
-import { getSchoolId } from "../../hooks/getSchoolId"
-import HeroComp101 from "./hero101";
-import { HeroComp13 } from "./hero13";
-import HeroComp40 from "./hero40";
-import { HeroComp78101 } from "./hero78101";
-
+import { DynamicHero } from "./DynamicHero";
 
 interface HeroProps {
   id?: string;
@@ -12,20 +7,11 @@ interface HeroProps {
 }
 
 export const HeroComp = ({ id, titleProps, subTitleProps }: HeroProps) => {
-    const schoolID = getSchoolId();
-    return (
-      <>
-        {
-            schoolID === '2' ? (
-              <HeroComp78101 id={id} titleProps={titleProps} subTitleProps={subTitleProps} />
-            ) : schoolID === "79" ? (
-              <HeroComp101 id={id} titleProps={titleProps} subTitleProps={subTitleProps} />
-            ) : schoolID === "40" ? (
-              <HeroComp40 id={id} titleProps={titleProps} subTitleProps={subTitleProps} />
-            ) : (
-              <HeroComp13 id={id} titleProps={titleProps} subTitleProps={subTitleProps} />
-            )
-          }
-      </>
-    )
-  }
+  return (
+    <DynamicHero
+      id={id}
+      titleProps={titleProps}
+      subTitleProps={subTitleProps}
+    />
+  );
+};

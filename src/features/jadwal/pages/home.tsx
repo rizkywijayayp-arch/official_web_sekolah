@@ -1,11 +1,24 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************************
  * THEME & DATA
@@ -104,11 +117,12 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
   const [day, setDay] = useState("Semua");
   const [kelas, setKelas] = useState("Semua");
 
-  const schoolId = getSchoolId()
+  const schoolId = getSchoolIdSync();
 
   // Fetch data from NEW API (hanya bagian ini yang diubah)
   useEffect(() => {
     const fetchData = async () => {
+      if (!schoolId) return;
       try {
         setLoading(true);
         const response = await fetch(`${API_CONFIG.BASE_URL}/jadwal?schoolId=${schoolId}`, {
@@ -147,7 +161,7 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
           setError("Belum ada data jadwal pelajaran");
         }
       } catch (e) {
-        console.warn("Fetch error:", e);
+        
         setError("Gagal memuat data jadwal. Silakan coba lagi nanti");
       } finally {
         setLoading(false);
@@ -367,9 +381,8 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
  * DEFAULT PAGE DENGAN HERO
  ****************************/
 const SchedulePage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
-  const schoolName = schoolInfo.fullName;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -378,7 +391,7 @@ const SchedulePage = () => {
       console.assert(typeof NavbarComp === "function" && typeof FooterComp === "function", "Navbar/Footer harus ada");
       console.log("UI smoke tests passed (Jadwal)");
     } catch (e) {
-      console.error("UI smoke tests failed:", e);
+      
     }
   }, [prefersReducedMotion]);
 

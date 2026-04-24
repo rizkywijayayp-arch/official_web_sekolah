@@ -28,7 +28,7 @@
 //   }, [detail?.data?.kehadiranBulananMataPelajaran]);
 
 
-//   console.log('items course:', items)
+('items course:', items)
 //   return (
 //     <BaseDataTable
 //       columns={studentCoursePresenceColumn}

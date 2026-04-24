@@ -1,7 +1,9 @@
 import { API_CONFIG } from "@/config/api";
+import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useSchoolProfile } from "@/features/_global/hooks/useSchoolProfile";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -146,7 +148,10 @@ function SafeImg({
 // === MAIN COMPONENT ===
 export function PramukaMain() {
   const [detail, setDetail] = useState<any>(null);
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
+
+  const { data: profile } = useSchoolProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
 
   const { data: rows = [], isLoading } = useQuery({
     queryKey: ['pramuka-premium', schoolId],

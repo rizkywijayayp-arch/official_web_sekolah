@@ -88,7 +88,7 @@ export function OsisPage() {
           setOsisData(null);
         }
       } catch (err: any) {
-        console.error("Fetch OSIS error:", err);
+        
       } finally {
         setLoading(false);
       }
@@ -195,7 +195,7 @@ export function OsisPage() {
         alert("Data OSIS berhasil disimpan!");
       }
     } catch (err: any) {
-      console.error(err);
+      
       alert(`Gagal menyimpan: ${err.message}`);
     } finally {
       setSaving(false);

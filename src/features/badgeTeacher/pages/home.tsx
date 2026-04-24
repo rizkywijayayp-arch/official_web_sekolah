@@ -251,7 +251,7 @@ export const ClassPresidentMain = () => {
       console.assert(csv.includes("1,2"), "CSV row correct");
       console.groupEnd();
     } catch (e) {
-      console.error("SelfTests failed", e);
+      
     }
   }, []);
 

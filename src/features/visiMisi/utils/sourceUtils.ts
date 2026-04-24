@@ -10,7 +10,7 @@ export const resolveSource = (url: string | null): PerpusSource => {
     }
     return "slims";
   } catch (e) {
-    console.error("Gagal parsing URL:", url);
+    
     return "inslite";
   }
 };

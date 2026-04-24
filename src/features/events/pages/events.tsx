@@ -107,7 +107,7 @@ export const CalendarEvent = () => {
       const response = await fetchCalendarEvents();
 
       if (!response || !response.data) {
-        console.error("❌ Error: Data tidak ditemukan dalam response API.");
+        
         return;
       }
 
@@ -139,7 +139,7 @@ export const CalendarEvent = () => {
 
       setEvents(formattedEvents.filter((event) => !expiredEvents.includes(event)));
     } catch (err) {
-      console.error("❌ Error fetching events:", err);
+      
     } finally {
       setLoading(false);
     }
@@ -151,19 +151,19 @@ export const CalendarEvent = () => {
 
   const handleCreateEvent = async () => {
     if (!user) {
-      console.error("❌ User tidak ditemukan. Pastikan Anda sudah login.");
+      
       alert.error("Anda harus login untuk membuat event.");
       return;
     }
 
     if (!formData.startTime || !formData.endTime) {
-      console.error("❌ Waktu mulai dan selesai harus diisi.");
+      
       alert.error("Waktu mulai dan selesai harus diisi.");
       return;
     }
 
     if (!formData.image) {
-      console.error("❌ Gambar wajib diunggah.");
+      
       alert.error("Gambar wajib diunggah!");
       return;
     }
@@ -171,8 +171,8 @@ export const CalendarEvent = () => {
     setIsSubmitting(true); // Start loading
     const userRole = user.role.toLowerCase();
     const userId = user.id;
-    console.log(`🔑 Role pengguna dari useProfile: ${userRole}`);
-    console.log(`🔎 User ID: ${userId}`);
+    
+    
 
     const newEvent = new FormData();
     newEvent.append("note", formData.note);
@@ -190,7 +190,7 @@ export const CalendarEvent = () => {
       resetForm();
       loadEvents();
     } catch (err) {
-      console.error("❌ Error creating event:", err);
+      
       alert.error("Gagal membuat event. Cek koneksi atau coba lagi.");
     } finally {
       setIsSubmitting(false); // Stop loading
@@ -202,7 +202,7 @@ export const CalendarEvent = () => {
 
     setIsSubmitting(true); // Start loading
     try {
-      console.log(`📌 Fetching event by ID: ${editingEvent.id}`);
+      
       const existingData = await fetchCalendarEventById(editingEvent.id);
 
       if (!existingData || !existingData.id) {
@@ -215,7 +215,7 @@ export const CalendarEvent = () => {
         return;
       }
 
-      console.log("✅ Existing event data:", existingData);
+      
 
       const startTime = formData.startTime
         ? dayjs(formData.startTime).toISOString()
@@ -272,7 +272,7 @@ export const CalendarEvent = () => {
       resetForm();
       loadEvents();
     } catch (err) {
-      console.error(`❌ Error editing event ID ${editingEvent.id}:`, err);
+      
       alert.error("Gagal mengedit event. Cek koneksi atau coba lagi.");
     } finally {
       setIsSubmitting(false); // Stop loading
@@ -284,7 +284,7 @@ export const CalendarEvent = () => {
       const { data } = await Tesseract.recognize(file, "eng");
       setOcrText(data.text.trim()); // Simpan hasil OCR di ocrText
     } catch (error) {
-      console.error("OCR Error:", error);
+      
       alert.error("Gagal memproses OCR pada gambar.");
     }
   };
@@ -292,7 +292,7 @@ export const CalendarEvent = () => {
   const checkAndDeleteExpiredEvents = async () => {
     try {
       const now = dayjs();
-      console.log("🔍 Mengecek event yang sudah kadaluwarsa...");
+      
 
       const expiredEvents = events.filter((event) =>
         dayjs(event.endTime).isBefore(now)
@@ -307,10 +307,10 @@ export const CalendarEvent = () => {
         }
         loadEvents();
       } else {
-        console.log("✅ Tidak ada event yang perlu dihapus.");
+        
       }
     } catch (err) {
-      console.error("❌ Error saat menghapus event yang kedaluwarsa:", err);
+      
     }
   };
 
@@ -324,7 +324,7 @@ export const CalendarEvent = () => {
 
   const handleDeleteEvent = useCallback(async (event: Event) => {
     if (!event.id) {
-      console.warn("⚠️ Tidak bisa menghapus event tanpa ID.");
+      
       return;
     }
 
@@ -338,12 +338,12 @@ export const CalendarEvent = () => {
         return;
       }
 
-      console.log(`🗑 Deleting event ID ${event.id}`);
+      
       await deleteCalendarEvent(event.id);
-      console.log(`✅ Event ID ${event.id} deleted successfully.`);
+      
       loadEvents();
     } catch (err) {
-      console.error(`❌ Error deleting event ID ${event.id}:`, err);
+      
     }
   }, [alert, loadEvents]);
 
@@ -362,7 +362,7 @@ export const CalendarEvent = () => {
   };
 
   const resetForm = () => {
-    console.log("🔄 Resetting form");
+    
     setFormData({
       note: "",
       description: "",
@@ -441,7 +441,7 @@ export const CalendarEvent = () => {
                     id="upload-image"
                     onChange={(e) => {
                       const file = e.target.files?.[0] || null;
-                      console.log("📸 Image selected:", file?.name);
+                      
                       setFormData({
                         ...formData,
                         image: file,
@@ -456,7 +456,7 @@ export const CalendarEvent = () => {
                       className="w-24 h-24 rounded-md mb-2"
                       alt="Preview"
                       onError={(e) => {
-                        console.error("❌ Image preview failed to load");
+                        
                         e.currentTarget.src = "/placeholder-image.png"; // Fallback image
                       }}
                     />
@@ -481,7 +481,7 @@ export const CalendarEvent = () => {
                     id="upload-video"
                     onChange={(e) => {
                       const file = e.target.files?.[0] || null;
-                      console.log("🎥 Video selected:", file?.name);
+                      
                       setFormData({
                         ...formData,
                         video: file,

@@ -39,7 +39,7 @@
 //     return value ? dayjs(value).format("DD-MM-YYYY") : "Kosong";
 //   };
 
-//   // console.log('student:', student)
+//   ('student:', student)
 
 //   return (
 //     <div id={`student-card-${student.id}`} className="container">

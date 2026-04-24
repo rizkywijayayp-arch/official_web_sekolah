@@ -1,7 +1,9 @@
 import { API_CONFIG } from "@/config/api";
+import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
@@ -16,7 +18,20 @@ import {
 import { useEffect, useState } from "react";
 
 const BASE_URL = `${API_CONFIG.BASE_URL}/ppdb`;
-const SCHOOL_ID = getSchoolId();
+const SCHOOL_ID = getSchoolIdSync();
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 // ──────────────────────────────────────────────────────────────
 // Komponen UI Premium

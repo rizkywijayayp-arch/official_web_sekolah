@@ -423,9 +423,9 @@ export default function KandidatOsisPage() {
       const once = JSON.parse(localStorage.getItem(SUPPORT_LS + "_once") || "{}");
       if (s && typeof s === "object") setSupports(s);
       if (once && typeof once === "object") setSupportedOnce(once);
-      console.info("✅ Promo page smoke tests passed");
+      
     } catch (e) {
-      console.warn("⚠️ Promo page init warning:", e);
+      
     }
   }, []);
 

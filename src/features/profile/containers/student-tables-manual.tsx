@@ -136,7 +136,7 @@
 //     }
 //   }
 
-//   console.log("Data akan dicetak:", attendanceData);
+//   
 
 //   return (
 //     <Document>
@@ -286,7 +286,7 @@
 //       return;
 //     }
 
-//     console.log("All students:", studentData);
+//     
 
 //     // Transform student data to match DailyAttendancePDF requirements
 //     const allAttendanceData = studentData.map((student: any) => ({
@@ -298,7 +298,7 @@
 //       statusKehadiran: student.statusKehadiran || student?.statusKehadiranHariIni || "-", // Assume statusKehadiran is in student data or default to "-"
 //     }));
 
-//     console.log("Processed attendance data:", allAttendanceData);
+//     
 
 //     const doc = (
 //       <DailyAttendancePDF
@@ -327,7 +327,7 @@
 
 //     alert.success("Laporan absensi harian berhasil diunduh.");
 //   } catch (error) {
-//     console.error("Error generating daily attendance PDF:", error);
+//     
 //     alert.error("Gagal menghasilkan laporan absensi harian.");
 //   }
 // };
@@ -389,7 +389,7 @@
 
 //   const attedances = profileSchoolId !== null ? useAttedances({ id: profileSchoolId }) : useAttedances();
 //   const idKelas = filter.find((f) => f.id === "idKelas")?.value;
-//   console.log('attedance check:', attedances)
+('attedance check:', attedances)
 //   const studentParams = useMemo(
 //     () => ({
 //       page: pagination.pageIndex + 1,
@@ -404,23 +404,23 @@
 //   const { data, isLoading, error, refetch } = useStudentPagination(studentParams);
 
 //   useEffect(() => {
-//     console.log("studentParams:", studentParams);
+//     
 //     refetch();
 //   }, [studentParams, refetch]);
 
 //   useEffect(() => {
 //     if (error) {
-//       console.error("Error fetching student data:", error);
+//       
 //       alert.error(`Gagal memuat data siswa: ${error.message}`);
 //     }
 //   }, [error, alert]);
 
 //   useEffect(() => {
 //     if (data?.pagination) {
-//       console.log("API currentPage:", data.pagination.currentPage, "Expected page:", studentParams.page);
+//       
 //       if (data.pagination.currentPage !== studentParams.page) {
-//         console.warn(`API returned currentPage ${data.pagination.currentPage} but expected ${studentParams.page}`);
-//         console.log("Data received:", data.students);
+//         
+//         
 //       }
 //     }
 //   }, [data, studentParams.page]);
@@ -495,7 +495,7 @@
 
 //         setOpenImport(false);
 //       } catch (error: any) {
-//         console.log("Error saat mengunggah file:", error);
+//         
 //         alert.error("Terjadi kesalahan saat mengimpor data");
 //       } finally {
 //         setIsUploading(false);
@@ -566,13 +566,13 @@
 //           pageSize: pagination.pageSize,
 //           totalItems: data?.pagination?.totalItems,
 //           onPageChange: (page) => {
-//             console.log("onPageChange called with page:", page);
+//             
 //             if (page >= 0) {
 //               onPaginationChange({ ...pagination, pageIndex: page });
 //             }
 //           },
 //           onSizeChange: (size) => {
-//             console.log("onSizeChange called with size:", size);
+//             
 //             onPaginationChange({ ...pagination, pageSize: size, pageIndex: 0 });
 //           },
 //         }}
@@ -756,7 +756,7 @@ const DailyAttendancePDF: React.FC<{
     }
   }
 
-  console.log("Data akan dicetak:", attendanceData);
+  
 
   return (
     <Document>
@@ -908,7 +908,7 @@ const generateAttendancePDF = async ({
       return;
     }
 
-    console.log("All students:", studentData);
+    
 
     // Transform student data to match DailyAttendancePDF requirements
     const allAttendanceData = studentData.map((student: any) => ({
@@ -925,7 +925,7 @@ const generateAttendancePDF = async ({
       (item) => (item.statusKehadiran || item.statusKehadiranHariIni) === "hadir"
     ).length;
 
-    console.log("Processed attendance data:", allAttendanceData);
+    
 
     const doc = (
       <DailyAttendancePDF
@@ -955,7 +955,7 @@ const generateAttendancePDF = async ({
 
     alert.success("Laporan absensi harian berhasil diunduh.");
   } catch (error) {
-    console.error("Error generating daily attendance PDF:", error);
+    
     alert.error("Gagal menghasilkan laporan absensi harian.");
   }
 };
@@ -1032,23 +1032,23 @@ export const StudentLandingTablesManual = () => {
   const { data, isLoading, error, refetch } = useStudentPagination(studentParams);
 
   useEffect(() => {
-    console.log("studentParams:", studentParams);
+    
     refetch();
   }, [studentParams, refetch]);
 
   useEffect(() => {
     if (error) {
-      console.error("Error fetching student data:", error);
+      
       alert.error(`Gagal memuat data siswa: ${error.message}`);
     }
   }, [error, alert]);
 
   useEffect(() => {
     if (data?.pagination) {
-      console.log("API currentPage:", data.pagination.currentPage, "Expected page:", studentParams.page);
+      
       if (data.pagination.currentPage !== studentParams.page) {
-        console.warn(`API returned currentPage ${data.pagination.currentPage} but expected ${studentParams.page}`);
-        console.log("Data received:", data.students);
+        
+        
       }
     }
   }, [data, studentParams.page]);
@@ -1123,7 +1123,7 @@ export const StudentLandingTablesManual = () => {
 
         setOpenImport(false);
       } catch (error: any) {
-        console.log("Error saat mengunggah file:", error);
+        
         alert.error("Terjadi kesalahan saat mengimpor data");
       } finally {
         setIsUploading(false);
@@ -1200,13 +1200,13 @@ export const StudentLandingTablesManual = () => {
           pageSize: pagination.pageSize,
           totalItems: data?.pagination?.totalItems,
           onPageChange: (page) => {
-            console.log("onPageChange called with page:", page);
+            
             if (page >= 0) {
               onPaginationChange({ ...pagination, pageIndex: page });
             }
           },
           onSizeChange: (size) => {
-            console.log("onSizeChange called with size:", size);
+            
             onPaginationChange({ ...pagination, pageSize: size, pageIndex: 0 });
           },
         }}

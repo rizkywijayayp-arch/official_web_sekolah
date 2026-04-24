@@ -233,9 +233,9 @@ export const VisitorChart = ({ formattedDate, tahun }: { formattedDate?: string;
   });
 
   // Debug logs
-  console.log('VisitorChart useLibrary params:', { sekolahId: profile?.user?.sekolahId, tanggal: formattedDate, tahun });
-  console.log('VisitorChart formattedDate:', formattedDate || 'No date selected');
-  console.log('VisitorChart tahun:', tahun || 'No year selected');
+  
+  
+  
 
   // Detect dark mode
   useEffect(() => {
@@ -455,7 +455,7 @@ export const VisitorChart = ({ formattedDate, tahun }: { formattedDate?: string;
 
       alert.success(lang.text("successDownloadPDF"));
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      
       alert.error('Gagal download');
     } finally {
       setIsGeneratingPDF(false);

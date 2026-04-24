@@ -60,7 +60,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({ data, displayMode, isSp
     }
   };
 
-  // console.log('data', data)
+  ('data', data)
 
   return (
     <motion.div
@@ -241,7 +241,7 @@ export default AttendanceCard;
 //   const currentStatus = data.statusKehadiran ?? "Belum Absen";
 //   const currentTanggal = data.tanggal;
 
-//   // console.log('datadata', data)
+//   ('datadata', data)
 
 //   return (
 //     <motion.div

@@ -1,11 +1,24 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************************
  * UTILS
@@ -251,7 +264,7 @@ function AnnouncementsSection() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
         const res = await fetch(`${API_CONFIG.BASE_URL}/pengumuman?schoolId=${schoolId}`);
         const result = await res.json();
         if (result.success) {
@@ -267,7 +280,7 @@ function AnnouncementsSection() {
           setAnnouncements(mapped);
         }
       } catch (e) {
-        console.error(e);
+        
       } finally {
         setLoading(false);
       }
@@ -413,8 +426,8 @@ function AnnouncementsSection() {
  * PAGE UTAMA
  ****************************/
 const PengumumanPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const schoolName = schoolInfo.fullName;
+  const { data: profile } = useProfile();
+  const schoolName = profile?.schoolName || "Sekolah";
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

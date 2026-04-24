@@ -75,7 +75,7 @@ export const StudentCardPage = () => {
     setSelectedSchool(value);
     setSchoolId(newSchoolId);
     setSearchKelas("all"); // Reset kelas saat sekolah berubah
-    console.log("🎯 School Selected:", newSchoolId);
+    
   };
 
   // Ambil daftar sekolah (hanya untuk SuperAdmin)
@@ -107,9 +107,9 @@ export const StudentCardPage = () => {
   const resource = useClassroom();
   const school = useSchool();
 
-  console.log("resource:", resource);
-  console.log("school:", school);
-  console.log("classroomList:", classroomList);
+  
+  
+  
 
   return (
     <DashboardPageLayout

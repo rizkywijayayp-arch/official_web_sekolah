@@ -1,19 +1,18 @@
-import { SMAN25_CONFIG } from "@/core/theme";
-import BeritaComp from "@/features/_global/components/berita";
-import { FooterComp } from "@/features/_global/components/footer";
-import GalleryComp from "@/features/_global/components/galeri";
-import { HeroComp } from "@/features/_global/components/hero";
-import NavbarComp from "@/features/_global/components/navbar";
-import { SambutanComp } from "@/features/_global/components/sambutan";
-import TugasComp from "@/features/_global/components/tugas";
 import { API_CONFIG } from "@/config/api";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { queryClient } from "@/features/_root/queryClient";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { Building2, ChevronDown, Handshake, HelpCircle, Instagram, Mail, MessageCircle, Play, SquareArrowOutUpRight, UserCheck, UserX } from "lucide-react";
 import { cloneElement, useEffect, useState } from "react";
+import { FooterComp } from "@/features/_global/components/footer";
+import { HeroComp } from "@/features/_global/components/hero";
+import NavbarComp from "@/features/_global/components/navbar";
+import BeritaComp from "@/features/_global/components/berita";
+import GalleryComp from "@/features/_global/components/galeri";
+import { SambutanComp } from "@/features/_global/components/sambutan";
+import TugasComp from "@/features/_global/components/tugas";
 
 const BASE_URL = `${API_CONFIG.BASE_URL}/profileSekolah`;
 const BASE_URL2 = API_CONFIG.BASE_URL;
@@ -108,7 +107,7 @@ export function useNews(schoolId: string | number | undefined) {
 
         setNews(mappedNews);
       } catch (err: any) {
-        console.error("Fetch news error:", err);
+        
         setError(err.message || "Gagal memuat berita");
       } finally {
         setLoading(false);
@@ -129,7 +128,7 @@ interface Facility {
 }
 
 const FasilitasSection = () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
 
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [loading, setLoading] = useState(true);
@@ -174,7 +173,7 @@ const FasilitasSection = () => {
 
         setFacilities(mapped);
       } catch (err: any) {
-        console.error("Fetch fasilitas error:", err);
+        
         setError(err.message || "Gagal memuat fasilitas");
       } finally {
         setLoading(false);
@@ -290,7 +289,7 @@ const PengurusSection = () => {
   const [pengurus, setPengurus] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const SCHOOL_ID = getSchoolId(); 
+  const SCHOOL_ID = getSchoolIdSync(); 
   const API_URL = `${API_CONFIG.BASE_URL}/guruTendik?schoolId=${SCHOOL_ID}`;
 
   useEffect(() => {
@@ -337,7 +336,7 @@ const PengurusSection = () => {
           setPengurus(mergedData);
         }
       } catch (error) {
-        console.error("Gagal mengambil data guru:", error);
+        
       } finally {
         setLoading(false);
       }
@@ -438,7 +437,7 @@ const VideoSection = () => {
   const [profile, setProfile] = useState<SchoolProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const SCHOOL_ID = getSchoolId();
+  const SCHOOL_ID = getSchoolIdSync();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -448,7 +447,7 @@ const VideoSection = () => {
         const result = await res.json();
         if (result.success) setProfile(result.data);
       } catch (err) {
-        console.error('Gagal memuat video profile:', err);
+        
       } finally {
         setLoading(false);
       }
@@ -497,7 +496,7 @@ const VideoSection = () => {
             transition={{ delay: 0.2 }}
             className="text-slate-500 max-w-2xl mx-auto text-lg font-light"
           >
-            {profile?.schoolName || 'SMAN 25 Jakarta'} dalam lensa kamera. Saksikan berbagai aktivitas, prestasi, dan kebersamaan kami.
+            {profile?.schoolName || 'Ceria Akademi'} dalam lensa kamera. Saksikan berbagai aktivitas, prestasi, dan kebersamaan kami.
           </motion.p>
         </div>
 
@@ -561,12 +560,12 @@ const InstagramFeedSection = ({ theme }: any) => {
   useEffect(() => {
     const fetchFeeds = async () => {
       try {
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
         const response = await fetch(`${BASE_URL2}/feed?schoolId=${schoolId}`);
         const result = await response.json();
         if (result.success) setPosts(result.data);
       } catch (error) {
-        console.error("Gagal mengambil data feed:", error);
+        
       } finally {
         setLoading(false);
       }
@@ -820,7 +819,7 @@ const useComments = (schoolId: number) => {   // parameter tetap number
 };
 
 const CommentSection = () => {
-  const schoolId: any = getSchoolId();  // ← number, bukan string "88"
+  const schoolId: any = getSchoolIdSync();  // ← number, bukan string "88"
 
   const { data: comments = [], isPending, error } = useComments(schoolId);
   const { mutate, isSubmitting } = useComments(schoolId);
@@ -992,7 +991,7 @@ interface Sponsor {
 }
 
 const SponsorMarqueeSection = () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -1010,7 +1009,7 @@ const SponsorMarqueeSection = () => {
           setSponsors(json.data);
         }
       } catch (err) {
-        console.error("Error fetch sponsor:", err);
+        
       } finally {
         setLoading(false);
       }
@@ -1163,7 +1162,7 @@ const useFAQs = (schoolId: string | number) => {
 
         setFaqs(allFaqs);
       } catch (err: any) {
-        console.error("Fetch FAQ error:", err);
+        
         setError(err.message || "Gagal memuat FAQ");
       } finally {
         setLoading(false);
@@ -1177,7 +1176,7 @@ const useFAQs = (schoolId: string | number) => {
 };
 
 const FAQSection = () => {
-  const SCHOOL_ID = getSchoolId();
+  const SCHOOL_ID = getSchoolIdSync();
   const { faqs, loading, error } = useFAQs(SCHOOL_ID);
   const [openIndex, setOpenIndex] = useState<number | null>(0); // Default buka item pertama
 
@@ -1321,11 +1320,24 @@ const Page = ({ theme, schoolId }: any) => (
   </div>
 );
 
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
 const Homepage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const [key, setKey] = useState(schoolInfo.fullName);
-  const theme = schoolInfo.theme;
-  const schoolID = getSchoolId()
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const [key, setKey] = useState(profile?.schoolName || 'Sekolah');
+  const schoolID = getSchoolIdSync();
 
   useEffect(() => {
     queryClient.invalidateQueries();
@@ -1335,9 +1347,3 @@ const Homepage = () => {
 };
 
 export default Homepage;
-
-// Tema dominan biru tua
-export const SMAN25_THEME = {
-  primary: "#1e3a8a",
-  accent: "#fcd34d",
-} as const;

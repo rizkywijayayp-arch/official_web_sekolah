@@ -319,7 +319,7 @@ export const LetterCreationForm = () => {
       school.query.refetch();
       navigate("/format/pdf", { replace: true });
     } catch (err: any) {
-      console.error("Error saat submit:", err);
+      
       if (err.response) {
         alert.error(err.response.data?.message || "Gagal memperbarui data surat");
       } else if (err.request) {

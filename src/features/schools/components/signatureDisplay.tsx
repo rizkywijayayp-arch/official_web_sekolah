@@ -19,7 +19,7 @@ export const SignatureDisplay = ({ signature }: { signature?: string }) => {
       setSchoolId(String(profileData.user.sekolah.id));
     }
   }, [profileData]);
-  // console.log("🚀 ~ SignatureDisplay ~ profileData:", profileData);
+  // 
 
   useEffect(() => {
     if (safeSignature && userID && schoolId) {
@@ -32,12 +32,6 @@ export const SignatureDisplay = ({ signature }: { signature?: string }) => {
           `schoolSignature_${userID}_${schoolId}`,
           safeSignature
         );
-        // console.log(
-        //   "✅ Signature disimpan di localStorage untuk user:",
-        //   userID,
-        //   "dan schoolId:",
-        //   schoolId
-        // );
       }
     }
   }, [safeSignature, userID, schoolId]);
@@ -45,7 +39,6 @@ export const SignatureDisplay = ({ signature }: { signature?: string }) => {
   // Pastikan hanya menampilkan signature jika userId dan schoolId cocok
   const isSignatureValid = schoolId && safeSignature;
 
-  // console.log('safe', safeSignature)
   return (
     // <div className="border border-gray-400 rounded-md bg-transparent w-full sm:w-1/3 h-[300px] flex justify-center items-center">
     <div className="border border-white/10 rounded-[14px] border-gray-400 rounded-md bg-transparent w-full h-[300px] flex justify-center items-center">

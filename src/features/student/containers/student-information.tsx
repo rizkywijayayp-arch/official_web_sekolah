@@ -235,7 +235,7 @@ export const StudentInformation = () => {
         }
       }      
       updatedData.kelasId = Number(data.kelasId);
-      console.log("Data yang dikirim saat submit:", updatedData);
+      
 
       await creation.update(decodeParams?.biodataId!, updatedData);
       setIsEditMode(false);
@@ -273,7 +273,7 @@ export const StudentInformation = () => {
       // Tangani error dengan pesan yang lebih spesifik
       const errorMessage = error?.message || lang.text('failedResetPass');
       alert.error(errorMessage);
-      console.error('Gagal mereset password:', error);
+      
       return 
     }
   };

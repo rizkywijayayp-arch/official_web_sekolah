@@ -8,7 +8,7 @@ export const StudentEdit = () => {
 
   // 🔹 Validasi: Jika ID tidak ada, arahkan ke halaman 404
   if (!decodeParams?.id || !decodeParams?.text) {
-    console.warn("❌ ERROR: ID siswa tidak ditemukan! Redirect ke /404");
+    
     return <Navigate to="/404" replace />;
   }
 

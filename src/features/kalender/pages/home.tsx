@@ -1,12 +1,25 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Bell, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************
  * UTILITIES
@@ -58,7 +71,7 @@ const useCalendarEvents = (year, month) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const schoolId = getSchoolId()
+  const schoolId = getSchoolIdSync()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,7 +108,7 @@ const useCalendarEvents = (year, month) => {
           setError("Belum ada agenda untuk bulan ini.");
         }
       } catch (err) {
-        console.warn("Fetch error:", err);
+        
         setError("Gagal memuat data kalender. Menampilkan data demo.");
         setEvents(DEMO_EVENTS);
       } finally {
@@ -177,7 +190,7 @@ export const CalendarSection = ({ schoolName }: { schoolName: string }) => {
   const [cursor, setCursor] = useState(new Date());
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
-  const SCHOOL_ID = getSchoolId();
+  const SCHOOL_ID = getSchoolIdSync();
 
   // Fetch Logic (Simplified for integration)
   const [events, setEvents] = useState<any[]>([]);
@@ -335,9 +348,9 @@ export const CalendarSection = ({ schoolName }: { schoolName: string }) => {
  * PAGE DENGAN HERO
  ****************************/
 const CalendarPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
-  const schoolName = schoolInfo.fullName;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolName = profile?.schoolName || 'Sekolah';
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -363,9 +376,9 @@ const CalendarPage = () => {
       console.assert(cells.length === 42, "Grid kalender harus 42 sel");
       console.assert(isWithinPeriod(new Date("2025-06-15T00:00:00+07:00"), PPDB_PERIOD) === true, "PPDB harus aktif Juni 2025");
 
-      console.log("UI smoke tests passed");
+      
     } catch (e) {
-      console.error("UI smoke tests failed:", e);
+      
     }
   }, [prefersReducedMotion, theme]);
 

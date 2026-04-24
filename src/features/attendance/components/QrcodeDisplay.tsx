@@ -191,7 +191,7 @@
 //       link.click();
 //       document.body.removeChild(link);
 //     } catch (error) {
-//       console.error('Failed to download QR code image:', error);
+//       
 //       alert.error('Gagal mengunduh gambar QR code. Silakan coba lagi.');
 //     } finally {
 //       setIsDownloading(false);
@@ -273,7 +273,7 @@
 //       let isDone = false;
 
 //       while (!isDone) {
-//         console.log('Mengirim file untuk proses / polling...');
+//         
 
 //         const response = await fetch('https://app.kiraproject.id/upload', {
 //           method: 'POST',
@@ -290,7 +290,7 @@
 //         }
 
 //         const result = await response.json();
-//         console.log('result summarize:', result);
+//         
 
 //         if (result?.status && result?.status === 'processing') {
 //           setSummary('Sedang proses merangkum');
@@ -321,7 +321,6 @@
 //         }
 //       }
 //     } catch (error) {
-//       console.error('Gagal mengunggah file audio:', {
 //         message: error.message,
 //         stack: error.stack,
 //         audioFileName: audioFile.name,
@@ -990,7 +989,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error('Failed to download QR code image:', error);
+      
       alert.error('Gagal mengunduh gambar QR code. Silakan coba lagi.');
     } finally {
       setIsDownloading(false);
@@ -1072,7 +1071,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({
       let isDone = false;
 
       while (!isDone) {
-        console.log('Mengirim file untuk proses / polling...');
+        
 
         const response = await fetch('https://app.kiraproject.id/upload', {
           method: 'POST',
@@ -1089,7 +1088,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({
         }
 
         const result = await response.json();
-        console.log('result summarize:', result);
+        
 
         if (result?.status && result?.status === 'processing') {
           setSummary('Sedang proses merangkum');

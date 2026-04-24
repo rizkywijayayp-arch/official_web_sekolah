@@ -314,7 +314,7 @@ export const studentColumnWithFilter = ({
     //         await onUpdateRFID(row.original?.user?.id || row.original?.id || row.original.userId, rfid);
     //         alert.success(lang.text('successUpdateRFID'));
     //       } catch (error) {
-    //         console.error("Error updating RFID:", error);
+    //         
     //         alert.error(lang.text('failedUpdateRFID'));
     //       } finally {
     //         setIsUpdating(false);

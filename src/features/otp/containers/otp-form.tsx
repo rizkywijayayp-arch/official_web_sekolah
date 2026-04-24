@@ -31,7 +31,7 @@ const parseZ = (zstring: string) => {
     const json = JSON.parse(jsonString);
     return json;
   } catch (err) {
-    console.log("invalid param", err);
+    
     return {};
   }
 };
@@ -41,7 +41,7 @@ export function OtpForm() {
   const zParams = searchParams.get("z");
   const { navigateTo, email } = parseZ(zParams || "");
 
-  console.log("navigateTo", navigateTo, email, zParams);
+  
 
   const navigate = useNavigate();
   const otp = useOtp();
@@ -65,7 +65,7 @@ export function OtpForm() {
         navigate(navigateTo, { replace: true });
       }
     } catch (err: any) {
-      console.log("err =>", err);
+      
       alert.error(err?.message || lang.text("verifyOtpFailed"));
     }
   }

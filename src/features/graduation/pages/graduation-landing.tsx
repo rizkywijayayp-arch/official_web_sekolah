@@ -1,7 +1,7 @@
 import { API_CONFIG } from "@/config/api";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from '@/features/_global/hooks/getSchoolId';
+import { getSchoolIdSync } from '@/features/_global/hooks/getSchoolId';
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Award, Calendar, Loader2, Search, Users } from "lucide-react";
@@ -11,7 +11,7 @@ import confetti from "canvas-confetti";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = API_CONFIG.BASE_URL;
-const SCHOOL_ID = getSchoolId();
+const SCHOOL_ID = getSchoolIdSync();
 
 export function PengumumanKelulusan() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,9 +111,9 @@ export function PengumumanKelulusan() {
 
     // Smoke tests Anda tetap di sini
     try {
-      console.log("UI smoke tests passed");
+      
     } catch (e) {
-      console.error(e);
+      
     }
   }, [prefersReducedMotion]);
 

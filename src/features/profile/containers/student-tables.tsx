@@ -352,7 +352,7 @@
 
 //     alert.success("Laporan absensi harian berhasil diunduh.");
 //   } catch (error) {
-//     console.error("Error generating daily attendance PDF:", error);
+//     
 //     alert.error("Gagal menghasilkan laporan absensi harian.");
 //   }
 // };
@@ -458,7 +458,7 @@
 
 //     alert.success("Laporan absensi bulanan berhasil diunduh.");
 //   } catch (error) {
-//     console.error("Error generating monthly attendance PDF:", error);
+//     
 //     alert.error("Gagal menghasilkan laporan absensi bulanan.");
 //   }
 // };
@@ -521,7 +521,7 @@
 
 //   // Trigger refetch when studentParams changes
 //   useEffect(() => {
-//     console.log("studentParams:", studentParams);
+//     
 //     refetch();
 //   }, [studentParams, refetch]);
 
@@ -599,8 +599,8 @@
 //       }
 
 //       const { data } = response.data;
-//       // console.log('data response:', response);
-//       // console.log('data excel response:', data);
+//       // 
+//       // 
 //       const formattedMessage = (
 //         <div>
 //           <p>✅ Berhasil diimport: {data?.success || 0}</p>
@@ -631,7 +631,7 @@
 
 //       setOpenImport(false);
 //     } catch (error: any) {
-//       console.error("Error saat mengunggah file:", error);
+//       
 //       alert.error("Terjadi kesalahan saat mengimpor data");
 //     } finally {
 //       setIsUploading(false);
@@ -672,15 +672,15 @@
 //     alert.error(lang.text("shouldClassroom"));
 //   };
 
-//   console.log("data data?.students", data?.students);
+//   
 
 //   const creation = useUserCreation();
 
 //   const handleUpdateRFID = async (studentId: string | number, rfid: string) => {
 //     try {
 //       const updatedData = { rfid };
-//       console.log("userid by RFID:", studentId);
-//       console.log("Data dikirim untuk RFID:", updatedData);
+//       
+//       
 
 //       await creation.update(studentId, updatedData);
 
@@ -692,14 +692,14 @@
 
 //       alert.success("RFID berhasil diperbarui.");
 //     } catch (error) {
-//       console.error("Error updating RFID:", error);
+//       
 //       alert.error("Gagal memperbarui RFID.");
 //       throw error;
 //     }
 //   };
 
 
-//   console.log('data?.students new', data?.students)
+('data?.students new', data?.students)
 //   return (
 //     <>
 //       <div className="flex justify-between items-center pb-4">
@@ -772,13 +772,13 @@
 //           pageSize: pagination.pageSize,
 //           totalItems: data?.pagination?.totalItems || 0,
 //           onPageChange: (page) => {
-//             console.log("onPageChange called with page:", page);
+//             
 //             if (page >= 0) {
 //               onPaginationChange({ ...pagination, pageIndex: page });
 //             }
 //           },
 //           onSizeChange: (size) => {
-//             console.log("onSizeChange called with size:", size);
+//             
 //             onPaginationChange({ ...pagination, pageSize: size, pageIndex: 0 });
 //           },
 //         }}
@@ -797,7 +797,7 @@
 //           })) || [],
 //           handleAttendRemove: (id) => {
 //             // Implementasi handleAttendRemove jika diperlukan
-//             console.log("Remove attendance for ID:", id);
+//             
 //           },
 //           onUpdateRFID: handleUpdateRFID, // Kirim fungsi handleUpdateRFID
 //         })}
@@ -1196,7 +1196,7 @@ export const generateAttendancePDF = async ({
 
     alert.success("Data siswa berhasil diunduh.");
   } catch (error) {
-    console.error("Error generating student data PDF:", error);
+    
     alert.error("Gagal menghasilkan data siswa.");
   }
 };
@@ -1302,7 +1302,7 @@ export const generateMonthlyAttendancePDF = async ({
 
     alert.success("Laporan absensi bulanan berhasil diunduh.");
   } catch (error) {
-    console.error("Error generating monthly attendance PDF:", error);
+    
     alert.error("Gagal menghasilkan laporan absensi bulanan.");
   }
 };
@@ -1385,7 +1385,7 @@ export const StudentLandingTables = () => {
   //     });
   //   }
     
-  //   console.log('students', data.students)
+  ('students', data.students)
 
   //   const duplicates = findDuplicates(data.students);
   //   return duplicates
@@ -1429,7 +1429,7 @@ export const StudentLandingTables = () => {
   };
 
   useEffect(() => {
-    console.log("studentParams:", studentParams);
+    
     refetch();
   }, [studentParams, refetch]);
 
@@ -1496,8 +1496,8 @@ export const StudentLandingTables = () => {
       }
 
       const { data } = response.data;
-      // console.log('data response:', response);
-      // console.log('data excel response:', data);
+      // 
+      // 
       const formattedMessage = (
         <div>
           <p>✅ Berhasil diimport: {data?.success || 0}</p>
@@ -1528,7 +1528,7 @@ export const StudentLandingTables = () => {
 
       setOpenImport(false);
     } catch (error: any) {
-      console.error("Error saat mengunggah file:", error);
+      
       alert.error("Terjadi kesalahan saat mengimpor data");
     } finally {
       setIsUploading(false);
@@ -1675,7 +1675,7 @@ export const StudentLandingTables = () => {
             value: s.id.toString(),
           })) || [],
           handleAttendRemove: (id) => {
-            console.log("Remove attendance for ID:", id);
+            
           },
           onUpdateRFID: handleUpdateRFID,
         })}

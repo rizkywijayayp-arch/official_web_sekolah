@@ -2,11 +2,11 @@ import { API_CONFIG } from "@/config/api";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 // Hook profil sekolah
 const useSchoolProfile = () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
   const API_BASE = API_CONFIG.BASE_URL;
 
   return useQuery({

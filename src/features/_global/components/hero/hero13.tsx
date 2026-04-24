@@ -2,14 +2,14 @@ import { API_CONFIG } from "@/config/api";
 import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ChevronDown, GraduationCap, Sparkles } from "lucide-react";
 
 
 // Hook baru untuk profil sekolah (hanya ini yang ditambah)
 const useSchoolProfile = () => {
-  const schoolId = getSchoolId(); // ← sesuaikan dengan ID sekolah yang ada di database
+  const schoolId = getSchoolIdSync(); // ← sesuaikan dengan ID sekolah yang ada di database
 
   const API_BASE = API_CONFIG.BASE_URL;
 

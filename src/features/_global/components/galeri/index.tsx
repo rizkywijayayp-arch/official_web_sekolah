@@ -1,5 +1,5 @@
 import { API_CONFIG } from "@/config/api";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
   ChevronLeft,
@@ -10,10 +10,24 @@ import {
   X
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 
 const BASE_URL = API_CONFIG.BASE_URL;
-const SCHOOL_ID = getSchoolId();
+const SCHOOL_ID = getSchoolIdSync();
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 
 const GalleryBento = () => {
@@ -34,7 +48,7 @@ const GalleryBento = () => {
         const json = await res.json();
         if (json.success) setAlbums(json.data);
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }
@@ -52,7 +66,7 @@ const GalleryBento = () => {
       const json = await res.json();
       if (json.success) setAlbumItems(json.data);
     } catch (err) {
-      console.error(err);
+      
     } finally {
       setLoadingItems(false);
     }

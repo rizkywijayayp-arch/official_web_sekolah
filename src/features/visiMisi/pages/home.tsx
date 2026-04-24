@@ -1,14 +1,27 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { BarChart3, CheckCircle2, Lightbulb, Loader2, Quote, Rocket, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const SCHOOL_ID = getSchoolId();
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+const SCHOOL_ID = getSchoolIdSync();
 const BASE_URL = `${API_CONFIG.BASE_URL}/visi-misi`;
 
 // ──────────────────────────────────────────────────────────────
@@ -37,10 +50,10 @@ const PremiumLabel = ({ children, icon: Icon }: any) => (
 // ──────────────────────────────────────────────────────────────
 
 export default function VisiMisiPage() {
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-  const schoolInfo = SMAN25_CONFIG;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +65,7 @@ export default function VisiMisiPage() {
         const record = json.success ? (Array.isArray(json.data) ? json.data[0] : json.data) : null;
         setData(record);
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }
@@ -70,8 +83,8 @@ export default function VisiMisiPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100">
-      <NavbarComp theme={schoolInfo.theme} />
+    <div className="min-h-screen" style={{ background: theme.bg }}>
+      <NavbarComp theme={theme} />
       <HeroComp titleProps="Visi - Misi & Tujuan" id="#content" />
 
       <main id="content" className="relative">

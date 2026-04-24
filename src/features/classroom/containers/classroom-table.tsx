@@ -195,7 +195,7 @@
     schoolIsLoading: boolean;
   }) => {
     if (!alert) {
-      console.error('Alert system is not available');
+      
       return;
     }
 
@@ -245,7 +245,7 @@
 
       alert.success('Daftar kelas berhasil diunduh sebagai PDF.');
     } catch (error) {
-      console.error('Error generating classroom PDF:', error);
+      
       alert.error('Gagal menghasilkan daftar kelas dalam format PDF.');
     }
   };
@@ -263,9 +263,9 @@
     const [selectedExport, setSelectedExport] = useState<string>("");
     const [searchNamaKelas, setSearchNamaKelas] = useState("");
 
-    console.log('classRoom:', resource);
-    console.log('school:', school);
-    console.log('profile:', profile);
+    
+    
+    
 
     const columns = useMemo(
       () =>
@@ -411,7 +411,7 @@
                 sekolahId: profile?.user?.sekolahId,
               };
 
-              console.log("format", formattedData);
+              
 
               // Create classroom
               await creation.create(formattedData);

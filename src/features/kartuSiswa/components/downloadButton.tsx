@@ -44,12 +44,12 @@
 //     let count = 0;
   
 //     for (let i = 0; i < students.length; i++) {
-//       console.log(`🔍 Mencari elemen: student-card-${students[i].id}`);
+//       
 //       const frontCard = document.getElementById(`student-card-${students[i].id}`);
 //       const backCard = document.getElementById(`student-card-${students[i].id}-back`);
   
 //       if (!frontCard || !backCard) {
-//         console.warn(`⚠️ Kartu siswa ${students[i].id} tidak ditemukan`);
+//         
 //         continue;
 //       }
   
@@ -171,12 +171,12 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ students, targetRef, al
     let processedCards = 0;
 
     for (let i = 0; i < students.length; i++) {
-      console.log(`🔍 Mencari elemen: student-card-${students[i].id}`);
+      
       const frontCard = document.getElementById(`student-card-${students[i].id}`);
       const backCard = document.getElementById(`student-card-${students[i].id}-back`);
 
       if (!frontCard || !backCard) {
-        console.warn(`⚠️ Kartu siswa ${students[i].id} tidak ditemukan`);
+        
         continue;
       }
 

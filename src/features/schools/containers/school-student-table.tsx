@@ -71,8 +71,8 @@ export function SchoolStudentTable(props: SchoolStudentProps) {
 
   // Log data dari biodata dan school saat diperoleh
   useEffect(() => {
-    console.log('🚀 ~ Biodata fetched:', biodata.data);
-    console.log('🚀 ~ School data fetched:', school.data?.[0]);
+    
+    
   }, [biodata.data, school.data?.[0]]);
 
 console.log('biod', biodata.data)
@@ -81,7 +81,7 @@ console.log('biod', biodata.data)
   //   const filteredData = biodata.data?.filter(
   //     (d) => Number(d.user?.sekolah?.id) === props.id,
   //   );
-  //   console.log('🚀 ~ Filtered data based on school ID:', filteredData);
+  //   
   //   return filteredData;
   // }, [biodata.data, props.id]);
 
@@ -94,13 +94,13 @@ console.log('biod', biodata.data)
           value: d.namaSekolah,
         })) || [],
     });
-    console.log('🚀 ~ Generated columns:', columnData);
+    
     return columnData;
   }, [school.data?.[0]]);
 
   // Log final data untuk tabel
   // useEffect(() => {
-  //   console.log('🚀 ~ Final data for table:', datas);
+  //   
   // }, [datas]);
 
   // Fungsi untuk menangani klik pada siswa
@@ -115,11 +115,11 @@ console.log('biod', biodata.data)
       },
     };
 
-    console.log('🚀 ~ Selected Student Detail:', studentDetail);
+    
     setSelectedStudent(studentDetail);
   };
 
-  // console.log('datas', datas)
+  ('datas', datas)
 
   return (
     <div>

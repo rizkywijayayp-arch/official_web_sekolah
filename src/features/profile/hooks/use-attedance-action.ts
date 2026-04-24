@@ -66,7 +66,7 @@ export const useAttendanceActions = (id: string | number) => {
 
     } catch (err: any) {
       if (err.message?.includes("prisma.devices.findUnique")) {
-        console.warn("Prisma device query failed, but treating as success");
+        
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["students"] }),
           queryClient.invalidateQueries({ queryKey: ["attedances-new"] }),
@@ -143,7 +143,7 @@ const handleAttendRemove = async (userId: number) => {
     // navigate(-1);
   } catch (err: any) {
     if (err.message?.includes("prisma.devices.findUnique")) {
-      console.warn("Prisma device query failed, but treating as success");
+      
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["students"] }),
         queryClient.invalidateQueries({ queryKey: ["attedances-new"] }),
@@ -181,7 +181,7 @@ const handleAttendRemove = async (userId: number) => {
       navigate(-1);
     } catch (err: any) {
       if (err.message?.includes("prisma.devices.findUnique")) {
-        console.warn("Prisma device query failed, but treating as success");
+        
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["students"] }),
           queryClient.invalidateQueries({ queryKey: ["attedances-new"] }),

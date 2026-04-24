@@ -480,7 +480,7 @@ import { API_CONFIG } from "@/config/api";
 
 
 import { getXHostHeader } from "@/core/utils/XHostHeader";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -662,7 +662,7 @@ const API_BASE = API_CONFIG.BASE_URL;
 const headers = { "Cache-Control": "no-store" };
 
 const fetchGraduations = async () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
   const res = await fetch(`${API_BASE}/graduations?schoolId=${schoolId}`, { headers, cache: "no-store" });
   if (!res.ok) throw new Error("Gagal memuat data kelulusan");
   const json = await res.json();

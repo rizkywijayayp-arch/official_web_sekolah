@@ -273,7 +273,7 @@
 //   schoolIsLoading: boolean;
 // }) => {
 
-//   console.log('schoolData', schoolData)
+('schoolData', schoolData)
 //   if (schoolIsLoading) {
 //     alert.error("Data sekolah masih dimuat, silakan coba lagi.");
 //     return;
@@ -317,7 +317,7 @@
 
 //     alert.success("Daftar tugas berhasil diunduh.");
 //   } catch (error) {
-//     console.error("Error generating homework PDF:", error);
+//     
 //     alert.error("Gagal menghasilkan daftar tugas.");
 //   }
 // };
@@ -1309,7 +1309,7 @@ const generateHomeworkPDF = async ({
 
     alert.success("Daftar tugas berhasil diunduh.");
   } catch (error) {
-    console.error("Error generating homework PDF:", error);
+    
     alert.error("Gagal menghasilkan daftar tugas.");
   }
 };

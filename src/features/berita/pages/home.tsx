@@ -1,9 +1,9 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -104,7 +104,7 @@ const NewsCard = ({ item, onClick, theme }: any) => {
 /****************************
  * SECTION: Berita
  ****************************/
-function BeritaSection({ theme }: { theme: any; }) {
+function BeritaSection() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("Semua");
   const [selected, setSelected] = useState<any>(null);
@@ -115,7 +115,7 @@ function BeritaSection({ theme }: { theme: any; }) {
     const fetchNews = async () => {
       try {
         setLoading(true);
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
         const res = await fetch(`${API_CONFIG.BASE_URL}/berita?schoolId=${schoolId}`);
         const result = await res.json();
 
@@ -129,7 +129,7 @@ function BeritaSection({ theme }: { theme: any; }) {
           setNewsData(mapped);
         }
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }
@@ -193,11 +193,10 @@ function BeritaSection({ theme }: { theme: any; }) {
           <div className="grid md:grid-cols-3 gap-10">
             <AnimatePresence mode="popLayout">
               {filtered.map((news) => (
-                <NewsCard 
-                  key={news.id} 
-                  item={news} 
-                  theme={theme} 
-                  onClick={() => setSelected(news)} 
+                <NewsCard
+                  key={news.id}
+                  item={news}
+                  onClick={() => setSelected(news)}
                 />
               ))}
             </AnimatePresence>
@@ -258,18 +257,24 @@ function BeritaSection({ theme }: { theme: any; }) {
 }
 
 /****************************
- * PAGE UTAMA
+ * PAGE UTAMA (DYNAMIC)
  ****************************/
 const BeritaPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
+  const { data: profile } = useQuery({
+    queryKey: ['schoolProfile'],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`);
+      const data = await res.json();
+      return data.data;
+    },
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavbarComp />
       <HeroComp titleProps="Berita Untuk-mu" id="#berita" />
       <main className="flex-1 relative z-[1]" id="berita">
-        <BeritaSection theme={theme} />
+        <BeritaSection />
       </main>
       <FooterComp />
     </div>

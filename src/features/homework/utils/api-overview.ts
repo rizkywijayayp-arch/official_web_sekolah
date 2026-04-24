@@ -69,7 +69,7 @@ export const fetchLibraryMembers = async ({
 
     return res.data.data.length;
   } catch (err) {
-    console.error("❌ Failed to fetch members:", err);
+    
     throw new Error("Failed to fetch library members");
   }
 };

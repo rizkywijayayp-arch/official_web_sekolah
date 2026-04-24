@@ -1,13 +1,28 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /* ================= CONFIG ================= */
 const BASE_URL = API_CONFIG.BASE_URL;
+
+const getSchoolIdCall = () => getSchoolIdSync();
 
 
 /* ================= COMPONENTS ================= */
@@ -27,13 +42,14 @@ const ServicesGrid = () => {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const SCHOOL_ID = getSchoolId();
+  const SCHOOL_ID = getSchoolIdSync();
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${BASE_URL}/layanan?schoolId=${SCHOOL_ID}`, {
+        const schoolId = getSchoolIdCall();
+        const res = await fetch(`${BASE_URL}/layanan?schoolId=${schoolId}`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Gagal memuat layanan");
@@ -50,7 +66,7 @@ const ServicesGrid = () => {
       }
     };
     fetchServices();
-  }, [SCHOOL_ID]);
+  }, []);
 
   const internalServices = services.filter((s: any) => s.type === "internal");
   const publicServices = services.filter((s: any) => s.type === "publik");
@@ -166,7 +182,8 @@ const ServicesGrid = () => {
 
 /* ================= PAGE ================= */
 export default function LayananPage() {
-  const theme = SMAN25_CONFIG.theme;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

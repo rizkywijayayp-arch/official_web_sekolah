@@ -40,7 +40,7 @@ export const TopLocationCard = () => {
         setLocations(response.data);
         setError(null);
       } catch (err) {
-        console.error("❌ Failed fetching location stats:", err);
+        
         setError(lang.text('errorFetchLocations') || "Failed to fetch location statistics");
       } finally {
         setIsLoading(false);

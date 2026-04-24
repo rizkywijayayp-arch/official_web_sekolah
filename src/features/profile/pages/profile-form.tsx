@@ -693,7 +693,7 @@
 
 // //   const filteredRiwayat = useMemo(() => riwayatSiswa.filter((s) => s.nama.toLowerCase().includes(searchSiswa.toLowerCase())), [searchSiswa]);
 
-// //   console.log('profile 222', profile)
+// ('profile 222', profile)
 // //   return (
 // //     <div className="min-h-screen w-full bg-background text-foreground">
 // //       {/* Page header */}
@@ -2344,7 +2344,7 @@ export const EditProfileForm = () => {
     const fetchGuruProfile = async () => {
       const id = profileNew?.user?.id;
       if (!id) {
-        console.log("No user ID found in profileNew?.user?.id");
+        
         return;
       }
 
@@ -2365,17 +2365,17 @@ export const EditProfileForm = () => {
         }
 
         const data = await response.json();
-        console.log("Guru Profile Data:", data);
+        
       } catch (error) {
-        console.error("Error fetching guru profile:", error);
+        
       }
     };
 
     fetchGuruProfile();
   }, [profileNew?.user?.id]);
 
-  console.log('profileNew', profileNew?.user);
-  console.log('dataGuru', dataGuru?.data);
+  
+  
 
   // Map profileNew?.user to profile structure
   const profile = useMemo(() => ({

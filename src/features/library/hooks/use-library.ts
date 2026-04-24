@@ -32,8 +32,9 @@ export const useLibrary = (props?: UseLibraryProps) => {
         params.append("sekolahId", props.sekolahId.toString());
       }
 
-      const url = `https://dev.kiraproject.id/api/get-history-perpus${params.toString() ? `?${params.toString()}` : ''}`;
-      console.log("useLibrary request URL:", url);
+      // Use relative path - nginx proxy handles forwarding to backend
+      const url = `/api/get-history-perpus${params.toString() ? `?${params.toString()}` : ''}`;
+      
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token") || ""}`,

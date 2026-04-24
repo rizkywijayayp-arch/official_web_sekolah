@@ -381,7 +381,7 @@ export const generateAttendancePDF = async ({
 
     alert.success('Laporan absensi harian berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating daily attendance PDF:', error);
+    
     alert.error('Gagal menghasilkan laporan absensi harian.');
   }
 };
@@ -464,7 +464,7 @@ export const generateMonthlyAttendancePDF = async ({
 
     alert.success('Laporan absensi bulanan berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating monthly attendance PDF:', error);
+    
     alert.error('Gagal menghasilkan laporan absensi bulanan.');
   }
 };
@@ -513,14 +513,14 @@ export const StudentLandingTablesManual = () => {
   
   const { data, isLoading, refetch } = useStudentPagination(studentParams);
 
-  // console.log('data siswa:', data)
+  ('data siswa:', data)
   useMemo(() => {
     if (attedances.isLoading || isLoading || !attedances.data || !data?.students?.data) {
       return;
     }
     const result = checkAttendance(attedances.data, data.students?.data);
     setAttendanceResult(result);
-    // console.log('result', result);
+    // 
   }, [attedances.isLoading, attedances.data, isLoading, data?.students?.data]);
 
   // Refetch when profileSchoolId changes
@@ -621,10 +621,10 @@ export const StudentLandingTablesManual = () => {
           alert.error(formattedMessage);
         }
 
-        console.log('response:', response);
+        
         setOpenImport(false);
       } catch (error: any) {
-        console.log("Error saat mengunggah file:", error);
+        
         alert.error("Terjadi kesalahan saat mengimpor data");
       } finally {
         setIsUploading(false);

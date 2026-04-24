@@ -106,7 +106,7 @@ export const SchoolMap = () => {
   const biodata = useBiodata();
   const schools = useSchool();
 
-  console.log("BIODATA LOK:", biodata);
+  
 
   // Enhanced studentData with sample fields for ratings and followers
   const studentData = useMemo(() => {
@@ -141,7 +141,7 @@ export const SchoolMap = () => {
     );
   }
 
-  console.log("studentData", studentData);
+  
 
   return (
     <>

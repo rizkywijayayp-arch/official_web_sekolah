@@ -6,8 +6,8 @@ import { dayjs, lang } from "@/core/libs";
 export const HandleDownloadPDF = (datas: any[], schoolName: string | undefined, filterDate: string = dayjs().format('YYYY-MM-DD')) => {
   const doc = new jsPDF();
 
-  console.log('Input datas:', datas);
-  console.log('Filter date:', filterDate);
+  
+  
 
   // Format tanggal dan waktu saat ini
   const now = new Date();
@@ -34,7 +34,7 @@ export const HandleDownloadPDF = (datas: any[], schoolName: string | undefined, 
   const tableData = datas
     .filter((data: any) => {
       const recordDate = dayjs(data.attendance?.createdAt).format('YYYY-MM-DD');
-      console.log('Record createdAt:', data.attendance?.createdAt, 'Formatted:', recordDate);
+      
       return recordDate === filterDate;
     })
     .map((data: any) => [
@@ -44,7 +44,7 @@ export const HandleDownloadPDF = (datas: any[], schoolName: string | undefined, 
       data.attendance?.jamPulang ? dayjs(data.attendance.jamPulang).format('HH:mm') : '-'
     ]);
 
-  console.log('Filtered tableData:', tableData);
+  
 
   // Add table using autoTable
   autoTable(doc, {

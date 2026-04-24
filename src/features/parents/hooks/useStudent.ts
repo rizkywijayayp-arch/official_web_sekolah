@@ -11,7 +11,7 @@ interface UseStudentsProps {
 
 export const useStudents = ({ page, size, sekolahId, kelas }: UseStudentsProps) => {
 
-  // console.log("📍 Query Params:", { page, size, sekolahId, kelas });
+  // 
   return usePaginatedQuery({
     queryKey: "students",
     endpoint: SERVICE_ENDPOINTS.student.list, // Sesuaikan dengan endpoint biodata siswa

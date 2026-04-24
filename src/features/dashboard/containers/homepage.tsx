@@ -305,32 +305,60 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
 };
 
 /****************
- * HERO SLIDER (6 slides)
+ * HERO SLIDER (from API)
  ****************/
-const heroSlides = [
-  { title: "Portal Resmi SMKN 13 Jakarta", desc: "Website multi‑tenant terintegrasi Xpresensi.", img: '/slide1.jpg', cta1: { href: "#pengumuman", label: "Lihat Pengumuman" }, cta2: { href: "#galeri", label: "Jelajah Galeri" }},
+const DEFAULT_SLIDES = [
+  { title: "Portal Resmi Sekolah", desc: "Website multi‑tenant terintegrasi Xpresensi.", img: '/slide1.jpg', cta1: { href: "#pengumuman", label: "Lihat Pengumuman" }, cta2: { href: "#galeri", label: "Jelajah Galeri" }},
   { title: "Pengumuman Terbaru", desc: "Informasi akademik & kesiswaan.", img: '/slide2.jpg', cta1: { href: "#pengumuman", label: "Cek Info" }, cta2: { href: "#", label: "Kalender" }},
   { title: "Sambutan Kepala Sekolah", desc: "Lingkungan belajar unggul & berkarakter.", img: '/slide3.jpg', cta1: { href: "#profil", label: "Baca Sambutan" }, cta2: { href: "#profil", label: "Profil Sekolah" }},
-  { title: "Galeri Kegiatan", desc: "Dokumentasi kegiatan & prestasi.", img: '/slide1.jpg', cta1: { href: "#galeri", label: "Lihat Galeri" }, cta2: { href: "#kesiswaan", label: "Ekskul" }},
-  { title: "Layanan Sekolah", desc: "Kurikulum, perpustakaan, kesiswaan.", img: '/slide2.jpg', cta1: { href: "/layanan", label: "Layanan" }, cta2: { href: "#perpustakaan", label: "E‑Library" } },
-  { title: "Kontak Sekolah", desc: "Informasi layanan publik.", img: '/slide3.jpg', cta1: { href: "#kontak", label: "Kontak" }, cta2: { href: "#", label: "Lokasi" }},
 ];
+
 const easing = [0.33, 1, 0.68, 1];
 const Hero = ({ theme }) => {
+  const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [index, setIndex] = useState(0);
   const [isPaused, setPaused] = useState(false);
   const prefersReducedMotion = useReducedMotion();
-  const go = (dir) => setIndex(p => (p + dir + heroSlides.length) % heroSlides.length);
+
+  // Fetch slides from API
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const schoolId = localStorage.getItem('devSchoolId') || '55';
+        const response = await fetch(`/heroSlides?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data && result.data.length > 0) {
+          setSlides(result.data);
+        }
+      } catch (error) {
+        // Use default slides on error
+      }
+    };
+    fetchSlides();
+  }, []);
+
+  const go = (dir) => setIndex(p => (p + dir + slides.length) % slides.length);
   const handlers = useSwipeable({ onSwipedLeft: () => go(1), onSwipedRight: () => go(-1), preventScrollOnSwipe: true, trackMouse: true });
-  useEffect(() => { if (isPaused || prefersReducedMotion) return; const t = setInterval(() => setIndex(p => (p + 1) % heroSlides.length), 6000); return () => clearInterval(t); }, [isPaused, prefersReducedMotion]);
-  const slide = heroSlides[index];
+  useEffect(() => { if (isPaused || prefersReducedMotion) return; const t = setInterval(() => setIndex(p => (p + 1) % slides.length), 6000); return () => clearInterval(t); }, [isPaused, prefersReducedMotion, slides.length]);
+  const slide = slides[index];
   return (
     <section id="beranda" className="relative overflow-hidden">
       <div className="relative w-full" {...handlers}>
         <div className="absolute inset-0">
           <AnimatePresence>
             <motion.div key={index} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} transition={{ duration: prefersReducedMotion ? 0 : 1, ease: easing }} className="absolute inset-0">
-              <SafeImage src={slide.img} alt={slide.title} className="relative inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.7)" }} />
+              {slide.mediaType === 'video' ? (
+                <video
+                  src={slide.img || slide.videoUrl}
+                  autoPlay
+                  muted
+                  loop
+                  className="relative inset-0 w-full h-full object-cover"
+                  style={{ filter: "brightness(0.7)" }}
+                />
+              ) : (
+                <SafeImage src={slide.img} alt={slide.title} className="relative inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.7)" }} />
+              )}
             </motion.div>
           </AnimatePresence>
           <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.bg}AA 0%, ${theme.primary}CC 100%)` }} />
@@ -341,8 +369,8 @@ const Hero = ({ theme }) => {
               <h1 className="text-3xl md:text-5xl font-bold leading-tight" style={{ color: theme.primaryText }}>{slide.title}</h1>
               <p className="mt-4 text-base md:text-lg opacity-90" style={{ color: theme.primaryText }}>{slide.desc}</p>
               <div className="mt-6 flex items-center gap-3">
-                <a className="rounded-xl px-5 py-3 text-sm font-semibold" style={{ background: theme.accent, color: "#1b1b1b" }} href={slide.cta1.href}>{slide.cta1.label}</a>
-                <a className="rounded-xl px-5 py-3 text-sm font-semibold border" style={{ borderColor: theme.accent, color: theme.primaryText }} href={slide.cta2.href}>{slide.cta2.label}</a>
+                <a className="rounded-xl px-5 py-3 text-sm font-semibold" style={{ background: theme.accent, color: "#1b1b1b" }} href={slide.cta1?.href || '#'}>{slide.cta1?.label}</a>
+                <a className="rounded-xl px-5 py-3 text-sm font-semibold border" style={{ borderColor: theme.accent, color: theme.primaryText }} href={slide.cta2?.href || '#'}>{slide.cta2?.label}</a>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -351,7 +379,7 @@ const Hero = ({ theme }) => {
             <button aria-label="Berikutnya" onClick={() => go(1)} className="px-3 py-2 rounded-xl bg-white/40 border backdrop-blur" style={{ borderColor: theme.subtle, color: theme.primaryText }}>→</button>
           </div>
           <div className="mt-4 flex gap-2">
-            {heroSlides.map((_, i) => (
+            {slides.map((_, i) => (
               <button key={i} aria-label={`Slide ${i + 1}`} onClick={() => setIndex(i)} className="h-2 rounded-full transition-all" style={{ width: i === index ? 24 : 8, background: i === index ? theme.accent : 'white' }} />
             ))}
           </div>
@@ -651,9 +679,9 @@ const Homepage = () => {
       console.assert(GLOBAL_DATA && Array.isArray(GLOBAL_DATA.announcements) && GLOBAL_DATA.announcements.length >= 1, "Global DINAS announcements present");
       const _nowYear = new Date().getFullYear();
       console.assert(Number.isFinite(SITE_SINCE) && SITE_SINCE <= _nowYear, "SITE_SINCE must be <= current year");
-      console.log("✅ UI smoke tests passed");
+      
     } catch (e) {
-      console.error("❌ UI smoke tests failed:", e);
+      
     }
   }, []);
   return <Page theme={theme} onTenantChange={setKey} currentKey={key} />;

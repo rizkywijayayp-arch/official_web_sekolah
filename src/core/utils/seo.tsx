@@ -1,7 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { API_CONFIG } from "@/config/api";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { setFavicon } from "./favicon";
 
 interface SEOMetadata {
   title?: string;
@@ -10,6 +11,8 @@ interface SEOMetadata {
   ogImage?: string;
   ogTitle?: string;
   ogDescription?: string;
+  logoUrl?: string;
+  schoolName?: string;
 }
 
 const DEFAULT_METADATA: SEOMetadata = {
@@ -25,7 +28,7 @@ export const useSEOMetadata = () => {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
         const response = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
         const result = await response.json();
 
@@ -38,6 +41,8 @@ export const useSEOMetadata = () => {
             ogImage: profile.heroImageUrl || profile.ogImage || null,
             ogTitle: profile.ogTitle || profile.schoolName || DEFAULT_METADATA.title,
             ogDescription: profile.ogDescription || profile.headmasterWelcome?.substring(0, 160) || DEFAULT_METADATA.description,
+            logoUrl: profile.logoUrl || null,
+            schoolName: profile.schoolName || "",
           });
         }
       } catch (err) {
@@ -124,6 +129,11 @@ export const MetaTagsInjector = () => {
     if (metadata.ogTitle) updateMetaProperty("og:title", metadata.ogTitle);
     if (metadata.ogDescription) updateMetaProperty("og:description", metadata.ogDescription);
     if (metadata.ogImage) updateMetaProperty("og:image", metadata.ogImage);
+
+    // Update favicon dari API
+    if (metadata.logoUrl || metadata.schoolName) {
+      setFavicon(metadata.logoUrl || null, metadata.schoolName);
+    }
   }, [metadata]);
 
   return null;

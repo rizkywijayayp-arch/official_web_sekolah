@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "@/features/_root/app";
 import { motion } from 'framer-motion';
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { loadAndApplyTheme } from "@/core/utils/themeConfig";
 import { MetaTagsInjector } from "@/core/utils/seo";
 
@@ -13,7 +13,7 @@ import "../node_modules/leaflet/dist/leaflet.css";
 import "./core/styles/index.css";
 
 // Load theme and SEO metadata early
-loadAndApplyTheme(getSchoolId());
+loadAndApplyTheme(getSchoolIdSync());
 
 // Cek apakah path saat ini adalah /voting-osis
 const isVotingPage = window.location.pathname === "/voting-osis";

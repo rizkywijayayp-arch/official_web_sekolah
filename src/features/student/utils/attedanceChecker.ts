@@ -3,7 +3,7 @@ export const checkAttendance = (dataA, dataB) => {
   console.log('data a:', dataA)
   console.log('data b:', dataB)
 
-  // console.log('dataAaaaaa', dataA)
+  ('dataAaaaaa', dataA)
   // Helper function to format date
   const formatDateTime = (isoString: string | undefined) => {
     if (!isoString) return 'N/A';

@@ -142,9 +142,9 @@ export const StudentDemographicsCharts = ({ selectedSchool }: { selectedSchool?:
   
   console.log('classRoom classData:', classData)
   // Log classData for debugging
-  // console.log('classData:', classData);
-  // console.log('Class Labels:', Object.keys(classData));
-  // console.log('Class Data:', Object.values(classData));
+  // 
+  ('Class Labels:', Object.keys(classData));
+  ('Class Data:', Object.values(classData));
 
   // Define theme-aware colors
   const textColor = theme === 'dark' ? '#FFFFFF' : '#000000';

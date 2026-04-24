@@ -18,7 +18,7 @@ export const SchoolVisitorCard = ({ baseUrl, namaSekolah }: Props) => {
 
       <div className="grid grid-cols-2 gap-2 pt-2">
   {todayStat?.visitor.map((v, i) => {
-    console.log(`[${namaSekolah}] Visitor #${i}`, v);
+    
 
     return (
       <div key={i} className="flex items-center gap-2">

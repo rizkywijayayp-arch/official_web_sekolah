@@ -8,22 +8,22 @@ export const StudentMoodles = React.memo(() => {
   const biodata = useBiodata();
 
   // Log untuk decodeParams
-  console.log('🚀 ~ decodeParams:', decodeParams);
+  
 
   // Ambil ID siswa dari decodeParams
   const studentId = decodeParams?.id;
-  console.log('🚀 ~ Student ID:', studentId);
+  
 
   // Log data biodata yang diterima
-  console.log('🚀 ~ Biodata fetched:', biodata.data);
+  
 
   // Cari data siswa di biodata berdasarkan ID
   const detail = useMemo(() => {
     const student = biodata.data?.find((d) => d.id === Number(studentId));
-    console.log('🚀 ~ Student found in biodata:', student);
+    
 
     if (!student) {
-      console.error('Siswa tidak ditemukan di biodata.');
+      
       return null;
     }
 
@@ -38,17 +38,17 @@ export const StudentMoodles = React.memo(() => {
     };
 
     // Log detail data yang dikonstruksi
-    console.log('🚀 ~ Detail Data constructed:', detailData);
+    
     return detailData;
   }, [biodata.data, studentId]);
 
   if (!detail) {
-    console.warn('🚀 ~ Data siswa tidak ditemukan.');
+    
     return <div>Data siswa tidak ditemukan. Silakan cek kembali.</div>;
   }
 
   // Log detail data yang diteruskan ke StudentMoodleTable
-  console.log('🚀 ~ Detail Data passed to StudentMoodleTable:', detail);
+  
 
   return (
     <div>

@@ -11,7 +11,7 @@
 //     const school = useSchool();
 //     const { handleAttend, handleAttendGoHome } = useAttendanceActions();
   
-//     console.log('biodata guru', biodata?.data)
+('biodata guru', biodata?.data)
   
 //     const columns = useMemo(
 //       () =>
@@ -283,7 +283,7 @@ const generateTeacherAttendancePDF = async ({
   hadirCount: number; // Add hadirCount type
 }) => {
   if (!alert) {
-    console.error('Alert system is not available');
+    
     return;
   }
 
@@ -330,7 +330,7 @@ const generateTeacherAttendancePDF = async ({
 
     alert.success('Laporan kehadiran guru berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating attendance PDF:', error);
+    
     alert.error('Gagal menghasilkan laporan kehadiran guru.');
   }
 };
@@ -344,7 +344,7 @@ export function TeacherLandingTablesManual() {
   const [exportLoading, setExportLoading] = useState<boolean>(false);
   const [refetchLoading, setRefetchLoading] = useState<boolean>(false);
 
-  console.log('biodata guru', biodata?.data);
+  
 
   const columns = useMemo(
     () =>
@@ -422,7 +422,7 @@ export function TeacherLandingTablesManual() {
       await Promise.all([biodata.query.refetch(), school.query.refetch()]);
       alert.success('Data berhasil dimuat ulang');
     } catch (error) {
-      console.error('Error refetching data:', error);
+      
       alert.error('Gagal memuat ulang data');
     } finally {
       setRefetchLoading(false);

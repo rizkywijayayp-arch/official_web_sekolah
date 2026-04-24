@@ -91,7 +91,7 @@ export const generateQrCodeApi = async (body: {
   );
   const data = await response.json();
   if (!response.ok) throw new Error('Failed to generate QR Code');
-  // console.log('response:', data)
+  ('response:', data)
   return data?.data;
 };
 
@@ -140,7 +140,7 @@ export const absenManual = async (id: string | number, status?: string = 'hadir'
       throw new Error(data?.message || 'Failed to submit manual attendance');
     }
 
-    // console.log('Response:', data);
+    // 
 
     return data?.data || '';
   } catch (error) {
@@ -165,7 +165,7 @@ export const editCalendarEvent = async (
   );
 
   if (Object.keys(filteredData).length === 0) {
-    console.warn('Tidak ada data yang diperbarui.');
+    
     return;
   }
 
@@ -197,10 +197,10 @@ export async function fetchAttendanceByQrID(limit: number | string, sekolahId: n
   const month = String(today.getMonth() + 1).padStart(2, '0'); 
   const day = String(today.getDate()).padStart(2, '0'); 
   const formattedDate = `${year}-${month}-${day}`;
-  // console.log('formattedDate', formattedDate)
+  ('formattedDate', formattedDate)
 
-  // console.log('limit:', limit)
-  // console.log('sekolahId:', sekolahId)
+  ('limit:', limit)
+  ('sekolahId:', sekolahId)
   // const res = await fetch(`https://backendtesting.xpresensi.com/api/v3/absensi_mata_pelajaran_list_siswa/${idLocal}`, {
   const res = await fetch(`https://dev.kiraproject.id/api/admin-absensi-mapel?page=1&limit=${limit}&sekolahId=${sekolahId}&kelasId=${selectedClass.idKelas}&tanggal=${formattedDate}`, {
     method: 'GET',
@@ -215,7 +215,7 @@ export async function fetchAttendanceByQrID(limit: number | string, sekolahId: n
   }
 
   const data = await res.json();
-  // console.log('data absen terbaru:', data)
+  ('data absen terbaru:', data)
 
   // Pastikan bentuk data sesuai, bisa diubah sesuai respons aslinya
   return data?.data || []; // Jika API membungkus di dalam `data`

@@ -129,7 +129,7 @@ const AttendanceReportPDF: React.FC<{
       dataChunks.push(chunk);
     }
   }
-  console.log('Data Chunks:', dataChunks); // Debugging
+   // Debugging
 
   return (
     <Document>
@@ -423,7 +423,7 @@ export const MatkulAttendance = () => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       } catch (error) {
-        console.error('Error generating PDF:', error);
+        
         alert('Gagal menghasilkan PDF.');
       }
     }

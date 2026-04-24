@@ -770,6 +770,6 @@ function RegionToolbar({ prov, kab, kec, onProvChange, onKabChange, onKecChange,
     const rows = sampleFilter(schools, "Jawa Barat", "Bandung", "Semua");
     console.assert(rows.length === schools.length, "[TEST] Filtering by Jawa Barat/Bandung should include all sample schools");
   } catch (e) {
-    console.error("[TEST] Runtime tests failed to execute:", e);
+    
   }
 })();

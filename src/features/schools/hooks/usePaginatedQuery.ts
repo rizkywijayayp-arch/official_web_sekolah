@@ -24,7 +24,7 @@ export const usePaginatedQuery = <T>({
     staleTime: 5 * 60 * 1000, 
     gcTime: 10 * 60 * 1000,
     queryFn: async () => {
-      // console.log("🔍 Query Params:", { ...params, page, size });
+      // 
 
       const response = await http.get(`${API_CONFIG.baseUrl}${endpoint}`, getInitialOptions())({
         params: { ...params, page, size },
@@ -35,8 +35,8 @@ export const usePaginatedQuery = <T>({
     keepPreviousData: true,
   });
 
-  // console.log("📊 Query Data:", query.data?.data);
-  // console.log("📊 Query Pagination:", query.data?.pagination);
+  // 
+  // 
 
   return {
     data: query.data?.data || [],

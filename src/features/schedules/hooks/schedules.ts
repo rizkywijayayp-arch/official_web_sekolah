@@ -24,7 +24,7 @@ export const useSchedules = () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
     },
     onError: (error) => {
-      console.error("Error creating schedule:", error);
+      
     },
   });
 

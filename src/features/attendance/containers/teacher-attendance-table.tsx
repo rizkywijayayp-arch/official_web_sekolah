@@ -197,7 +197,7 @@ const generateTeacherAttendancePDF = async ({
   alert: any;
 }) => {
   if (!alert) {
-    console.error('Alert system is not available');
+    
     return;
   }
 
@@ -244,7 +244,7 @@ const generateTeacherAttendancePDF = async ({
 
     alert.success('Laporan kehadiran guru berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating teacher attendance PDF:', error);
+    
     alert.error(error?.message || 'Gagal menghasilkan laporan kehadiran guru.');
   }
 };

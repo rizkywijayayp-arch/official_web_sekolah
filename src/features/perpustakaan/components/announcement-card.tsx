@@ -55,7 +55,7 @@ export const AnnouncementCard = () => {
         setEvents(mapped);
         setError(null);
       } catch (err) {
-        console.error("❌ Failed fetching events:", err);
+        
         setError(lang.text('fail') || "Failed to fetch events");
       } finally {
         setIsLoading(false);
@@ -103,7 +103,7 @@ export const AnnouncementCard = () => {
         }))
       );
     } catch (err) {
-      console.error("❌ Gagal update event:", err);
+      
       alert.error(lang.text('fail') || "Failed to save event changes");
     }
   };

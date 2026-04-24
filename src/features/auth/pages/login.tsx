@@ -22,96 +22,93 @@ export const LoginPage = () => {
   const [isSocketConnected, setIsSocketConnected] = useState(false);
   const [hasLoginWithBarcode, setHasLoginWithBarcode] = useState(false);
 
-  // Fetch barcode token
-  const fetchBarcodeToken = async () => {
-    if (barcodeToken) return;
-    try {
-      setIsLoadingBarcode(true);
-      const response = await fetch('https://dev.kiraproject.id/generate-barcode', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      if (data?.barcodeToken) {
-        setBarcodeToken(data.barcodeToken);
-        console.log('barcode', data.barcodeToken);
-        socket?.emit('register', data.barcodeToken);
-      } else {
-        throw new Error('Failed to fetch barcode token');
-      }
-    } catch (err: any) {
-      alert.error(err?.message || 'Failed to fetch barcode token');
-    } finally {
-      setIsLoadingBarcode(false);
-    }
-  };
+  // Fetch barcode token - disabled for public website
+  // const fetchBarcodeToken = async () => {
+  //   if (barcodeToken) return;
+  //   try {
+  //     setIsLoadingBarcode(true);
+  //     const response = await fetch(`${API_CONFIG.BASE_URL}/generate-barcode`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     if (data?.barcodeToken) {
+  //       setBarcodeToken(data.barcodeToken);
 
-  // Initialize socket connection
-  useEffect(() => {
-    const socketConnection = io('https://dev.kiraproject.id');
+  //       socket?.emit('register', data.barcodeToken);
+  //     } else {
+  //       throw new Error('Failed to fetch barcode token');
+  //     }
+  //   } catch (err: any) {
+  //     alert.error(err?.message || 'Failed to fetch barcode token');
+  //   } finally {
+  //     setIsLoadingBarcode(false);
+  //   }
+  // };
 
-    socketConnection.on('connect', () => {
-      setSocket(socketConnection);
-      setIsSocketConnected(true);
-    });
+  // Initialize socket connection - disabled for public website
+  // useEffect(() => {
+  //   const socketConnection = io(API_CONFIG.BASE_URL);
 
-    socketConnection.on('disconnect', () => {
-      setIsSocketConnected(false);
-    });
+  //   socketConnection.on('connect', () => {
+  //     setSocket(socketConnection);
+  //     setIsSocketConnected(true);
+  //   });
 
-    socketConnection.on('email-scanned', (email: string) => {
-      setScannedEmail(email);
-      console.log('Email scanned:', email);
-    });
+  //   socketConnection.on('disconnect', () => {
+  //     setIsSocketConnected(false);
+  //   });
 
-    return () => {
-      socketConnection.disconnect();
-    };
-  }, []);
+  //   socketConnection.on('email-scanned', (email: string) => {
+  //     setScannedEmail(email);
+
+  //   });
+
+  //   return () => {
+  //     socketConnection.disconnect();
+  //   };
+  // }, []);
 
   // Fetch QR code when socket is connected and barcode tab is active
-  useEffect(() => {
-    if (socket && activeTab === 'barcode') {
-      fetchBarcodeToken();
-    }
-  }, [socket, activeTab]);
+  // useEffect(() => {
+  //   if (socket && activeTab === 'barcode') {
+  //     fetchBarcodeToken();
+  //   }
+  // }, [socket, activeTab]);
 
-  // Handle login with barcode
-  useEffect(() => {
-    if (scannedEmail && !hasLoginWithBarcode) {
-      setHasLoginWithBarcode(true);
-      auth.loginWithBarcode(scannedEmail)
-        .then((res) => {
-          const token = res?.data?.token;
-          const role = res?.data?.role;
+  // // Handle login with barcode
+  // useEffect(() => {
+  //   if (scannedEmail && !hasLoginWithBarcode) {
+  //     setHasLoginWithBarcode(true);
+  //     auth.loginWithBarcode(scannedEmail)
+  //       .then((res) => {
+  //         const token = res?.data?.token;
+  //         const role = res?.data?.role;
 
-          if (role === 'siswa' || role === 'Siswa') {
-            alert.error('Akses ditolak');
-            setHasLoginWithBarcode(false);
-            localStorage.removeItem('token');
-            navigate('/auth/login', { replace: true });
-            return;
-          }
+  //         if (role === 'siswa' || role === 'Siswa') {
+  //           alert.error('Akses ditolak');
+  //           setHasLoginWithBarcode(false);
+  //           localStorage.removeItem('token');
+  //           navigate('/auth/login', { replace: true });
+  //           return;
+  //         }
 
-          console.log('barcode', res?.data);
+  //         if (token) {
+  //           saveToken(token);
+  //           localStorage.setItem('token', token);
+  //         }
 
-          if (token) {
-            console.log('token biasa:', token);
-            saveToken(token);
-            localStorage.setItem('token', token);
-          }
-
-          alert.success('Login berhasil dengan QR!');
-          navigate('/dashboard', { replace: true });
-        })
-        .catch((err) => {
-          alert.error(err?.message || 'Login gagal');
-          setHasLoginWithBarcode(false);
-        });
-    }
-  }, [scannedEmail, auth, alert, hasLoginWithBarcode, navigate]);
+  //         alert.success('Login berhasil dengan QR!');
+  //         navigate('/dashboard', { replace: true });
+  //       })
+  //       .catch((err) => {
+  //         alert.error(err?.message || 'Login gagal');
+  //         setHasLoginWithBarcode(false);
+  //       });
+  //   }
+  // }, [scannedEmail, auth, alert, hasLoginWithBarcode, navigate]);
 
   // Handle tab change
   const handleTabChange = (tab: 'email' | 'barcode') => {
@@ -134,7 +131,7 @@ export const LoginPage = () => {
           saveToken(token);
           localStorage.setItem('token', token);
         } else {
-          console.log('Token tidak ditemukan dalam response');
+          
         }
 
         alert.success('Selamat datang kembali');

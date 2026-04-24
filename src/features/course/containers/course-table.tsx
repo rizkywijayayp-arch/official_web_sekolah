@@ -202,7 +202,7 @@ const generateCoursePDF = async ({
   schoolIsLoading: boolean;
 }) => {
   if (!alert) {
-    console.error('Alert system is not available');
+    
     return;
   }
 
@@ -252,7 +252,7 @@ const generateCoursePDF = async ({
 
     alert.success('Daftar mata pelajaran berhasil diunduh sebagai PDF.');
   } catch (error) {
-    console.error('Error generating course PDF:', error);
+    
     alert.error('Gagal menghasilkan daftar mata pelajaran dalam format PDF.');
   }
 };
@@ -495,7 +495,7 @@ export const CourseTable = () => {
             });
             successCount++;
           } catch (error) {
-            console.error(`Gagal mengirim: ${item.namaMataPelajaran}`, error);
+            
             errorCount++;
           }
         }
@@ -521,7 +521,7 @@ export const CourseTable = () => {
       await resource.query.refetch();
       reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error("Error saat memproses file:", error);
+      
       alert.error(lang.text("errSystem"));
     } finally {
       setUploading(false);

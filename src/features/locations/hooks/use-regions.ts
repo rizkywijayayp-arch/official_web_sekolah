@@ -4,7 +4,7 @@
 // // Fungsi untuk mengonversi LineString menjadi Polygon
 // const lineStringToPolygon = (lineString: number[][]): number[][][] | null => {
 //   if (!lineString || lineString.length < 3) {
-//     console.warn("LineString tidak valid: terlalu sedikit titik");
+//     
 //     return null;
 //   }
 
@@ -23,7 +23,7 @@
 // export const getRegionForPoint = (lat: number, lng: number): string => {
 //   // Validasi input koordinat
 //   if (lat === undefined || lng === undefined || isNaN(lat) || isNaN(lng)) {
-//     console.error(`Invalid coordinates: lat=${lat}, lng=${lng}`);
+//     
 //     return "other";
 //   }
 
@@ -34,7 +34,7 @@
 
 //     // Validasi data GeoJSON
 //     if (!geojson || !geojson.type) {
-//       console.warn(`Invalid<|control250|>
+(`Invalid<|control250|>
 
 // System: GeoJSON data for region: ${region.key}`);
 //       continue;
@@ -43,13 +43,13 @@
 //     // Jika data adalah FeatureCollection
 //     if (geojson.type === "FeatureCollection") {
 //       if (!geojson.features || !Array.isArray(geojson.features)) {
-//         console.warn(`Invalid FeatureCollection for region: ${region.key}`);
+//         
 //         continue;
 //       }
 
 //       for (const feature of geojson.features) {
 //         if (!feature.geometry) {
-//           console.warn(`Invalid feature in region: ${region.key}`);
+//           
 //           continue;
 //         }
 
@@ -59,7 +59,7 @@
 //         if (geometry.type === "LineString") {
 //           const polygonCoords = lineStringToPolygon(geometry.coordinates);
 //           if (!polygonCoords) {
-//             console.warn(`Gagal mengonversi LineString ke Polygon di region: ${region.key}`);
+//             
 //             continue;
 //           }
 
@@ -74,17 +74,17 @@
 //         if (geometry.type === "Polygon" || geometry.type === "MultiPolygon") {
 //           try {
 //             if (turf.booleanPointInPolygon(point, { ...feature, geometry })) {
-//               console.log(`Point [${lng}, ${lat}] is in region: ${region.key}`);
+//               
 //               return region.key;
 //             }
 //           } catch (error) {
-//             console.error(
+(
 //               `Error processing feature in region ${region.key}:`,
 //               error.message
 //             );
 //           }
 //         } else {
-//           console.warn(
+(
 //             `Unsupported geometry type ${geometry.type} in region: ${region.key}`
 //           );
 //         }
@@ -95,7 +95,7 @@
 //       let geometry = geojson.geometry;
 
 //       if (!geometry) {
-//         console.warn(`Invalid geometry in region: ${region.key}`);
+//         
 //         continue;
 //       }
 
@@ -103,7 +103,7 @@
 //       if (geometry.type === "LineString") {
 //         const polygonCoords = lineStringToPolygon(geometry.coordinates);
 //         if (!polygonCoords) {
-//           console.warn(`Gagal mengonversi LineString ke Polygon di region: ${region.key}`);
+//           
 //           continue;
 //         }
 
@@ -117,25 +117,25 @@
 //       if (geometry.type === "Polygon" || geometry.type === "MultiPolygon") {
 //         try {
 //           if (turf.booleanPointInPolygon(point, { ...geojson, geometry })) {
-//             console.log(`Point [${lng}, ${lat}] is in region: ${region.key}`);
+//             
 //             return region.key;
 //           }
 //         } catch (error) {
-//           console.error(
+(
 //             `Error processing feature in region ${region.key}:`,
 //             error.message
 //           );
 //         }
 //       } else {
-//         console.warn(
+(
 //           `Unsupported geometry type ${geometry.type} in region: ${region.key}`
 //         );
 //       }
 //     } else {
-//       console.warn(`Unsupported GeoJSON type ${geojson.type} in region: ${region.key}`);
+//       
 //     }
 //   }
 
-//   console.log(`Point [${lng}, ${lat}] does not belong to any region`);
+//   
 //   return "other"; // Jika tidak berada di wilayah mana pun
 // };

@@ -76,16 +76,16 @@ export const LincensingCreationForm = () => {
       const formData = new FormData();
       const token = localStorage.getItem("token");
 
-      console.log("data", data);
+      
 
       formData.append("alasan", data.alasan);
       formData.append("dari", data.dari);
       formData.append("sampai", data.sampai);
       formData.append("buktiSurat", data.buktiSurat);
 
-      console.log("📦 FormData yang akan dikirim:");
+      
       for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
+        
       }
 
       const headers = {
@@ -111,14 +111,14 @@ export const LincensingCreationForm = () => {
       });
       navigate("/licensing", { replace: true });
     } catch (err: any) {
-      console.error("Error saat submit:", err);
+      
       if (err.response) {
-        console.log("error", err.response.data?.message);
+        
         alert.error(err.response.data?.message || lang.text("licensingFailCreate"));
       } else if (err.request) {
         alert.error(lang.text("licensingFailCreate"));
       } else {
-        console.log("error", err.message);
+        
         alert.error(err?.message || lang.text("licensingFailCreate"));
       }
     } finally {

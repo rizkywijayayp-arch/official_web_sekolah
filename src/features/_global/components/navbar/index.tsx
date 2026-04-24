@@ -1,24 +1,7 @@
-import { getSchoolId } from "../../hooks/getSchoolId";
-import NavbarComp1378101 from "./navbarComp1370101";
-import NavbarComp40 from "./navbarComp40";
+import { DynamicNavbar } from "./DynamicNavbar";
 
 const NavbarComp = () => {
-    const schoolID = getSchoolId();
-    return (
-      <>
-        {
-            schoolID === '2' ? (
-              <NavbarComp1378101 />
-            ) : schoolID === "79" ? (
-              <NavbarComp1378101 />
-            ) : schoolID === "40" ? (
-              <NavbarComp40 />
-            ) : (
-              <NavbarComp1378101 />
-            )
-          }
-      </>
-    )
-  }
+  return <DynamicNavbar />;
+};
 
-  export default NavbarComp;
+export default NavbarComp;

@@ -101,7 +101,7 @@ export const fetchBookStats = async (
       available: available <= 0 ? 0 : available,
     };
   } catch (err: any) {
-    console.warn("Fallback to default stats due to error:", err.message);
+    
     return {
       totalBooks: 15010,
       borrowing: 0,

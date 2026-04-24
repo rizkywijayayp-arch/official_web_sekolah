@@ -1,7 +1,7 @@
 import { API_CONFIG } from "@/config/api";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 interface HeroProps {
   id?: string;
@@ -11,7 +11,7 @@ interface HeroProps {
 
 // Hook baru untuk profil sekolah (hanya ini yang ditambah)
 const useSchoolProfile = () => {
-  const schoolId = getSchoolId(); // ← sesuaikan dengan ID sekolah yang ada di database
+  const schoolId = getSchoolIdSync(); // ← sesuaikan dengan ID sekolah yang ada di database
 
   const API_BASE = API_CONFIG.BASE_URL;
 

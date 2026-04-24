@@ -1,34 +1,19 @@
 // Centralized API Configuration for Multi-Tenant
-// Use window.location.origin for dynamic domain resolution
+// Use relative paths for API calls to avoid Mixed Content errors
+// nginx proxy handles forwarding to backend
 
 const API_CONFIG = {
-  // Dynamic base URL based on current domain
+  // Backend API base URL - use relative path for proxy compatibility
   get BASE_URL() {
-    if (typeof window === 'undefined') {
-      return 'https://be-school.kiraproject.id';
-    }
-
-    const hostname = window.location.hostname;
-    const port = window.location.port;
-    const protocol = window.location.protocol;
-
-    // Local development
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      // Vite dev server (5173) or React dev server (3000)
-      if (port === '5173' || port === '3000') {
-        return 'http://localhost:5005';
-      }
-      // Already on backend port
-      return `${protocol}//${hostname}:${port}`;
-    }
-
-    // Production - use current domain's origin
-    return `${protocol}//${hostname}${port ? ':' + port : ''}`;
+    // Use relative path so nginx can proxy (avoids Mixed Content)
+    const base = import.meta.env.VITE_API_BASE_URL || '/';
+    // Remove trailing slash to avoid double slashes
+    return base.replace(/\/$/, '');
   },
 
   // For explicit schoolId-based calls
   withSchoolId(schoolId) {
-    return `${this.BASE_URL}?schoolId=${schoolId}`;
+    return `${this.BASE_URL}/profileSekolah?schoolId=${schoolId}`;
   }
 };
 

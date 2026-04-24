@@ -260,7 +260,7 @@ export function ScheduleLandingContent() {
             jamSelesai: formatTime(row.jamSelesai),
           };
 
-          console.log('schedule saat ini:', schedule);
+          
 
           // Validate required fields, excluding "Catatan"
           if (
@@ -352,7 +352,7 @@ export function ScheduleLandingContent() {
             await creation.create(item);
             successCount++;
           } catch (err: any) {
-            console.error(`Gagal mengirim: ${item.mataPelajaranId}`, err);
+            
             errorCount++;
           }
         }
@@ -970,7 +970,7 @@ export function ScheduleLandingContent() {
               .map((kelasId) => {
                 const classSchedules = groupedByClassAndDay[parseInt(kelasId)];
                 if (!classSchedules) {
-                  console.warn(`No schedules found for kelasId: ${kelasId}`);
+                  
                   return null;
                 }
                 return (

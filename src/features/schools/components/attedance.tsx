@@ -64,7 +64,7 @@
 //   const [isSheetOpen, setIsSheetOpen] = useState(false);
 //   const [searchQuery, setSearchQuery] = useState("");
 
-//   // console.log('yesterdayy atten:', yesterdayData)
+//   ('yesterdayy atten:', yesterdayData)
 //   // Reset search query when sheet is closed
 //   useEffect(() => {
 //     if (!isSheetOpen) {
@@ -84,9 +84,9 @@
 //     student.name?.toLowerCase().includes(searchQuery.toLowerCase())
 //   );
 
-//   // console.log("SORTED", sortedDataNoAccess);
-//   // console.log("FILTERED", filteredDataNoAccess);
-//   // console.log("SEARCH QUERY", searchQuery);
+//   // 
+//   // 
+//   // 
 
 //   return (
 //     <div className="flex gap-4 w-full justify-between">

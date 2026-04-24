@@ -49,7 +49,7 @@ export const CardCreationForm = () => {
   const navigate = useNavigate();
   const alert = useAlert();
 
-  console.log('school letter', school);
+  
 
   const form = useForm<z.infer<typeof cardUpdateFormSchema>>({
     resolver: zodResolver(cardUpdateFormSchema),
@@ -95,7 +95,7 @@ export const CardCreationForm = () => {
       school.query.refetch();
       navigate("/format/card", { replace: true });
     } catch (err: any) {
-      console.error("Error saat submit:", err);
+      
       if (err.response) {
         alert.error(err.response.data?.message || "Gagal memperbarui data kartu");
       } else if (err.request) {

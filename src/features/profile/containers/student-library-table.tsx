@@ -55,7 +55,7 @@
 //     return acc;
 //   }, []);
 
-//   console.log('mergedDataInOrder', mergedDataInOrder)
+('mergedDataInOrder', mergedDataInOrder)
 
 //   // const filteredData = mergedDataInOrder.filter((item) => {
 //   //   const nameMatch = nameFilter.trim() !== ""
@@ -106,7 +106,7 @@
 //     return nameMatch && nisMatch && dayMatch && statusMatch && idMatch;
 //   });
 
-//   console.log('filteredData', filteredData)
+('filteredData', filteredData)
 
 //   return (
 //     <>

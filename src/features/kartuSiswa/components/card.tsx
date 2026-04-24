@@ -28,9 +28,9 @@ export const MultiCard = ({
   const printRef = useRef<HTMLDivElement>(null);
   const allDataRef = useRef<HTMLDivElement>(null);
 
-  // console.log("searchKelas:", searchKelas);
-  // console.log("📌 Data Siswa:", students);
-  // console.log("🏫 Data Sekolah:", schoolDetail);
+  // 
+  // 
+  // 
 
   // Show loading state if data is still being fetched
   if (isStudentsLoading || isSchoolLoading || !students || !schoolDetail) {

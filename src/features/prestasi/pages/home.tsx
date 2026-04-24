@@ -1,9 +1,9 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Calendar, ChevronDown, Filter, MapPin, Search, Star, Trophy, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -87,8 +87,21 @@ const PrestasiCard = ({ item, theme, onOpen }) => {
   );
 };
 
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
 const PrestasiSection = () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
   const [selected, setSelected] = useState<any>(null);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('Semua');
@@ -113,7 +126,7 @@ const PrestasiSection = () => {
           setAchievements(mapped);
         }
       } catch (err) {
-        console.error("Error fetching achievements:", err);
+        
       } finally {
         setIsLoading(false);
       }
@@ -335,8 +348,8 @@ const PrestasiSection = () => {
 };
 
 const PrestasiPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
   return (
     <div className="min-h-screen" style={{ background: theme.bg }}>
       <NavbarComp theme={theme} />

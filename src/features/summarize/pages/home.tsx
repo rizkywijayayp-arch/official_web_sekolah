@@ -266,7 +266,7 @@ function runDevTests() {
 
     console.groupEnd();
   } catch (e) {
-    console.error("Dev tests failed", e);
+    
   }
 }
 if (typeof window !== "undefined") runDevTests();
@@ -333,7 +333,7 @@ export default function AllSummarizes() {
       sessionId: selected?.id,
       photo: photo ? photo.name : undefined,
     };
-    console.log("[AI PROCESS] Payload:", payload);
+    
     // Simulate updating the selected session with the photo
     if (selected && photo) {
       setSelected({ ...selected, photo: photo.name });
@@ -380,7 +380,7 @@ export default function AllSummarizes() {
     if (!selected) return;
     const recipients = { siswa: true, orangTuaKelas: true, admin: true };
     const payload = { sessionId: selected.id, class: selected.class, subject: selected.subject, recipients, photo: selected.photo };
-    console.log("Create Task Payload", payload);
+    
     setLastTaskInfo(`Tugas dibuat untuk siswa + orang tua kelas ${selected.class} + admin`);
   };
 

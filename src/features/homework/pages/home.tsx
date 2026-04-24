@@ -54,7 +54,7 @@ export const LibraryHomePage = () => {
   );
 
   const { data, isLoading, refetch } = useStudentPagination(studentParams);
-  console.log("data lib siswa survey:", data);
+  
 
   const encryptPayload = simpleEncode(
     JSON.stringify({ id: school?.data?.id, text: school?.data?.namaSekolah })
@@ -75,10 +75,10 @@ export const LibraryHomePage = () => {
     if (selectedDate && !isNaN(selectedDate.getTime())) {
       const formatted = dayjs(selectedDate).format("DD-MM-YYYY");
       setFormattedDate(formatted);
-      console.log("Selected Date:", formatted, "Year:", tahun);
+      
     } else {
       setFormattedDate("");
-      console.log("No valid date selected");
+      
     }
   };
 
@@ -86,7 +86,7 @@ export const LibraryHomePage = () => {
   const handleResetDate = () => {
     setDate(undefined);
     setFormattedDate("");
-    console.log("Date reset: No date selected, Year:", tahun);
+    
   };
 
   // Generate years: current year and 5 years before

@@ -56,7 +56,7 @@ export const generateAttendancePDF = async ({
       size: 999,
     };
 
-    console.log("Mengambil data PDF dengan parameter:", pdfParams);
+    
 
     // Ambil data dari /api/user-siswa
     const response = await axios.get(
@@ -69,7 +69,7 @@ export const generateAttendancePDF = async ({
       }
     );
 
-    console.log("Respons API:", response.data);
+    
 
     // Tangani struktur respons yang bervariasi
     const studentList = Array.isArray(response.data)
@@ -79,10 +79,10 @@ export const generateAttendancePDF = async ({
       throw new Error("Data siswa tidak ditemukan dalam respons");
     }
 
-    console.log("Daftar siswa:", studentList);
+    
 
     const fullAttendanceResult = checkAttendance(attendanceData, studentList);
-    console.log("Hasil kehadiran lengkap:", fullAttendanceResult);
+    
 
     if (fullAttendanceResult.length === 0) {
       alert.error("Tidak ada data kehadiran yang tersedia untuk diunduh");
@@ -146,7 +146,7 @@ export const generateAttendancePDF = async ({
 
     doc.save("laporan_kehadiran_hari_ini.pdf");
   } catch (error: any) {
-    console.error("Error saat membuat PDF:", error);
+    
     alert.error(`Gagal membuat PDF: ${error.message || "Kesalahan tidak diketahui"}`);
   }
 };
@@ -295,7 +295,7 @@ export const generateMonthlyAttendancePDF = async ({
 
     doc.save(`laporan_kehadiran_bulanan_${month}_${year}.pdf`);
   } catch (error: any) {
-    console.error("Error saat membuat PDF bulanan:", error);
+    
     alert.error(`Gagal membuat PDF: ${error.message || "Kesalahan tidak diketahui"}`);
   }
 };

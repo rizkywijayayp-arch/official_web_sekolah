@@ -1,10 +1,8 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
-import { getXHostHeader } from "@/core/utils/XHostHeader";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { FooterComp } from "@/features/_global/components/footer";
 import GalleryComp from "@/features/_global/components/galeri";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
 import { queryClient } from "@/features/_root/queryClient";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -12,35 +10,6 @@ import { useEffect, useState } from "react";
 
 let useSwipeable;
 try { useSwipeable = require("react-swipeable").useSwipeable; } catch { useSwipeable = () => ({}) }
-
-// --- THEME CONFIG (NEW SOFT LIGHT MODE) ---
-export const SMAN25_THEME = {
-  name: "SMAN 25 Jakarta",
-  primary: "#3B82F6",      // Blue Accent
-  primaryText: "#1E293B",  // Slate 800 (Deep Text)
-  accent: "#60A5FA",       // Light Blue
-  bg: "#F8FAFC",           // Slate 50 (Very Light Grey/Blue)
-  surface: "#FFFFFF",      // Pure White
-  surfaceText: "#334155",  // Slate 700
-  subtle: "#F1F5F9",       // Slate 100 (Dividers)
-  pop: "#EF4444",          // Red
-} as const;
-
-const GLOBAL_DATA: any = {
-  announcements: [
-    { title: "Edaran Dinas: Libur Nasional & Cuti Bersama", date: "05 Sep 2025", tag: "Dinas", source: "dinas" },
-  ],
-};
-
-const ANNOUNCEMENTS_TENANT: any = [
-  { title: "PPDB 2025 Tahap 1 Dibuka", date: "06 Sep 2025", tag: "Akademik", source: "local" },
-  { title: "Pengambilan Rapor Semester Ganjil", date: "31 Okt 2025", tag: "Kesiswaan", source: "local" },
-];
-
-const MERGED_ANNOUNCEMENTS: any = [
-  ...GLOBAL_DATA.announcements.map((a: any) => ({ title: a.title, desc: `${a.tag}: ${a.title} — ${a.date}`, _meta: a })),
-  ...ANNOUNCEMENTS_TENANT.map((a: any) => ({ title: a.title, desc: `${a.tag}: ${a.title} — ${a.date}`, _meta: a })),
-];
 
 // --- REUSABLE COMPONENTS ---
 const SafeImage = ({ src, alt, className, style }: any) => {
@@ -63,15 +32,13 @@ const Badge = ({ children }: any) => (
 
 // --- HOOKS ---
 const useHeroSlides = () => {
-  const xHost = getXHostHeader();
+  const schoolId = getSchoolIdSync();
   return useQuery({
-    queryKey: ['heroSlides', xHost],
+    queryKey: ['heroSlides', schoolId],
     queryFn: async () => {
-      const res = await fetch("${API_CONFIG.BASE_URL}/beranda", {
-        headers: { 'X-Host': xHost },
-      });
+      const res = await fetch(`${API_CONFIG.BASE_URL}/beranda?schoolId=${schoolId}`);
       const data = await res.json();
-      return data.heroSlides.map((s: any) => ({
+      return (data.heroSlides || []).map((s: any) => ({
         title: s.title,
         desc: s.desc,
         img: s.img,
@@ -83,42 +50,40 @@ const useHeroSlides = () => {
 };
 
 const useStats = () => {
-  const xHost = getXHostHeader();
+  const schoolId = getSchoolIdSync();
   return useQuery({
-    queryKey: ['stats', xHost],
+    queryKey: ['stats', schoolId],
     queryFn: async () => {
-      const res = await fetch("${API_CONFIG.BASE_URL}/public/statistics/daily", {
-        headers: { 'X-Host': xHost },
-      });
+      const res = await fetch(`${API_CONFIG.BASE_URL}/public/statistics/daily?schoolId=${schoolId}`);
       const data = await res.json();
       return [
-        { k: "Hadir Hari Ini", v: data.data.hadirHariIni },
-        { k: "Izin/Sakit", v: data.data.izinSakit },
-        { k: "Terlambat", v: data.data.terlambat },
-        { k: "Guru Hadir", v: data.data.guruHadir },
+        { k: "Hadir Hari Ini", v: data.data?.hadirHariIni || 0 },
+        { k: "Izin/Sakit", v: data.data?.izinSakit || 0 },
+        { k: "Terlambat", v: data.data?.terlambat || 0 },
+        { k: "Guru Hadir", v: data.data?.guruHadir || 0 },
       ];
     },
   });
 };
 
 const useSambutanAndHeadmasters = () => {
-  const xHost = getXHostHeader();
+  const schoolId = getSchoolIdSync();
   return useQueries({
     queries: [
       {
-        queryKey: ['sambutan', xHost],
+        queryKey: ['sambutan', schoolId],
         queryFn: async () => {
-          const res = await fetch("${API_CONFIG.BASE_URL}/beranda", { headers: { 'X-Host': xHost } });
+          const res = await fetch(`${API_CONFIG.BASE_URL}/beranda?schoolId=${schoolId}`);
           const data = await res.json();
           return data.sambutan;
         },
       },
       {
-        queryKey: ['headmasters', xHost],
+        queryKey: ['headmasters', schoolId],
         queryFn: async () => {
-          const res = await fetch("${API_CONFIG.BASE_URL}/sejarah/kepsek", { headers: { 'X-Host': xHost } });
+          const res = await fetch(`${API_CONFIG.BASE_URL}/sejarah/kepsek?schoolId=${schoolId}`);
           const data = await res.json();
-          return data.items;
+          return data.items || [];
         },
       },
     ],
@@ -126,21 +91,21 @@ const useSambutanAndHeadmasters = () => {
 };
 
 const useAnnouncements = () => {
-  const xHost = getXHostHeader();
+  const schoolId = getSchoolIdSync();
   return useQuery({
-    queryKey: ['announcements', xHost],
+    queryKey: ['announcements', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/public/announcements?page=1&limit=10`, { headers: { 'X-Host': xHost } });
+      const res = await fetch(`${API_CONFIG.BASE_URL}/public/announcements?page=1&limit=10&schoolId=${schoolId}`);
       const data = await res.json();
-      return data.data;
+      return data.data || [];
     },
   });
 };
 
 const useNews = () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
   return useQuery({
-    queryKey: ['news'],
+    queryKey: ['news', schoolId],
     queryFn: async () => {
       const res = await fetch(`${API_CONFIG.BASE_URL}/berita?schoolId=${schoolId}&page=1&limit=20`);
       const data = await res.json();
@@ -237,17 +202,19 @@ const StatsBar = () => {
   );
 };
 
-// === GLOBAL INFO BAR (CLEAN) ===
-const GlobalInfoBar = ({ theme }: any) => {
+// === GLOBAL INFO BAR (DYNAMIC) ===
+const GlobalInfoBar = () => {
+  const { data: announcements = [] } = useAnnouncements();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setIndex(i => (i + 1) % MERGED_ANNOUNCEMENTS.length), 4000);
+    if (announcements.length === 0) return;
+    const id = setInterval(() => setIndex(i => (i + 1) % announcements.length), 4000);
     return () => clearInterval(id);
-  }, []);
+  }, [announcements.length]);
 
-  if (!MERGED_ANNOUNCEMENTS.length) return null;
-  const ann = MERGED_ANNOUNCEMENTS[index];
+  if (announcements.length === 0) return null;
+  const ann = announcements[index];
 
   return (
     <div className="bg-white border-b border-slate-100 py-3">
@@ -266,25 +233,33 @@ const GlobalInfoBar = ({ theme }: any) => {
 // === HEADMASTER GREETING (RE-STYLED) ===
 const HeadmasterGreeting = () => {
   const [sambutanQuery] = useSambutanAndHeadmasters();
-  const sambutan = sambutanQuery.data;
+  const { data: profile } = useQuery({
+    queryKey: ['schoolProfile'],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`);
+      const data = await res.json();
+      return data.data;
+    },
+  });
+  const sambutan = kepalaSekolah?.data;
 
   return (
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-[320px,1fr] gap-12 items-center bg-slate-50 p-8 md:p-16 rounded-[3rem]">
           <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200">
-            <SafeImage src={sambutan?.photo ? `${API_CONFIG.BASE_URL}${sambutan.photo}` : "/defaultProfile.png"} className="w-full h-full object-cover" />
+            <SafeImage src={profile?.photoHeadmasterUrl ? `${API_CONFIG.BASE_URL}${profile.photoHeadmasterUrl}` : "/defaultProfile.png"} className="w-full h-full object-cover" />
           </div>
           <div>
             <span className="text-blue-500 font-bold text-sm uppercase tracking-widest">Kepala Sekolah</span>
             <h2 className="mt-2 text-3xl md:text-4xl font-black text-slate-800 leading-tight">Membangun Masa Depan Berkarakter</h2>
             <div className="w-20 h-1.5 bg-blue-500 my-8 rounded-full" />
             <div className="space-y-4 text-lg text-slate-600 leading-relaxed italic">
-              {sambutan?.text.split("\n").map((p: string, i: number) => <p key={i}>"{p}"</p>)}
+              {sambutan?.text?.split("\n").map((p: string, i: number) => <p key={i}>"{p}"</p>)}
             </div>
             <div className="mt-8">
-              <h4 className="text-xl font-bold text-slate-900">{sambutan?.name}</h4>
-              <p className="text-slate-500">Kepala SMAN 25 Jakarta</p>
+              <h4 className="text-xl font-bold text-slate-900">{sambutan?.name || profile?.headmasterName || 'Kepala Sekolah'}</h4>
+              <p className="text-slate-500">Kepala {profile?.schoolName || 'Sekolah'}</p>
             </div>
           </div>
         </div>
@@ -357,27 +332,41 @@ const News = ({ schoolName }: any) => {
   );
 };
 
-// === MAIN PAGE ===
-const Page = ({ theme, schoolName, onTenantChange, currentKey }: any) => (
-  <div className="min-h-screen" style={{ background: theme.bg }}>
-    <NavbarComp theme={theme} onTenantChange={onTenantChange} currentKey={currentKey} />
-    <GlobalInfoBar theme={theme} />
-    <Hero theme={theme} schoolName={schoolName} />
-    <StatsBar />
-    <HeadmasterGreeting />
-    <Announcements theme={theme} />
-    <News schoolName={schoolName} />
-    <GalleryComp />
-    <FooterComp theme={theme} />
-  </div>
-);
+// === MAIN PAGE (DYNAMIC) ===
+const Page = () => {
+  const { data: profile } = useQuery({
+    queryKey: ['schoolProfile'],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`);
+      const data = await res.json();
+      return data.data;
+    },
+  });
+
+  const theme = {
+    bg: profile?.themeBg || '#FFFFFF',
+    primary: profile?.themePrimary || '#3B82F6',
+    primaryText: profile?.themePrimaryText || '#1E293B',
+  };
+  const schoolName = profile?.schoolName || 'Sekolah';
+
+  return (
+    <div className="min-h-screen" style={{ background: theme.bg }}>
+      <NavbarComp />
+      <GlobalInfoBar />
+      <Hero theme={theme} schoolName={schoolName} />
+      <StatsBar />
+      <HeadmasterGreeting />
+      <Announcements theme={theme} />
+      <News schoolName={schoolName} />
+      <GalleryComp />
+      <FooterComp />
+    </div>
+  );
+};
 
 const Homepage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = SMAN25_THEME;
-  const schoolName = schoolInfo.fullName;
-
-  return <Page theme={theme} schoolName={schoolName} onTenantChange={() => {}} currentKey={schoolName} />;
+  return <Page />;
 };
 
 export default Homepage;

@@ -51,10 +51,10 @@ export const fetchAllStudents = async (params: Omit<any, 'page' | 'size'>): Prom
       currentPage++;
     }
 
-    console.log(`Fetched ${allStudents.length} students`);
+    
     return allStudents;
   } catch (error) {
-    console.error("Error fetching all students:", error);
+    
     throw new Error("Failed to fetch all students");
   }
 };

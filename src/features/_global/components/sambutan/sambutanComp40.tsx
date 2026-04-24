@@ -2,12 +2,12 @@ import { API_CONFIG } from "@/config/api";
 // import { motion } from "framer-motion";
 // import { Award, BookOpen, Quote, School, Sparkles, Users } from "lucide-react";
 // import { useEffect, useState } from "react";
-// import { getSchoolId } from "../../hooks/getSchoolId";
+// import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 // const SambutanComp40 = () => {
 //   const [profile, setProfile] = useState<any>(null);
 //   const [loading, setLoading] = useState(true);
-//   const SCHOOL_ID = getSchoolId();
+//   const SCHOOL_ID = getSchoolIdSync();
 
 //   useEffect(() => {
 //     const fetchProfile = async () => {
@@ -16,7 +16,7 @@ import { API_CONFIG } from "@/config/api";
 //         const result = await res.json();
 //         if (result.success) setProfile(result.data);
 //       } catch (err) {
-//         console.error(err);
+//         
 //       } finally {
 //         setLoading(false);
 //       }
@@ -150,13 +150,13 @@ import { API_CONFIG } from "@/config/api";
 import { motion } from "framer-motion";
 import { Award, BookOpen, School, Sparkles, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 const SambutanComp40 = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const SCHOOL_ID = getSchoolId();
+  const SCHOOL_ID = getSchoolIdSync();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -165,7 +165,7 @@ const SambutanComp40 = () => {
         const result = await res.json();
         if (result.success) setProfile(result.data);
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }
@@ -220,10 +220,10 @@ const SambutanComp40 = () => {
             <div className="absolute inset-10 bg-blue-600/20 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             
             <div className="relative w-full h-[90%] mx-auto md:w-[440px] overflow-hidden p-6 border border-blue-900 rounded-[40px] md:h-[440px] bg-white">
-              <img 
-                src={profile?.photoHeadmasterUrl || '/kapalaSekolah.png'} 
-                alt="Kepala Sekolah" 
-                className="w-full h-full rounded-xl md:object-cover object-contain transition-transform duration-1000" 
+              <img
+                src={profile?.photoHeadmasterUrl || ''}
+                alt="Kepala Sekolah"
+                className="w-full h-full rounded-xl md:object-cover object-contain transition-transform duration-1000"
               />
             </div>
 

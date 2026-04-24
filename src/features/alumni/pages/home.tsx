@@ -1,14 +1,27 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from '@/core/theme';
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from '@/features/_global/components/hero';
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from '@/features/_global/hooks/getSchoolId';
+import { getSchoolIdSync } from '@/features/_global/hooks/getSchoolId';
+import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************************
  * PLACEHOLDER AVATAR
@@ -93,7 +106,7 @@ const InlineProfileCard: React.FC<{
  * MAIN COMPONENT - Buku Alumni
  ****************************/
 const API_BASE_URL = API_CONFIG.BASE_URL;
-const SCHOOL_ID = getSchoolId(); 
+const SCHOOL_ID = getSchoolIdSync(); 
 
 const registerAlumniSchema = z.object({
   name: z.string().min(3, "Nama minimal 3 karakter"),
@@ -105,8 +118,9 @@ const registerAlumniSchema = z.object({
 type RegisterAlumniForm = z.infer<typeof registerAlumniSchema>;
 
 export function BukuAlumni() {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolId = getSchoolIdSync();
 
   const [alumniData, setAlumniData] = useState<AlumniItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,7 +150,7 @@ export function BukuAlumni() {
       setLoading(true);
       setError(null);
 
-      const res = await fetch(`${API_BASE_URL}/alumni?schoolId=${SCHOOL_ID}&isVerified=true`, {
+      const res = await fetch(`${API_BASE_URL}/alumni?schoolId=${schoolId}&isVerified=true`, {
         cache: 'no-store',
       });
 
@@ -180,7 +194,7 @@ export function BukuAlumni() {
 
       setAlumniData(mapped);
     } catch (err) {
-      console.error('Fetch alumni error:', err);
+      
       setError('Gagal memuat data alumni. Silakan coba lagi nanti.');
       setAlumniData([]);
     } finally {
@@ -218,7 +232,7 @@ export function BukuAlumni() {
         desc = `Jurusan asal: ${data.major}${desc ? `\n\n${desc}` : ''}`;
       }
       if (desc) formData.append("description", desc);
-      formData.append("schoolId", String(SCHOOL_ID));
+      formData.append("schoolId", String(schoolId));
 
       if (photoFile) {
         formData.append("photo", photoFile);

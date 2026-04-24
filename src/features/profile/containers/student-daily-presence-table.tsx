@@ -18,12 +18,12 @@
 //   const school = useSchool(); // Ambil data sekolah untuk kop dan ttd
 //   const items = useMemo(() => detail.data?.absensis || [], [detail?.data?.absensis]);
   
-//   console.log('data absen detail siswa:', props?.id)
-//   console.log('data absen detail siswa:', detail?.data)
+('data absen detail siswa:', props?.id)
+('data absen detail siswa:', detail?.data)
 
 //   const handleDownloadPDF = async () => {
 //     if (!school.data?.[0]) return;
-//     console.log('school', school)
+('school', school)
 //     const doc = (
 //       <StudentPresencePDF
 //         data={items}

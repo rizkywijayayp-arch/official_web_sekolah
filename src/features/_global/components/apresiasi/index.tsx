@@ -1,9 +1,22 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { AnimatePresence, motion } from "framer-motion";
 import { Trophy, Medal, Clock, Star, Users, Award, Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************************
  * SECTION: Hall of Fame
@@ -23,7 +36,7 @@ function HallOfFameSection() {
       try {
         setLoading(true);
         setError(null);
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
 
         // Memanggil API Hall of Fame sesuai base url anda
         const response = await fetch(

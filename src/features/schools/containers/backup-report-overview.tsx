@@ -70,7 +70,7 @@ export const ReportOverview = ({ selectedSchool, selectDate }: ReportOverviewPro
   // Calculate attendance stats
   const attendanceStats = useMemo(() => {
     const stats = calculateAttendanceStats(filteredData);
-    console.log('stats here:', stats);
+    
     if (stats.totalHadir !== 0 || stats.totalAlpa !== 0 || stats.totalSakit !== 0) {
       setIsStatsLoading(false);
     } else {

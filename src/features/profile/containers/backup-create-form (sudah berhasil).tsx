@@ -53,7 +53,7 @@ export const StudentCreationForm = () => {
   const navigate = useNavigate()
 
   // const filteredDataClass = resource?.data && resource?.data?.filter((data) => data?.Sekolah.id === detail?.data?.sekolahId)
-  // console.log('filter', filteredDataClass)
+  ('filter', filteredDataClass)
 
   const form = useForm<z.infer<typeof studentEditSchema>>({
     resolver: zodResolver(studentEditSchema),
@@ -152,7 +152,7 @@ export const StudentCreationForm = () => {
 
       // if (data.kelasId && data.kelasId !== detailKelas.data?.idKelas) {
       //   updatedData.kelasId = data.kelasId
-      //   console.log('kelasid terbaru:', data.kelasId)
+      ('kelasid terbaru:', data.kelasId)
       // }
 
       if (data.nis && data.nis !== detail.data?.nis) {
@@ -643,10 +643,10 @@ export const StudentCreationForm = () => {
 //   const alert = useAlert()
 //   const biodata = useBiodata() // 🔹 Untuk otomatis memperbarui tabel siswa setelah update
 
-//   console.log('IDIDIDID', Number(decodeParams?.id))
-//   console.log('detail', detail.data)
-//   // console.log('detailNew', detailKelas.data)
-//   console.log('kelas', resource.data)
+('IDIDIDID', Number(decodeParams?.id))
+('detail', detail.data)
+//   ('detailNew', detailKelas.data)
+('kelas', resource.data)
 //   const navigate = useNavigate()
 
 //   const form = useForm<z.infer<typeof studentEditSchema>>({
@@ -678,7 +678,7 @@ export const StudentCreationForm = () => {
 //   // 🔹 Perbarui nilai form ketika `detail.data` berubah
 //   useEffect(() => {
 //     if (detail.data) {
-//       console.log("Detail Data Siswa:", detail.data)
+("Detail Data Siswa:", detail.data)
 //       form.reset({
 //         kelasId: detail.data?.kelasId || 0,
 //         name: detail.data?.user?.name || "",
@@ -705,8 +705,8 @@ export const StudentCreationForm = () => {
 
 //   async function onSubmit(data: z.infer<typeof studentEditSchema>) {
 //     try {
-//       console.log("User ID yang akan diupdate:", decodeParams.id)
-//       console.log("Data yang dikirim sebelum mapping:", data)
+("User ID yang akan diupdate:", decodeParams.id)
+("Data yang dikirim sebelum mapping:", data)
 
 //       // 🔹 Hanya kirim data yang berubah
 //       const updatedData: any = {}
@@ -797,7 +797,7 @@ export const StudentCreationForm = () => {
 //       //   updatedData.isVerified = data.isVerified ? 1 : 0
 //       // }
 
-//       console.log("Data yang dikirim ke backend:", updatedData)
+("Data yang dikirim ke backend:", updatedData)
 
 //       await creation.update(Number(decodeParams.id), updatedData)
 
@@ -809,7 +809,7 @@ export const StudentCreationForm = () => {
 
 //       biodata.query.refetch() // ✅ Panggil refetch agar data otomatis diperbarui
 //     } catch (err: any) {
-//       console.error("Error saat update:", err)
+("Error saat update:", err)
 //       alert.error(
 //         err?.message ||
 //           lang.text("failUpdate", { context: lang.text("student") })
@@ -884,7 +884,7 @@ export const StudentCreationForm = () => {
 //                   }
 //                   onValueChange={(val) => {
 //                     const mappedValue = val === "Laki-laki" ? "Male" : "Female" // 🔹 Mapping UI ke backend
-//                     console.log("Jenis Kelamin yang dipilih:", mappedValue)
+("Jenis Kelamin yang dipilih:", mappedValue)
 //                     field.onChange(mappedValue)
 //                   }}
 //                 >

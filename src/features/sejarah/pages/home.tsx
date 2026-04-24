@@ -1,11 +1,24 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 const Section = ({ children }: { children: React.ReactNode }) => (
   <section className="py-12 md:py-16">
@@ -181,13 +194,14 @@ const KepalaSekolahGrid: React.FC<{ theme: any; data: any[] }> = ({ theme, data 
 
 /**************** * MAIN PAGE COMPONENT ****************/
 const SejarahPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const { theme, fullName: schoolName } = schoolInfo;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolName = profile?.schoolName || 'Sekolah';
   
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const schoolId = getSchoolId()
+  const schoolId = getSchoolIdSync()
 
   useEffect(() => {
     const getSejarah = async () => {
@@ -198,7 +212,7 @@ const SejarahPage = () => {
           setData(result.data);
         }
       } catch (error) {
-        console.error("Gagal mengambil data:", error);
+        
       } finally {
         setLoading(false);
       }

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogInIcon, Mail, MapPin, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 // Theme Tokens for Multiple Schools
 const THEME_TOKENS = {
@@ -50,7 +50,7 @@ const useOnClickOutside = (ref, handler) => {
 
 // Hook untuk ambil profil sekolah (sama seperti di homepage)
 const useSchoolProfile = () => {
-  const schoolId = getSchoolId(); // ← sesuaikan dengan ID sekolah SDN 09 di database
+  const schoolId = getSchoolIdSync(); // ← sesuaikan dengan ID sekolah SDN 09 di database
 
   const API_BASE = API_CONFIG.BASE_URL;
 

@@ -1,23 +1,36 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { 
-  Users, 
-  Target, 
-  Trophy, 
-  ChevronRight, 
-  Mail, 
-  Phone, 
-  X, 
-  CheckCircle2, 
+import { useEffect, useState } from "react";
+import {
+  Users,
+  Target,
+  Trophy,
+  ChevronRight,
+  Mail,
+  Phone,
+  X,
+  CheckCircle2,
   Loader2,
   Award
 } from "lucide-react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 // ──────────────────────────────────────────────────────────────
 // Sub-Components Premium
@@ -53,8 +66,9 @@ const SectionHeader = ({ title, subtitle, icon: Icon }: any) => (
 // ──────────────────────────────────────────────────────────────
 
 const OsisPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const schoolId = getSchoolId();
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolId = getSchoolIdSync();
 
   const [apiData, setApiData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -68,7 +82,7 @@ const OsisPage = () => {
         const result = await res.json();
         if (result.success) setApiData(result.data);
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }
@@ -92,7 +106,7 @@ const OsisPage = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFDFF] text-slate-900 font-sans">
-      <NavbarComp theme={schoolInfo.theme} />
+      <NavbarComp theme={theme} />
       <HeroComp titleProps="Struktur - OSIS" id="#content" />
 
       <main id="content" className="relative pb-24">

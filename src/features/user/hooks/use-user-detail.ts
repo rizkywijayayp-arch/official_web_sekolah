@@ -17,7 +17,7 @@ export const useUserDetail = (id: number) => {
   });
 
   const data = useMemo(() => query.data?.data, [query.data?.data]);
-  //  console.log("🔹 Data mentah dari API sebelum decoding:", query.data?.data);
+  //  
   const isLoading = query.isLoading || query.isFetching || query.isPending;
 
   return {

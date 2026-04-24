@@ -17,7 +17,7 @@ export const SchoolByProvinceTable = ({ onExport, status }: SchoolByProvinceTabl
   const school = useSchool();
   // const profile = useProfile();
 
-  // console.log('school data this:', school)
+  ('school data this:', school)
   const { global, pagination } = useDataTableController({ defaultPageSize: 9999 });
 
   const studentParams = useMemo(
@@ -56,7 +56,7 @@ export const SchoolByProvinceTable = ({ onExport, status }: SchoolByProvinceTabl
 
   // Data tabel yang akan diekspor
   const tableData = filteredData;
-  console.log('Table data:', tableData);
+  
 
   // Fungsi untuk ekspor ke PDF
   const exportToPDF = () => {

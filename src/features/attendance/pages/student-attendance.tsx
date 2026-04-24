@@ -230,7 +230,7 @@ const generateStudentAttendancePDF = async ({
   period?: string;
 }) => {
   if (!alert) {
-    console.error('Alert system is not available');
+    
     return;
   }
 
@@ -283,7 +283,7 @@ const generateStudentAttendancePDF = async ({
 
     alert.success('Laporan kehadiran siswa berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating attendance PDF:', error);
+    
     alert.error('Gagal menghasilkan laporan kehadiran siswa.');
   }
 };
@@ -312,9 +312,9 @@ export const StudentAttendance = () => {
   const biodataAll = useBiodata();
   // const { data: schoolData, isLoading: schoolIsLoading } = useSchoolDetail({ id: profile?.user?.sekolahId});
   const schoolData = useSchool()
-  console.log('STUDENT ATTEDANCE - ABSENHARIINI', biodata?.data);
-  console.log('biodataAll', biodataAll?.data);
-  console.log('schoolData', schoolData);
+  
+  
+  
 
   const [selectedStartMonth, setSelectedStartMonth] = useState<string>(
     dayjs().tz('Asia/Jakarta').startOf('month').format('YYYY-MM')
@@ -454,7 +454,7 @@ export const StudentAttendance = () => {
     );
   }, [dataMode, biodata.isLoading, biodataAll.isLoading]);
 
-  console.log('STUDENT ATTEDANCE - DATA::', filteredData);
+  
   
  const handleExport = async (format: 'csv' | 'excel' | 'pdf') => {
   if (filteredData.length === 0) {

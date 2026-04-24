@@ -1,14 +1,19 @@
 import { API_CONFIG } from "@/config/api";
 
 /**
- * Set favicon berdasarkan logo sekolah
+ * Set favicon berdasarkan logo sekolah atau favicon URL custom
  * Call ini setiap kali schoolData di-load
  */
-export const setFavicon = (logoUrl: string | null, schoolName?: string) => {
+export const setFavicon = (logoUrl: string | null, schoolName?: string, faviconUrl?: string | null) => {
   const link = document.querySelector("link[rel='icon']") as HTMLLinkElement || document.createElement("link");
 
-  if (logoUrl) {
-    // Pakai logo dari API
+  if (faviconUrl) {
+    // Pakai favicon custom dari admin
+    link.rel = "icon";
+    link.type = faviconUrl.endsWith('.png') ? "image/png" : "image/x-icon";
+    link.href = faviconUrl;
+  } else if (logoUrl) {
+    // Pakai logo dari API sebagai favicon
     link.rel = "icon";
     link.type = "image/x-icon";
     link.href = logoUrl;
@@ -55,6 +60,7 @@ export const setFaviconFromProfile = (profile: any) => {
   if (!profile) return;
 
   const logoUrl = profile.logoUrl || null;
+  const faviconUrl = profile.faviconUrl || null;
   const schoolName = profile.schoolName || "";
-  setFavicon(logoUrl, schoolName);
+  setFavicon(logoUrl, schoolName, faviconUrl);
 };

@@ -281,7 +281,7 @@
 
 //     alert.success('Laporan absensi harian berhasil diunduh.');
 //   } catch (error) {
-//     console.error('Error generating daily attendance PDF:', error);
+//     
 //     alert.error('Gagal menghasilkan laporan absensi harian.');
 //   }
 // };
@@ -326,7 +326,7 @@
 //   const navigate = useNavigate();
 //   const alert = useAlert();
 
-//   console.log('rpfile', profile?.user)
+('rpfile', profile?.user)
 
 //   useEffect(() => {
 //     if (profile?.user) {
@@ -345,7 +345,7 @@
 //         ? JSON.parse(student.data)
 //         : student.data || [];
 //     } catch (error) {
-//       console.error("Gagal parse student.data:", error);
+//       
 //       return [];
 //     }
 //   }, [student.data, refreshKey]);
@@ -412,7 +412,7 @@
 //         try {
 //           setQrCodeData(JSON.parse(savedQr));
 //         } catch (error) {
-//           console.error("❌ Gagal parsing qrCodeData dari localStorage:", error);
+//           
 //           setQrCodeData(null);
 //         }
 //       }
@@ -1223,7 +1223,7 @@ const generateAttendancePDF = async ({
 
     alert.success('Laporan absensi harian berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating daily attendance PDF:', error);
+    
     alert.error('Gagal menghasilkan laporan absensi harian.');
   }
 };
@@ -1267,7 +1267,7 @@ export function HistoryAttendance() {
         ? JSON.parse(student.data)
         : student.data || [];
     } catch (error) {
-      console.error("Gagal parse student.data:", error);
+      
       return [];
     }
   }, [student.data, refreshKey]);
@@ -1334,7 +1334,7 @@ export function HistoryAttendance() {
         try {
           setQrCodeData(JSON.parse(savedQr));
         } catch (error) {
-          console.error("❌ Gagal parsing qrCodeData dari localStorage:", error);
+          
           setQrCodeData(null);
         }
       }

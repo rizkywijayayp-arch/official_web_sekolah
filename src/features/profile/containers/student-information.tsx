@@ -78,12 +78,12 @@ export const StudentInformation = () => {
   // Log form errors for debugging
   const { formState: { errors } } = form;
   useEffect(() => {
-    console.log("Form errors:", errors);
+    
   }, [errors]);
 
   // Log profile data for debugging
   useEffect(() => {
-    console.log("Profile data:", profile?.user);
+    
   }, [profile?.user]);
 
   // Memoized options
@@ -164,7 +164,7 @@ export const StudentInformation = () => {
       const subscription = form.watch(
         debounce((currentValues) => {
           const hasFormChanges = !deepEqual(currentValues, initialValues);
-          console.log("Current values:", currentValues, "Has changes:", hasFormChanges);
+          
           setHasChanges(hasFormChanges);
         }, 300)
       );
@@ -199,7 +199,7 @@ export const StudentInformation = () => {
         }
       }
 
-      console.log("Data yang dikirim saat submit:", updatedData);
+      
 
       // Assuming biodataId is profile?.user?.id
       await creation.update(profile?.user?.id!, updatedData);
@@ -235,7 +235,7 @@ export const StudentInformation = () => {
     } catch (error) {
       const errorMessage = error?.message || lang.text('failedResetPass');
       alert.error(errorMessage);
-      console.error('Gagal mereset password:', error);
+      
       return;
     }
   }

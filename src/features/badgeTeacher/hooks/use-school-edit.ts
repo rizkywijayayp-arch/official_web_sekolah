@@ -41,12 +41,12 @@ export const useSchoolUpdateDialog = () => {
           !school.data?.longitude;
 
         if (hasEmptyField && !hasShownDialog) {
-          console.log("📌 [useSchoolUpdateDialog] Opening dialog: Empty fields detected and no prior dialog shown");
+          
           setIsModalOpen(true);
           localStorage.setItem("hasShownSchoolDialog", "true");
         }
       } else {
-        console.log("📌 [useSchoolUpdateDialog] Opening dialog: No school data found");
+        
         if (!hasShownDialog) {
           setIsModalOpen(true);
           localStorage.setItem("hasShownSchoolDialog", "true");
@@ -58,12 +58,12 @@ export const useSchoolUpdateDialog = () => {
   }, [school.isLoading, school.data, hasInitialized]);
 
   const handleCloseDialog = () => {
-    console.log("📌 [useSchoolUpdateDialog] Closing dialog via handleCloseDialog");
+    
     setIsModalOpen(false);
   };
 
   const handleOpenChange = (open: boolean) => {
-    console.log("📌 [useSchoolUpdateDialog] handleOpenChange called", { open });
+    
     if (!open) {
       return; // Jangan izinkan penutupan dialog melalui klik di luar
     }

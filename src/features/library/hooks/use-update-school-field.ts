@@ -12,7 +12,7 @@ export const useUpdateSchoolField = (schoolId: number) => {
       toast.success("URL Youtube berhasil diperbarui");
     } catch (error) {
       toast.error("Gagal memperbarui URL Youtube");
-      console.error(error);
+      
     }
   };
 

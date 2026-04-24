@@ -30,10 +30,10 @@ export const LibraryLanding = () => {
     if (selectedDate && !isNaN(selectedDate.getTime())) {
       const formatted = dayjs(selectedDate).format("DD-MM-YYYY");
       setFormattedDate(formatted);
-      console.log("Selected Date:", formatted, "Year:", tahun);
+      
     } else {
       setFormattedDate("");
-      console.log("No valid date selected");
+      
     }
   };
 
@@ -41,15 +41,15 @@ export const LibraryLanding = () => {
   const handleResetDate = () => {
     setDate(undefined);
     setFormattedDate("");
-    console.log("Date reset: No date selected, Year:", tahun);
+    
   };
 
   // Generate years: current year and 5 years before
   const years = Array.from({ length: 6 }, (_, i) => dayjs().year() - 5 + i);
 
   // Debugging logs
-  console.log('Formatted Date di LibraryLanding:', formattedDate || 'No date selected');
-  console.log('Tahun di LibraryLanding:', tahun);
+  
+  
 
   return (
     <DashboardPageLayout

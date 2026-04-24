@@ -97,15 +97,15 @@ export const EditableInfoItem = <T extends FieldValues>({
                     editor={ClassicEditor}
                     data={field.value || visiMisiPlaceholder}
                     onReady={() => {
-                      console.log("CKEditor initialized for visiMisi");
+                      
                     }}
                     onChange={(event, editor) => {
                       const data = editor.getData();
-                      console.log("CKEditor changed:", data);
+                      
                       field.onChange(data);
                     }}
                     onError={(error) => {
-                      console.error("CKEditor error:", error);
+                      
                       setCkEditorError?.("Gagal memuat CKEditor");
                     }}
                   />

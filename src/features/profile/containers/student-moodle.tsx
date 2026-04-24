@@ -27,12 +27,12 @@ export function StudentMoodleTable({ detail }: { detail: Detail }) {
   const sekolahId = detail.data?.user?.sekolahId;
   const username = detail.data?.user?.nis;
 
-  console.log('🚀 ~ All User Details:', detail);
-  console.log('🚀 ~ Sekolah ID:', sekolahId);
+  
+  
   console.log('🚀 ~ Username (NIS):', username);
 
   if (!sekolahId || !username) {
-    console.error('Sekolah ID atau Username tidak tersedia!');
+    
     return <div>Data tidak valid</div>;
   }
 
@@ -60,17 +60,17 @@ export function StudentMoodleTable({ detail }: { detail: Detail }) {
         MOODLE_BASE_URL,
       ).toString();
 
-      console.log('Fetching data from:', apiUrl);
+      
 
       const response = await fetch(apiUrl);
 
       if (!response.ok) {
-        console.error('Failed to fetch data:', response.statusText);
+        
         throw new Error('Failed to fetch data');
       }
 
       const data = await response.json();
-      console.log('Fetched data:', data);
+      
 
       return data.map(
         (
@@ -103,10 +103,10 @@ export function StudentMoodleTable({ detail }: { detail: Detail }) {
   // Handle success or error outside useQuery using React effects
   React.useEffect(() => {
     if (moodleData) {
-      console.log('🚀 ~ Data successfully fetched and sent:', moodleData);
+      
     }
     if (error) {
-      console.error('🚀 ~ Error fetching data:', error);
+      
     }
   }, [moodleData, error]);
 

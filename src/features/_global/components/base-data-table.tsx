@@ -134,7 +134,7 @@
 // }: BaseDataTableProps) => {
 //   const [searchParams, setSearchParams] = useSearchParams();
 
-//   // console.log('studnet table', students)
+//   ('studnet table', students)
 
 //   const filterSearchParams = useMemo(
 //     () => searchParams.get("filter"),
@@ -187,7 +187,7 @@
 
 //   // const _data = useMemo(() => data || dataFallback, [data, dataFallback]);
 
-//   // console.log('enrich', enrichedData)
+//   ('enrich', enrichedData)
 
 //   const table = useReactTable({
 //     // data: _data,

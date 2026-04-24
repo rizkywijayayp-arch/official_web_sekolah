@@ -1,12 +1,25 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import { useEffect, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /* ================================
            TIPE DATA
@@ -107,7 +120,7 @@ const OrgNode = ({ node, level = 0 }: { node: Organization; level?: number }) =>
 /* ================================
        KOMPONEN UTAMA - TREE VIEW
 ================================ */
-const SCHOOL_ID = getSchoolId();
+const SCHOOL_ID = getSchoolIdSync();
 
 const StrukturOrganisasi = () => {
   const [treeData, setTreeData] = useState<Organization[]>([]);
@@ -121,7 +134,7 @@ const StrukturOrganisasi = () => {
         const json = await res.json();
         if (json.success) setTreeData(json.data);
       } catch (err) {
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }
@@ -202,7 +215,8 @@ const Page = ({ theme }: { theme: any; }) => (
 );
 
 const StrukturPage = () => {
-  const { theme } = SMAN25_CONFIG;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
   return <Page theme={theme} />;
 };
 

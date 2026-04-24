@@ -126,13 +126,9 @@ export const EventTable = ({
         //   ? storedEventCreator === userId?.toString()
         //   : false;
 
-        // console.log("🛠 Event Data:", event);
-        // console.log("🔎 Current User Role:", userRole);
-        // console.log("🔎 Current User ID:", userId);
-        // console.log(
-        //   "🔎 Event Created By Current User:",
-        //   isCreatedByCurrentUser
-        // );
+        //
+        //
+        //
 
         return (
           <div className="flex space-x-2">

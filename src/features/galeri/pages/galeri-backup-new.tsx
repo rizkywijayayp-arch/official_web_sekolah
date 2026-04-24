@@ -1075,7 +1075,7 @@ const GalleryPage = () => {
       console.assert(typeof setInterval === 'function', 'Autoplay membutuhkan setInterval');
       console.log('✅ UI smoke tests passed (Galeri + Header/Footer + Autoplay)');
     } catch (e) {
-      console.error('❌ UI smoke tests failed:', e);
+      
     }
   }, [prefersReducedMotion]);
 

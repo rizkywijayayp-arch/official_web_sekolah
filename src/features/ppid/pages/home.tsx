@@ -1,16 +1,28 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from "framer-motion";
 import { File } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 const IFilter = () => "🔎";
-const ILink = () => "🔗"
+const ILink = () => "🔗";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************************
  * UTILS
@@ -31,7 +43,7 @@ const Section = ({ id, title, icon, children }: { id: string; title: string; ico
           {title}
         </h2>
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +63,7 @@ const Section = ({ id, title, icon, children }: { id: string; title: string; ico
  * API CONFIG PPID
  ****************************/
 const PPID_API_BASE = `${API_CONFIG.BASE_URL}/ppid`;
-const SCHOOL_ID = getSchoolId();
+const SCHOOL_ID = getSchoolIdSync();
 
 const fetchPPIDDocuments = async () => {
   const response = await fetch(`${PPID_API_BASE}?schoolId=${SCHOOL_ID}`, {
@@ -123,17 +135,17 @@ const DokumenList = ({ kategoriFilter }: { kategoriFilter: string }) => {
           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-600 transition-colors">
             <IFilter />
           </div>
-          <input 
-            value={q} 
-            onChange={e => setQ(e.target.value)} 
-            placeholder="Cari dokumen..." 
+          <input
+            value={q}
+            onChange={e => setQ(e.target.value)}
+            placeholder="Cari dokumen..."
             className="w-full pl-12 pr-4 py-3.5 bg-gray-200 placeholder:text-black/60 border-none rounded-2xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm font-medium"
           />
         </div>
         <div className="md:w-48">
-          <select 
-            value={tahun} 
-            onChange={e => setTahun(e.target.value)} 
+          <select
+            value={tahun}
+            onChange={e => setTahun(e.target.value)}
             className="w-full px-4 py-3.5 bg-gray-200 placeholder:text-black/60 border-none rounded-2xl outline-none text-sm font-bold text-gray-700 cursor-pointer"
           >
             {tahunOpts.map(t => <option key={t} value={t}>Tahun {t}</option>)}
@@ -154,7 +166,7 @@ const DokumenList = ({ kategoriFilter }: { kategoriFilter: string }) => {
           <tbody className="divide-y divide-gray-50">
             <AnimatePresence>
               {filtered.map((d: any, i: number) => (
-                <motion.tr 
+                <motion.tr
                   key={d.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -171,9 +183,9 @@ const DokumenList = ({ kategoriFilter }: { kategoriFilter: string }) => {
                   <td className="px-8 py-6 text-sm font-black text-gray-500">{d.tahun}</td>
                   <td className="px-8 py-6 text-right">
                     {d.url ? (
-                      <a 
-                        href={d.url} 
-                        target="_blank" 
+                      <a
+                        href={d.url}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-200 transition-all active:scale-95"
                       >
@@ -202,20 +214,18 @@ const DokumenList = ({ kategoriFilter }: { kategoriFilter: string }) => {
 };
 
 /****************************
- * MAIN PPID PAGE – tanpa Profil PPID
+ * MAIN PPID PAGE – menggunakan Profile API
  ****************************/
-let theme: any = {};
-
 export function PPIDMain() {
-  const school = SMAN25_CONFIG;
-  theme = school.theme;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
 
   useEffect(() => {
     document.documentElement.style.setProperty("--brand-primary", theme.primary);
-    document.documentElement.style.setProperty("--brand-accent", theme.gold);
+    document.documentElement.style.setProperty("--brand-accent", theme.accent);
     document.documentElement.style.setProperty("--brand-bg", theme.bg);
     document.documentElement.style.setProperty("--brand-surface", theme.surface);
-  }, []);
+  }, [theme]);
 
   return (
     <div className="min-h-screen" style={{ background: theme.bg }}>

@@ -35,7 +35,7 @@ export const ReportOverview = ({ selectedSchool }: ReportOverviewProps) => {
 
   const profile = useProfile()
   const biodataNew = useBiodataNew(profile?.user?.sekolahId);
-  console.log('BIODATA NEW ABSEN::', biodataNew?.data);
+  
 
   // Determine attendance stats based on selected date
   const attendanceStats = biodataNew?.data

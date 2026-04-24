@@ -19,9 +19,9 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem('token'); // Ambil token dari localStorage
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('🔑 Token digunakan:', token);
+      
     } else {
-      console.warn('⚠️ Token tidak ditemukan, mungkin perlu login ulang.');
+      
     }
     return config;
   },
@@ -31,9 +31,9 @@ apiClient.interceptors.request.use(
 // ✅ **FETCH SEMUA EVENT**
 export const fetchCalendarEvents = async () => {
   try {
-    console.log('📅 Fetching all calendar events...');
+    
     const response = await apiClient.get('/');
-    console.log('✅ Fetched events:', response.data);
+    
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -42,7 +42,7 @@ export const fetchCalendarEvents = async () => {
         error.response?.data || error.message,
       );
     } else {
-      console.error('❌ Unknown error:', error);
+      
     }
     throw error;
   }
@@ -50,23 +50,23 @@ export const fetchCalendarEvents = async () => {
 
 export const fetchCalendarEventById = async (eventId: number) => {
   try {
-    console.log(`📌 Fetching event by ID: ${eventId}`);
+    
     const response = await apiClient.get(`/${eventId}`);
 
     // ✅ Pastikan hanya mengambil bagian `data`
     const existingData = response?.data?.data;
 
     if (!existingData || !existingData.id) {
-      console.warn(`⚠️ Event ID ${eventId} tidak ditemukan.`);
+      
       return null;
     }
 
-    console.log('✅ Fetched event:', existingData);
+    
 
     return existingData;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
-      console.warn(`⚠️ Event ID ${eventId} tidak ditemukan di server.`);
+      
       return null;
     }
     console.error(
@@ -89,7 +89,7 @@ export const createCalendarEvent = async (eventData: FormData) => {
     const response = await apiClient.post('/', eventData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log('✅ Event created successfully:', response.data);
+    
     return response.data;
   } catch (error) {
     console.error(
@@ -106,14 +106,14 @@ export const updateCalendarEvent = async (
   eventData: FormData,
 ) => {
   try {
-    console.log(`✏️ Updating note siswa with ID: ${eventId}`);
+    
     const response = await apiClient.put(`/${eventId}`, eventData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
 
-    console.log('✅ Note siswa updated successfully:', response.data);
+    
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -122,7 +122,7 @@ export const updateCalendarEvent = async (
         error.response?.data || error.message,
       );
     } else {
-      console.error('❌ Unknown error:', error);
+      
     }
     throw error;
   }
@@ -131,18 +131,18 @@ export const updateCalendarEvent = async (
 // ✅ **DELETE EVENT**
 export const deleteCalendarEvent = async (eventId: number) => {
   try {
-    console.log(`🗑 Deleting event with ID: ${eventId}`);
+    
 
     // First, check if the event exists before deleting
     const checkEvent = await apiClient.get(`/${eventId}`);
     if (!checkEvent.data) {
-      console.error('❌ Event not found on the server!');
+      
       return; // Event not found, so skip deletion
     }
 
     // If event exists, proceed to delete it
     const response = await apiClient.delete(`/${eventId}`);
-    console.log('✅ Event deleted successfully:', response.data);
+    
     return response.data; // Return the response data
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -151,7 +151,7 @@ export const deleteCalendarEvent = async (eventId: number) => {
         error.response?.data || error.message,
       );
     } else {
-      console.error('❌ Unknown error:', error);
+      
     }
     throw error; // Re-throw the error if any
   }

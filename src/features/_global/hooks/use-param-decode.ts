@@ -9,7 +9,7 @@ export const useParamDecode = () => {
       const r = JSON.parse(simpleDecode(params.id || ''));
       return r;
     } catch (err: unknown) {
-      console.log('param not decoded', err);
+      
       return {};
     }
   }, [params?.id]);

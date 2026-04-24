@@ -198,7 +198,7 @@
 //         setApiBooks([]);
 //       }
 //     } catch (error) {
-//       console.error("Error fetching books from API:", error);
+//       
 //       setApiBooks([]);
 //     }
 //   };
@@ -343,13 +343,27 @@
 
 
 
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, ChevronLeft, ChevronRight, BookOpen, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 // --- Utility Functions ---
 function getExt(name = "") {
@@ -449,7 +463,8 @@ const Reader = ({ item, theme, onClose }) => {
 
 // --- Main Library Section ---
 export default function LibrarySection() {
-  const theme = SMAN25_CONFIG;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
   const [openItem, setOpenItem] = useState(null);
   const [query, setQuery] = useState("");
   const [apiBooks, setApiBooks] = useState([]);
@@ -488,7 +503,7 @@ export default function LibrarySection() {
           setApiBooks(mapped);
         }
       } catch (err) {
-        console.error("Fetch error:", err);
+        
       } finally {
         setLoading(false);
       }

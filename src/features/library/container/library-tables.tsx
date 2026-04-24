@@ -229,7 +229,7 @@ const generateAttendancePDF = async ({
   schoolIsLoading: boolean;
 }) => {
   if (!alert) {
-    console.error('Alert system is not available');
+    
     return;
   }
 
@@ -289,7 +289,7 @@ const generateAttendancePDF = async ({
 
     alert.success('Laporan absensi perpustakaan berhasil diunduh.');
   } catch (error) {
-    console.error('Error generating attendance PDF:', error);
+    
     alert.error('Gagal menghasilkan laporan absensi perpustakaan.');
   }
 };
@@ -362,7 +362,7 @@ export const LibraryLandingTables = ({ formattedDate, tahun }: { formattedDate?:
         schoolIsLoading,
       });
     } catch (error) {
-      console.error('Error in handleDownloadPDF:', error);
+      
       alert?.error?.('Terjadi kesalahan saat mengunduh laporan.');
     } finally {
       setIsGeneratingPDF(false);

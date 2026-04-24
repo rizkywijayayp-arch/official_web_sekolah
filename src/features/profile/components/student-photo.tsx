@@ -12,7 +12,7 @@ export const StudentPhoto = ({ image, title }: StudentPhotoProps) => {
       ? `${nameArr?.[0]?.[0]?.toUpperCase() || ""}${nameArr?.[1]?.[0]?.toUpperCase() || ""}`
       : "-";
 
-  console.log('foto siswa:', image);
+  
 
   return (
     // <AspectRatio ratio={1 / 1} className="w-full h-full">

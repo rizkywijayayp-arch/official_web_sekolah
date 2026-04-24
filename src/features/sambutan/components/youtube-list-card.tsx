@@ -74,7 +74,7 @@ export const YoutubeListCard = () => {
       );
       setEditing((prev) => ({ ...prev, [key]: false }));
     } catch (err) {
-      console.error("❌ Gagal update YouTube URL:", err);
+      
       alert.error(lang.text("errorUpdateUrl"));
     }
   };

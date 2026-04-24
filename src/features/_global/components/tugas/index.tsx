@@ -1,9 +1,22 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, User, X, BookOpen, Clock, Link as LinkIcon, GraduationCap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************************
  * UTILS
@@ -26,7 +39,7 @@ function TugasSection({ theme, schoolName }: { theme: any; schoolName: string })
       try {
         setLoading(true);
         setError(null);
-        const schoolId = getSchoolId();
+        const schoolId = getSchoolIdSync();
         // Memanggil API Tugas
         const response = await fetch(
           `${API_CONFIG.BASE_URL}/tugas?schoolId=${schoolId}`,
@@ -270,8 +283,10 @@ function TugasSection({ theme, schoolName }: { theme: any; schoolName: string })
 }
 
 const TugasComp = () => {
-  const schoolInfo2 = SMAN25_CONFIG;
-  return <TugasSection theme={schoolInfo2.theme} schoolName={schoolInfo2.fullName} />;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolName = profile?.schoolName || 'Sekolah';
+  return <TugasSection theme={theme} schoolName={schoolName} />;
 };
 
 export default TugasComp;

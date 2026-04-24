@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react"; // Install lucide-react jika belum ada
 import { useMemo, useRef, useState } from "react";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 // ... (useSchoolProfile Hook tetap sama)
 const useSchoolProfile = () => {
-  const schoolId = getSchoolId();
+  const schoolId = getSchoolIdSync();
   const API_BASE = API_CONFIG.BASE_URL;
 
   return useQuery({
@@ -48,10 +48,10 @@ export const HeroComp40 = ({ id, titleProps, subTitleProps }: any) => {
   };
 
   function getYoutubeId(url: string) {
-    if (!url) return "L6RvJtXSLlE";
+    if (!url) return "";
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : "L6RvJtXSLlE";
+    return (match && match[2].length === 11) ? match[2] : "";
   }
 
   const renderTitle = (text: string) => {
@@ -81,18 +81,28 @@ export const HeroComp40 = ({ id, titleProps, subTitleProps }: any) => {
       
       {/* --- Fullscreen Video Wrapper --- */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <iframe
-          ref={playerRef}
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1&start=6`}
-          allow="autoplay; encrypted-media"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                     w-[100vw] h-[56.25vw] min-h-[200vh] min-w-[177.77vh]"
-          style={{ border: 'none', aspectRatio: '16/9' }}
-          title="Hero Background Video"
-        />
-        
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black/80" />
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
+        {videoId ? (
+          <>
+            <iframe
+              ref={playerRef}
+              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1&start=6`}
+              allow="autoplay; encrypted-media"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                         w-[100vw] h-[56.25vw] min-h-[200vh] min-w-[177.77vh]"
+              style={{ border: 'none', aspectRatio: '16/9' }}
+              title="Hero Background Video"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black/80" />
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
+          </>
+        ) : (
+          <>
+            {/* Fallback background when no video */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920')] bg-cover bg-center opacity-30" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-black/80" />
+          </>
+        )}
       </div>
 
       {/* --- Content Area --- */}
@@ -111,7 +121,7 @@ export const HeroComp40 = ({ id, titleProps, subTitleProps }: any) => {
             className="hidden md:inline-block px-4 py-1 mb-6 border border-blue-800 rounded-full bg-blue-500/10 backdrop-blur-sm"
           >
             <span className="text-xs font-medium tracking-[0.3em] text-blue-400 uppercase">
-              Official website at SMAN 40 Jakarta Utara
+              {profile?.schoolName || ''}
             </span>
           </motion.div>
 

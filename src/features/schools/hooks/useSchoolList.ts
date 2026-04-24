@@ -12,13 +12,13 @@ export const useSchoolList = ({ enabled }: { enabled: boolean }) => {
         getInitialOptions()
       )();
       
-      console.log("✅ School List Response:", response);
+      
       return response.data?.data ?? []; 
     },
     enabled,
   });
 
-  console.log("📊 School List Data:", query.data);
+  
   return {
     ...query,
   data: query.data?.data ?? [],

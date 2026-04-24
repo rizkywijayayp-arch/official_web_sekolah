@@ -77,7 +77,7 @@
 //         isActive: Number(data.isActive),
 //       };
 
-//       console.log('Payload yang dikirim:', payload); // Debugging payload sebelum dikirim
+//        // Debugging payload sebelum dikirim
 
 //       await creation.update(Number(decodeParams.id), payload);
 
@@ -259,7 +259,7 @@ export const AdminCreationForm = ({ user, onClose }: AdminCreationFormProps) => 
         ...(isSuperAdmin && { member: data.member }), // Include member only for superAdmin
       };
 
-      console.log("Payload yang dikirim:", payload); // Debugging payload
+       // Debugging payload
 
       if (user?.id) {
         await creation.update(user.id, payload);

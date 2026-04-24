@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { API_CONFIG } from "@/config/api";
 import { setFaviconFromProfile } from "@/core/utils/favicon";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 export const FooterComp = () => {
   const [schoolData, setSchoolData] = useState<any>(null);
@@ -19,9 +20,8 @@ export const FooterComp = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const schoolId = getSchoolId();
+      const schoolId = getSchoolIdSync();
       try {
-        // Ganti URL ini dengan endpoint API backend kamu
         const response = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
         const result = await response.json();
         if (result.success && result.data) {
@@ -29,7 +29,7 @@ export const FooterComp = () => {
           setFaviconFromProfile(result.data);
         }
       } catch (error) {
-        console.error("Gagal mengambil data footer:", error);
+        
       } finally {
         setLoading(false);
       }
@@ -39,7 +39,10 @@ export const FooterComp = () => {
   }, []);
 
   // State Loading atau Default jika data belum ada
-  if (loading) return <div className="bg-blue-800 h-20" />; 
+  if (loading) return <div className="bg-blue-800 h-20" />;
+
+  // Jika belum ada data sekolah, tampilkan footer minimal
+  const hasSchoolData = schoolData?.schoolName;
 
   // Fungsi untuk membersihkan nama dari keterangan wilayah
   const cleanSchoolName = (name: string) => {
@@ -50,21 +53,23 @@ export const FooterComp = () => {
   };
 
   const displayData = {
-    // Nama sekolah yang sudah dibersihkan
-    name: cleanSchoolName(schoolData?.schoolName || "Ceria Academy"),
-    
-    address: schoolData?.address || "Alamat belum diatur",
-    phone: schoolData?.phoneNumber || "-",
-    email: schoolData?.email || "-",
-    
+    // Nama sekolah - tidak ada default, kosong sampai admin input
+    name: cleanSchoolName(schoolData?.schoolName || ""),
+
+    address: schoolData?.address || "",
+    phone: schoolData?.phoneNumber || "",
+    email: schoolData?.email || "",
+
     // Mengambil inisial dari nama yang sudah bersih
-    shortName: cleanSchoolName(schoolData?.schoolName || "CA")
-      .split(' ')
-      .filter(word => word.length > 0)
-      .map(n => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase(),
+    shortName: schoolData?.schoolName
+      ? cleanSchoolName(schoolData.schoolName)
+          .split(' ')
+          .filter(word => word.length > 0)
+          .map(n => n[0])
+          .join('')
+          .substring(0, 2)
+          .toUpperCase()
+      : "",
 
     mapsUrl: (schoolData?.latitude && schoolData?.longitude)
       ? `https://www.google.com/maps?q=${schoolData.latitude},${schoolData.longitude}`
@@ -87,30 +92,32 @@ export const FooterComp = () => {
       
       <div className="max-w-7xl mx-auto px-6 pt-20 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          
+
           {/* Brand Column */}
           <div className="md:col-span-5 space-y-6">
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg bg-[#F2C94C] text-[#1e293b]"
-              >
-                {displayData.shortName}
+            {displayData.shortName && (
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg bg-[#F2C94C] text-[#1e293b]"
+                >
+                  {displayData.shortName}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">
+                    {displayData.name}
+                  </h2>
+                  <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mt-1">
+                    Web Pendidikan
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">
-                  {displayData.name}
-                </h2>
-                <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mt-1">
-                  Web Pendidikan
-                </p>
-              </div>
-            </div>
-            
-            <p className="text-slate-200 text-sm leading-relaxed max-w-sm">
-              Mewujudkan lulusan yang berkarakter Profil Pelajar Pancasila, 
-              unggul dalam prestasi, berbudaya lingkungan, dan siap menghadapi 
-              tantangan global.
-            </p>
+            )}
+
+            {schoolData?.headmasterWelcome && (
+              <p className="text-slate-200 text-sm leading-relaxed max-w-sm">
+                {schoolData.headmasterWelcome}
+              </p>
+            )}
           </div>
 
           {/* Quick Links */}
@@ -133,7 +140,8 @@ export const FooterComp = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Info - hanya tampilkan jika ada data kontak */}
+          {hasSchoolData && (
           <div className="md:col-span-4">
             <h4 className="text-sm font-black uppercase tracking-widest text-slate-200 mb-6 flex items-center gap-2">
               <MapPin size={16} className="text-blue-200 ml-[-4px]" /> Hubungi Kami
@@ -142,7 +150,7 @@ export const FooterComp = () => {
               <p className="text-slate-200 text-sm leading-relaxed">
                 {displayData.address}
               </p>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm text-slate-300">
                   <Phone size={14} /> {displayData.phone}
@@ -186,13 +194,14 @@ export const FooterComp = () => {
               </a>
             </div>
           </div>
+          )}
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2 text-slate-200 text-[11px] font-bold uppercase tracking-widest">
             <ShieldCheck size={14} />
-            <span>© {displayData.year} {displayData.name} • All Rights Reserved</span>
+            <span>© {displayData.year} {displayData.name}{displayData.name ? ' • All Rights Reserved' : ''}</span>
           </div>
           
           <div className="flex items-center gap-4">

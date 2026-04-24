@@ -69,7 +69,7 @@ export const classroomColumns = (columFilter?: BaseTableFilter): ColumnDef<Class
         const encryptPayload = simpleEncode(
           JSON.stringify({ id: row.original.id, text: row.original.namaKelas }),
         );
-        // // console.log(encryptPayload)
+        // (encryptPayload)
         // const encryptPayload = JSON.stringify({ id: row.original.id, text: row.original.namaKelas })
         return (
           <BaseActionTable

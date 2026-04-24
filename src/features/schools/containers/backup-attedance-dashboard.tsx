@@ -31,7 +31,7 @@ export const AttedancesReport = ({ selectedSchool, selectDate }: AttedancesRepor
         student.absensis?.length > 0 &&
         (!selectedSchool || student.user?.sekolah?.namaSekolah === selectedSchool)
     );
-    console.log("filteredBySchool:", filtered);
+    
     return filtered;
   }, [biodata.data, selectedSchool]);
 
@@ -65,7 +65,7 @@ export const AttedancesReport = ({ selectedSchool, selectDate }: AttedancesRepor
         selectedClass ? student.kelas?.namaKelas === selectedClass : true
       ) || [];
 
-    // console.log('specificDayData:', data);
+    // 
     return data;
   }, [filteredBySchool, selectedClass, targetDate]);
 
@@ -93,21 +93,21 @@ export const AttedancesReport = ({ selectedSchool, selectDate }: AttedancesRepor
         selectedClass ? student.kelas?.namaKelas === selectedClass : true
       ) || [];
 
-    console.log('previousDayData:', data);
+    
     return data;
   }, [filteredBySchool, selectedClass, targetDate]);
 
   // Calculate attendance stats for the target date
   const specificDayStats = useMemo(() => {
     const stats = calculateAttendanceStats(specificDayData);
-    console.log('specificDayStats:', stats);
+    
     return stats;
   }, [specificDayData]);
 
   // Calculate attendance stats for the previous day
   const previousDayStats = useMemo(() => {
     const stats = calculateAttendanceStats(previousDayData);
-    console.log('previousDayStats:', stats);
+    
     return stats;
   }, [previousDayData]);
 

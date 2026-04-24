@@ -43,7 +43,7 @@ interface CourseInitialData {
 //       XLSX.writeFile(wb, "Template_Upload_Mata_Pelajaran.xlsx");
 //     })
 //     .catch((error) => {
-//       console.error("Error loading template file:", error);
+//       
 //     });
 // };
 
@@ -213,7 +213,7 @@ export const CourseCreationForm = ({
   //           });
   //           successCount++;
   //         } catch (error) {
-  //           console.error(`Gagal mengirim: ${item.namaMataPelajaran}`, error);
+  //           
   //           errorCount++;
   //         }
   //       }
@@ -237,7 +237,7 @@ export const CourseCreationForm = ({
 
   //     reader.readAsArrayBuffer(file);
   //   } catch (error) {
-  //     console.error("Error saat memproses file:", error);
+  //     
   //     setUploadStatus(lang.text("errSystem"));
   //   }
   // };

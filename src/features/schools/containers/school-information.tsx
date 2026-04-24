@@ -126,13 +126,13 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
 
   // Check for hook errors
   useEffect(() => {
-    console.log("useSchoolDetail status:", { isFetching: detail.isFetching, data: detail.data?.[0] });
-    if (detail.error) console.error("useSchoolDetail error:", detail.error);
-    if (student.error) console.error("useBiodata error:", student.error);
-    if (teacher.error) console.error("useBiodataGuru error:", teacher.error);
-    if (classroom.error) console.error("useClassroom error:", classroom.error);
-    if (course.error) console.error("useCourse error:", course.error);
-    if (province.error) console.error("useProvinces error:", province.error);
+    
+    if (detail.error) { console.error("Detail fetch error:", detail.error); }
+    if (student.error) { console.error("Student fetch error:", student.error); }
+    if (teacher.error) { console.error("Teacher fetch error:", teacher.error); }
+    if (classroom.error) { console.error("Classroom fetch error:", classroom.error); }
+    if (course.error) { console.error("Course fetch error:", course.error); }
+    if (province.error) { console.error("Province fetch error:", province.error); }
   }, [
     detail.error,
     detail.isFetching,
@@ -147,7 +147,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
   // Populate form and store initial values
   useEffect(() => {
     if (detail.data?.[0]) {
-      console.log("Resetting form with detail.data?.[0]:", detail.data?.[0]);
+      
       const newValues = {
         provinceId: String(detail.data?.[0]?.provinceId) || "",
         schoolName: detail.data?.[0]?.namaSekolah || "",
@@ -184,7 +184,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
     if (initialValues) {
       const subscription = form.watch((currentValues) => {
         const hasFormChanges = !deepEqual(currentValues, initialValues);
-        console.log("Form values changed:", { currentValues, hasFormChanges });
+        
         setHasChanges(hasFormChanges);
       });
       return () => subscription.unsubscribe();
@@ -193,12 +193,12 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
 
   // Debug isEditMode
   useEffect(() => {
-    console.log("isEditMode changed:", isEditMode);
+    
   }, [isEditMode]);
 
   // Submit form function
   async function onSubmit(data: z.infer<typeof schoolUpdateFormSchema>) {
-    console.log("onSubmit called with data:", data);
+    
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -339,7 +339,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
       setIsEditMode(false);
       setHasChanges(false);
     } catch (err: any) {
-      console.error("onSubmit error:", err);
+      
       alert.error(
         err.response?.data?.message ||
           lang.text("failed", {
@@ -360,10 +360,10 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
         onSubmit={(e) => {
           e.preventDefault();
           if (isEditMode && isIntentionalSubmit) {
-            console.log("Form submitted");
+            
             form.handleSubmit(onSubmit)();
           } else {
-            console.log("Form submission blocked");
+            
           }
         }}
         className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4"
@@ -380,12 +380,12 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                     <FileUploader
                       value={field.value}
                       onChange={(v) => {
-                        console.log("FileUploader onChange:", v);
+                        
                         field.onChange(v);
                       }}
                       buttonPlaceholder="Upload logo sekolah"
                       onError={(e) => {
-                        console.log("FileUploader error:", e);
+                        
                         form.setError("file", { message: e });
                       }}
                       showButton={false}
@@ -409,7 +409,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                   <SignatureInput
                     sigCanvas={sigCanvas}
                     onSignatureChange={() => {
-                      console.log("SignatureInput changed");
+                      
                       form.setValue("ttdKepalaSekolah", sigCanvas.current?.toDataURL() || null);
                     }}
                   />
@@ -502,7 +502,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                       size="sm"
                       disabled={isSubmitting}
                       onClick={() => {
-                        console.log("Tombol Batal diklik");
+                        
                         form.reset();
                         setIsEditMode(false);
                         setIsIntentionalSubmit(false);
@@ -518,7 +518,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                     type="button"
                     size="lg"
                     onClick={() => {
-                      console.log("Entering edit mode");
+                      
                       setIsEditMode(true);
                     }}
                   >
@@ -755,7 +755,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                         <InputMap
                           label="Pilih Lokasi Peta"
                           onChange={(v) => {
-                            console.log("InputMap onChange:", v);
+                            
                             field.onChange(v);
                           }}
                           value={field.value}

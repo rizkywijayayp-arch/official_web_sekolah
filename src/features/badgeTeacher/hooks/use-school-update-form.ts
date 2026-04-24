@@ -51,7 +51,7 @@ export const useSchoolUpdateForm = ({ onClose }: UseSchoolUpdateFormProps) => {
   // Set data awal ke state hanya sekali saat data dari API tersedia
   useEffect(() => {
     if (!school.isLoading && school.data && !schoolData) {
-      console.log("📌 Mengambil data sekolah dari API:", school.data?.[0]);
+      
       const initialData: z.infer<typeof schoolUpdateFormSchema> = {
         provinceId: String(school.data?.[0]?.provinceId) || "",
         schoolName: school.data?.[0]?.namaSekolah || "",
@@ -81,7 +81,7 @@ export const useSchoolUpdateForm = ({ onClose }: UseSchoolUpdateFormProps) => {
 
   // Fungsi submit
   async function onSubmit(data: z.infer<typeof schoolUpdateFormSchema>) {
-    console.log("🚀 Form is valid, submitting data:", data);
+    
     try {
       const formData = new FormData();
       const token = localStorage.getItem("token");
@@ -153,7 +153,7 @@ export const useSchoolUpdateForm = ({ onClose }: UseSchoolUpdateFormProps) => {
         { headers }
       );
 
-      console.log("✅ Data sekolah berhasil terupdate:", response.data);
+      
       alert.success(
         lang.text("successful", {
           context: lang.text("updateSchoolData"),
@@ -164,9 +164,9 @@ export const useSchoolUpdateForm = ({ onClose }: UseSchoolUpdateFormProps) => {
       onClose();
       navigate("/", { replace: true });
     } catch (err: any) {
-      console.error("Error while submitting:", err);
+      
       if (err.response) {
-        console.error("Response error:", err.response);
+        
         alert.error(
           err.response.data?.message ||
             lang.text("failed", {
@@ -174,12 +174,12 @@ export const useSchoolUpdateForm = ({ onClose }: UseSchoolUpdateFormProps) => {
             })
         );
       } else if (err.request) {
-        console.error("Request error:", err.request);
+        
         alert.error(
           lang.text("failed", { context: lang.text("updateSchoolData") })
         );
       } else {
-        console.error("Error message:", err.message);
+        
         alert.error(
           err?.message ||
             lang.text("failed", {

@@ -64,7 +64,7 @@ export const GraduationDialog = ({ open, onClose }: SchoolClassDialogProps) => {
           lulus: true,
           sekolahId: Number(selectedSchool),
         };
-        console.log("Submitting:", body);
+        
         const { data } = await creation.create(body);
         alert.success(data?.message);
         setSelectedClasses([]);

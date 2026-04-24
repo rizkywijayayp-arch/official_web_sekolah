@@ -22,7 +22,7 @@
 // export const FormRfid: React.FC<FormRfidProps> = ({ userId }) => {
 //   const alert = useAlert();
 //   const biodata = useBiodata();
-//   console.log("user", biodata);
+//   
 
 //   // Mengambil ID pengguna dari biodata yang diambil dari hook useBiodata
 //   // Sesuaikan dengan struktur data yang ada pada useBiodata
@@ -64,7 +64,7 @@
 //   // Mengatur nilai form setelah data siswa berhasil diambil
 //   useEffect(() => {
 //     if (detail.data) {
-//       console.log("Detail Data Siswa:", detail.data);
+//       
 //       form.reset({
 //         name: detail.data?.name || "",
 //         email: detail.data?.email || "",
@@ -89,7 +89,7 @@
 
 //   // Fungsi untuk meng-handle submit form
 //   async function onSubmit(data: z.infer<typeof studentEditSchema>) {
-//     console.log("Submitting RFID for student ID:", userId); // Log userId
+//      // Log userId
 
 //     setLoadingCreation(true); // Menandakan bahwa request sedang diproses
 
@@ -164,7 +164,7 @@
 //         lang.text("successUpdate", { context: lang.text("student") })
 //       );
 //     } catch (err: any) {
-//       console.error("Error updating student:", err);
+//       
 //       alert.error(
 //         err?.message ||
 //           lang.text("failUpdate", { context: lang.text("student") })

@@ -1,12 +1,25 @@
 import { API_CONFIG } from "@/config/api";
-import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
-import { getSchoolId } from "@/features/_global/hooks/getSchoolId";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
 import { AlertCircle, Calendar, Clock, Download, FileText, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+
+const useProfile = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['school-profile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.success ? json.data : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
 /****************
  * FETCH HOOK (HANYA BAGIAN INI YANG DIUBAH)
@@ -44,7 +57,7 @@ const useKurikulumData = () => {
   const [data, setData] = useState<KurikulumData>(DEMO_DATA);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const SCHOOL_ID = getSchoolId()
+  const SCHOOL_ID = getSchoolIdSync()
 
   useEffect(() => {
     const fetchKurikulum = async () => {
@@ -81,7 +94,7 @@ const useKurikulumData = () => {
 
         setData(mappedData);
       } catch (err) {
-        console.warn("Fetch error:", err);
+        
         setError("Gagal memuat data kurikulum. Menampilkan data demo.");
         setData(DEMO_DATA);
       } finally {
@@ -197,9 +210,9 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
  * PAGE DENGAN HERO
  ****************************/
 const CurriculumPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
-  const schoolName = schoolInfo.fullName;
+  const { data: profile } = useProfile();
+  const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const schoolName = profile?.schoolName || 'Sekolah';
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -213,7 +226,7 @@ const CurriculumPage = () => {
 
       console.log("UI smoke tests passed (theme, Navbar/Footer)");
     } catch (e) {
-      console.error("UI smoke tests failed:", e);
+      
     }
   }, [prefersReducedMotion, theme]);
 
