@@ -5,28 +5,49 @@ import { API_CONFIG } from "@/config/api";
  * Call ini setiap kali schoolData di-load
  */
 export const setFavicon = (logoUrl: string | null, schoolName?: string, faviconUrl?: string | null) => {
-  const link = document.querySelector("link[rel='icon']") as HTMLLinkElement || document.createElement("link");
+  // Hapus link icon yang existing
+  const existingLink = document.querySelector("link[rel='icon']");
+  if (existingLink) {
+    existingLink.remove();
+  }
+
+  // Buat link element baru
+  const link = document.createElement("link");
+  link.rel = "icon";
 
   if (faviconUrl) {
     // Pakai favicon custom dari admin
-    link.rel = "icon";
-    link.type = faviconUrl.endsWith('.png') ? "image/png" : "image/x-icon";
+    link.type = faviconUrl.toLowerCase().endsWith('.png') ? "image/png" : "image/x-icon";
     link.href = faviconUrl;
   } else if (logoUrl) {
     // Pakai logo dari API sebagai favicon
-    link.rel = "icon";
-    link.type = "image/x-icon";
-    link.href = logoUrl;
+    const lowerUrl = logoUrl.toLowerCase();
+    if (lowerUrl.endsWith('.png')) {
+      link.type = "image/png";
+    } else if (lowerUrl.endsWith('.jpg') || lowerUrl.endsWith('.jpeg')) {
+      link.type = "image/jpeg";
+    } else if (lowerUrl.endsWith('.webp')) {
+      link.type = "image/webp";
+    } else if (lowerUrl.endsWith('.svg')) {
+      link.type = "image/svg+xml";
+    } else if (lowerUrl.endsWith('.ico')) {
+      link.type = "image/x-icon";
+    } else {
+      link.type = "image/x-icon";
+    }
+    // Add cache-busting timestamp
+    link.href = logoUrl.includes('?') ? `${logoUrl}&t=${Date.now()}` : `${logoUrl}?t=${Date.now()}`;
   } else if (schoolName) {
     // Generate favicon dari inisial sekolah
-    link.rel = "icon";
     link.type = "image/svg+xml";
     link.href = generateInitialFavicon(schoolName);
+  } else {
+    // Fallback
+    link.type = "image/x-icon";
+    link.href = "/logo.ico";
   }
 
-  if (!document.head.contains(link)) {
-    document.head.appendChild(link);
-  }
+  document.head.appendChild(link);
 };
 
 /**

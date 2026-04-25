@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogInIcon, Mail, MapPin, Menu, Phone, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 const NAV = [
   {
@@ -95,10 +96,11 @@ const NavDropdown = ({ item }: any) => {
 };
 
 export const DynamicNavbar = () => {
+  const schoolId = getSchoolIdSync();
   const { data: profile } = useQuery({
-    queryKey: ['schoolProfile'],
+    queryKey: ['schoolProfile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`, { cache: 'no-store' });
+      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
       const data = await res.json();
       return data.data;
     },
@@ -151,7 +153,7 @@ export const DynamicNavbar = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full group-hover:bg-blue-500/30 transition-all" />
               <img
-                src={profile?.logoUrl || "/logo.png"}
+                src={profile?.logoUrl || "/logo.jpg"}
                 alt="Logo"
                 className="w-10 h-10 md:w-11 md:h-11 relative object-contain transition-transform group-hover:scale-110"
               />

@@ -95,12 +95,14 @@ export const FooterComp = () => {
 
           {/* Brand Column */}
           <div className="md:col-span-5 space-y-6">
-            {displayData.shortName && (
+            {schoolData?.logoUrl && (
               <div className="flex items-center gap-4">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg bg-[#F2C94C] text-[#1e293b]"
-                >
-                  {displayData.shortName}
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white overflow-hidden">
+                  <img
+                    src={schoolData.logoUrl}
+                    alt={displayData.name || "Logo Sekolah"}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">

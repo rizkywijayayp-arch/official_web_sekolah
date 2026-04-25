@@ -16,9 +16,9 @@ interface SEOMetadata {
 }
 
 const DEFAULT_METADATA: SEOMetadata = {
-  title: "Web Profile Sekolah",
-  description: "Website resmi sekolah untuk informasi dan layanan pendidikan",
-  keywords: "sekolah, pendidikan, profile sekolah",
+  title: "",
+  description: "",
+  keywords: "",
 };
 
 export const useSEOMetadata = () => {
@@ -70,6 +70,8 @@ export const SEOMetaTags = ({ customTitle, customDescription, customImage }: SEO
   const title = customTitle || metadata.title || DEFAULT_METADATA.title;
   const description = customDescription || metadata.description || DEFAULT_METADATA.description;
   const image = customImage || metadata.ogImage || "/og-default.png";
+  // Dynamic site name dari schoolName API, fallback ke schoolName atau title
+  const siteName = metadata.schoolName || metadata.title || DEFAULT_METADATA.title;
 
   return (
     <>
@@ -87,7 +89,7 @@ export const SEOMetaTags = ({ customTitle, customDescription, customImage }: SEO
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:site_name" content={title} />
+      <meta property="og:site_name" content={siteName} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -129,10 +131,20 @@ export const MetaTagsInjector = () => {
     if (metadata.ogTitle) updateMetaProperty("og:title", metadata.ogTitle);
     if (metadata.ogDescription) updateMetaProperty("og:description", metadata.ogDescription);
     if (metadata.ogImage) updateMetaProperty("og:image", metadata.ogImage);
+    // Update og:site_name dengan nama sekolah (bukan URL)
+    if (metadata.schoolName) {
+      updateMetaProperty("og:site_name", metadata.schoolName);
+      // Update title juga kalau belum ada custom title
+      if (!metadata.title) {
+        document.title = metadata.schoolName;
+      }
+    }
 
-    // Update favicon dari API
-    if (metadata.logoUrl || metadata.schoolName) {
-      setFavicon(metadata.logoUrl || null, metadata.schoolName);
+    // Update favicon dari API - panggil selalu kalau ada logoUrl atau schoolName
+    if (metadata.logoUrl) {
+      setFavicon(metadata.logoUrl, metadata.schoolName);
+    } else if (metadata.schoolName) {
+      setFavicon(null, metadata.schoolName);
     }
   }, [metadata]);
 
