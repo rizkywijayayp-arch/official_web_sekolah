@@ -7,7 +7,7 @@ import { getSchoolIdSync } from "../../hooks/getSchoolId";
 
 const useSchoolProfile = () => {
   const schoolId = getSchoolIdSync();
-  const API_BASE = API_CONFIG.BASE_URL;
+  const API_BASE = API_CONFIG.baseUrl;
   return useQuery({
     queryKey: ['schoolProfile', schoolId],
     queryFn: async () => {
@@ -162,7 +162,7 @@ export const NavbarComp40 = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full group-hover:bg-blue-500/30 transition-all" />
               <img 
-                src={profile?.logoUrl || "/logo.jpg"} 
+                src={profile?.logoUrl || ""} 
                 alt="Logo" 
                 className="w-10 h-10 md:w-11 md:h-11 relative object-contain transition-transform group-hover:scale-110" 
               />
