@@ -57,12 +57,22 @@ export function PengumumanKelulusan() {
   const [memoryPhotos, setMemoryPhotos] = useState<{id: number; url: string; caption: string}[]>([]);
   const [photosLoading, setPhotosLoading] = useState(true);
 
-  // Announcement date (default: June 5, 2026 08:00 WIB)
-  const announcementDate = new Date('2026-06-05T08:00:00+07:00');
-
   // Fetch school gallery photos from backend (default empty if not set)
+  const [announcementConfig, setAnnouncementConfig] = useState<AnnouncementConfig | null>(null);
   useEffect(() => {
     const schoolId = getSchoolIdSync();
+    // Fetch announcement settings from backend
+    fetch(`${API_CONFIG.baseUrl}/kelulusan/announcement?schoolId=${schoolId}`, {
+      headers: { 'X-API-Key': 'kira-school-2024' },
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && json.data) {
+          setAnnouncementConfig(json.data);
+        }
+      })
+      .catch(err => console.error('Gagal load pengaturan pengumuman:', err));
+
     fetch(`${API_CONFIG.baseUrl}/gallery?schoolId=${schoolId}&limit=8`)
       .then(res => res.json())
       .then(json => {
@@ -74,14 +84,30 @@ export function PengumumanKelulusan() {
           })).filter((p: any) => p.url);
           setMemoryPhotos(photos);
         }
-        // If no data, keep empty array (no default images)
       })
       .catch(err => console.error('Gagal load foto galeri:', err))
       .finally(() => setPhotosLoading(false));
   }, []);
 
-  // Countdown logic
+  // Announcement date from backend, fallback ke default
+  const announcementDate = useMemo(() => {
+    if (announcementConfig?.tanggalPengumuman) {
+      return new Date(announcementConfig.tanggalPengumuman);
+    }
+    return new Date('2026-06-05T08:00:00+07:00');
+  }, [announcementConfig?.tanggalPengumuman]);
+
+  // Enable countdown setting (default true)
+  const showCountdown = announcementConfig?.enableCountdown !== false;
+
+  // Countdown logic - only run if countdown is enabled
   useEffect(() => {
+    // If countdown disabled, open immediately
+    if (!showCountdown) {
+      setIsOpen(true);
+      return;
+    }
+
     const updateCountdown = () => {
       const now = new Date();
       const diff = announcementDate.getTime() - now.getTime();
@@ -103,7 +129,7 @@ export function PengumumanKelulusan() {
     updateCountdown();
     const timer = setInterval(updateCountdown, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [announcementDate, showCountdown]);
 
   // Auto-rotate carousel (only if photos available)
   useEffect(() => {
@@ -197,7 +223,7 @@ export function PengumumanKelulusan() {
               className="text-slate-400 text-lg mb-8"
             >
               Sabar ya... Pengumuman akan dibuka pada<br />
-              <span className="text-white font-semibold">5 Juni 2026 pukul 08:00 WIB</span>
+              <span className="text-white font-semibold">{announcementDate.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Asia/Jakarta' })} WIB</span>
             </motion.p>
 
             {/* Countdown Boxes */}
