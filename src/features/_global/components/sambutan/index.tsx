@@ -27,10 +27,10 @@ const DynamicSambutan = () => {
   if (loading) return <div className="py-24 text-center text-blue-600 font-bold">Memuat pesan kepemimpinan...</div>;
 
   const stats = [
-    { icon: <Users size={30} />, value: profile?.studentCount || '540+', label: 'Siswa' },
-    { icon: <BookOpen size={30} />, value: profile?.teacherCount || '45+', label: 'Guru' },
-    { icon: <School size={30} />, value: profile?.roomCount || '30+', label: 'Kelas' },
-    { icon: <Award size={30} />, value: profile?.achievementCount || '100', label: 'Prestasi' },
+    { icon: <Users size={30} />, value: profile?.studentCount ? `${profile.studentCount}+` : '-', label: 'Siswa' },
+    { icon: <BookOpen size={30} />, value: profile?.teacherCount ? `${profile.teacherCount}+` : '-', label: 'Guru' },
+    { icon: <School size={30} />, value: profile?.roomCount ? `${profile.roomCount}+` : '-', label: 'Kelas' },
+    { icon: <Award size={30} />, value: profile?.achievementCount ? `${profile.achievementCount}` : '-', label: 'Prestasi' },
   ];
 
   return (

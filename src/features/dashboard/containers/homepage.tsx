@@ -415,24 +415,59 @@ const Section = ({ id, title, subtitle, theme, children, viewAllHref = "#" }) =>
 );
 
 /****************
- * STATS BAR (below hero)
+ * STATS BAR (below hero) - from API
  ****************/
 const StatsBar = ({ theme }) => {
-  const stats = [
-    { k: "Hadir Hari Ini", v: 1021 },
-    { k: "Izin/Sakit", v: 34 },
-    { k: "Terlambat", v: 12 },
-    { k: "Guru Hadir", v: 88 },
-  ];
+  const [stats, setStats] = useState([
+    { k: "Hadir Hari Ini", v: 0 },
+    { k: "Izin/Sakit", v: 0 },
+    { k: "Terlambat", v: 0 },
+    { k: "Guru Hadir", v: 0 },
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`/api/siswa/summary-attendances?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          const { siswa, guru } = result.data;
+          setStats([
+            { k: "Siswa Hadir", v: siswa?.rincian?.Hadir || 0 },
+            { k: "Izin/Sakit", v: siswa?.rincian?.Izin || siswa?.rincian?.Sakit || 0 },
+            { k: "Terlambat", v: siswa?.rincian?.Terlambat || 0 },
+            { k: "Guru Hadir", v: guru?.rincian?.Hadir || 0 },
+          ]);
+        }
+      } catch (err) {
+        console.error('Gagal fetch stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+    const interval = setInterval(fetchStats, 60000); // refresh every minute
+    return () => clearInterval(interval);
+  }, []);
+
   const prefersReducedMotion = useReducedMotion();
   return (
     <section id="stats" className="py-6">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {stats.map((s, i) => (
+          {loading ? (
+            [1, 2, 3, 4].map(i => (
+              <div key={i} className="rounded-2xl p-4 border shadow-sm animate-pulse" style={{ background: theme.surface, borderColor: theme.subtle }}>
+                <div className="h-4 w-20 rounded" style={{ background: theme.subtle }} />
+                <div className="h-8 w-12 mt-2 rounded" style={{ background: theme.subtle }} />
+              </div>
+            ))
+          ) : stats.map((s, i) => (
             <motion.div key={s.k} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : i * 0.05 }} className="rounded-2xl p-4 border shadow-sm" style={{ background: theme.surface, borderColor: theme.subtle }}>
               <div className="text-xs md:text-sm opacity-80" style={{ color: theme.surfaceText }}>{s.k}</div>
-              <div className="text-xl md:text-2xl font-bold" style={{ color: theme.surfaceText }}>{s.v}</div>
+              <div className="text-xl md:text-2xl font-bold" style={{ color: theme.surfaceText }}>{s.v.toLocaleString('id-ID')}</div>
             </motion.div>
           ))}
         </div>
@@ -459,10 +494,30 @@ const GlobalInfoBar = ({ theme }) => {
 };
 
 /****************
- * HEADMASTER GREETING
+ * HEADMASTER GREETING - from API
  ****************/
 const HeadmasterGreeting = ({ theme }) => {
+  const [headmaster, setHeadmaster] = useState({ nama: '', nip: '' });
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const fetchHeadmaster = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`/api/profileSekolah?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          setHeadmaster({
+            nama: result.data.namaKepalaSekolah || result.data.nama_kepala_sekolah || '',
+            nip: result.data.nipKepalaSekolah || result.data.nip_kepala_sekolah || ''
+          });
+        }
+      } catch (err) {
+        console.error('Gagal fetch kepala sekolah:', err);
+      }
+    };
+    fetchHeadmaster();
+  }, []);
   const variants = {
     container: { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: prefersReducedMotion ? 0 : 0.08 } } },
     up: { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: prefersReducedMotion ? 0 : 0.5, ease: [0.33,1,0.68,1] } } },
