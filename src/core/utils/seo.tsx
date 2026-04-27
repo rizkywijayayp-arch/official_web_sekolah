@@ -29,7 +29,7 @@ export const useSEOMetadata = () => {
     const fetchMetadata = async () => {
       try {
         const schoolId = getSchoolIdSync();
-        const response = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+        const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
         const result = await response.json();
 
         if (result.success && result.data) {

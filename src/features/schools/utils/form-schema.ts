@@ -66,29 +66,14 @@ export const schoolUpdateFormSchema = z.object({
     .min(1, { message: lang.text("schoolCreationValidation2") }),
   schoolAdmin: z.string().optional(),
   schoolStatus: z.enum(["1", "0"]).optional(),
-  // schoolLogo: z.any().optional(),
-  // schoolFile: z.any().optional(),
   provinceId: z.string().optional(),
   moodleApiUrl: z.string().optional(),
   tokenMoodle: z.string().optional(),
   serverSatu: z.string().optional(),
   serverDua: z.string().optional(),
   serverTiga: z.string().optional(),
-  file: z
-    .any()
-    .optional(),
-  //   // .refine(
-  //   //   (file) => {
-  //   //     if (!file || file === "" || file === null) return true; // Izinkan file kosong
-  //   //     if (!(file instanceof File)) return false; // Pastikan file adalah instance File
-  //   //     return ["image/jpeg", "image/jpg", "image/png"].includes(file.type);
-  //   //   },
-  //   //   {
-  //   //     message: lang.text('fileValidation ', {
-  //   //       formats: "JPG, JPEG, atau PNG",
-  //   //     }), // Pesan error: Hanya file JPG, JPEG, atau PNG yang diperbolehkan
-  //   //   }
-  // ),
+  file: z.any().optional(),
+  favicon: z.any().optional(), // Favicon upload field
   urlYoutube1: z.string().optional(),
   urlYoutube2: z.string().optional(),
   urlYoutube3: z.string().optional(),
@@ -100,9 +85,8 @@ export const schoolUpdateFormSchema = z.object({
     lng: z.number(),
   }),
   active: z.number(),
-  // alamatSekolah: z.string().min(1, { message: "Alamat sekolah harus diisi" }),
   alamatSekolah: z.string().optional(),
   vision: z.string().optional(),
   missions: z.string().optional(),
-  visiMisi: z.string().optional(), // Tambahkan field ini
+  visiMisi: z.string().optional(),
 });

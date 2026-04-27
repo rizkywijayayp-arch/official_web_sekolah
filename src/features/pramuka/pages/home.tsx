@@ -156,7 +156,7 @@ export function PramukaMain() {
   const { data: rows = [], isLoading } = useQuery({
     queryKey: ['pramuka-premium', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/pramuka?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/pramuka?schoolId=${schoolId}`);
       const json = await res.json();
       return json.data.map((item: any) => ({
         id: item.id.toString(),

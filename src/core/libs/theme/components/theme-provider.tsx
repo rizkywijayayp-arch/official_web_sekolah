@@ -26,6 +26,14 @@ const generateCssVariables = (colors: ThemeContextValue["colors"]) => {
     Object.entries(colors).forEach(([key, value]) => {
       root.style.setProperty(`--theme-color-${key}`, value);
     });
+
+    // Set semantic aliases untuk kemudahan
+    root.style.setProperty(`--theme-color-text-primary`, colors.surfaceText || colors.primary || '#212121');
+    root.style.setProperty(`--theme-color-text-secondary`, colors.primaryText || colors.subtle || '#475569');
+    root.style.setProperty(`--theme-color-text-muted`, colors.subtle || '#757575');
+    root.style.setProperty(`--theme-color-bg`, colors.bg || '#FFFFFF');
+    root.style.setProperty(`--theme-color-surface`, colors.surface || '#F5F5F5');
+    root.style.setProperty(`--theme-color-border`, colors.gray || colors.subtle || '#e0e0e0');
   }
 };
 

@@ -36,7 +36,7 @@ const useHeroSlides = () => {
   return useQuery({
     queryKey: ['heroSlides', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/beranda?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/beranda?schoolId=${schoolId}`);
       const data = await res.json();
       return (data.heroSlides || []).map((s: any) => ({
         title: s.title,
@@ -54,7 +54,7 @@ const useStats = () => {
   return useQuery({
     queryKey: ['stats', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/public/statistics/daily?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/public/statistics/daily?schoolId=${schoolId}`);
       const data = await res.json();
       return [
         { k: "Hadir Hari Ini", v: data.data?.hadirHariIni || 0 },
@@ -73,7 +73,7 @@ const useSambutanAndHeadmasters = () => {
       {
         queryKey: ['sambutan', schoolId],
         queryFn: async () => {
-          const res = await fetch(`${API_CONFIG.BASE_URL}/beranda?schoolId=${schoolId}`);
+          const res = await fetch(`${API_CONFIG.baseUrl}/beranda?schoolId=${schoolId}`);
           const data = await res.json();
           return data.sambutan;
         },
@@ -81,7 +81,7 @@ const useSambutanAndHeadmasters = () => {
       {
         queryKey: ['headmasters', schoolId],
         queryFn: async () => {
-          const res = await fetch(`${API_CONFIG.BASE_URL}/sejarah/kepsek?schoolId=${schoolId}`);
+          const res = await fetch(`${API_CONFIG.baseUrl}/sejarah/kepsek?schoolId=${schoolId}`);
           const data = await res.json();
           return data.items || [];
         },
@@ -95,7 +95,7 @@ const useAnnouncements = () => {
   return useQuery({
     queryKey: ['announcements', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/public/announcements?page=1&limit=10&schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/public/announcements?page=1&limit=10&schoolId=${schoolId}`);
       const data = await res.json();
       return data.data || [];
     },
@@ -107,7 +107,7 @@ const useNews = () => {
   return useQuery({
     queryKey: ['news', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/berita?schoolId=${schoolId}&page=1&limit=20`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/berita?schoolId=${schoolId}&page=1&limit=20`);
       const data = await res.json();
       return (data.data || []).map((item: any) => ({
         id: item.id,
@@ -146,7 +146,7 @@ const Hero = ({ theme }: any) => {
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="relative h-full w-full">
-            <SafeImage src={`${API_CONFIG.BASE_URL}${slide.img}`} className="w-full h-full object-cover" style={{ filter: "brightness(0.95)" }} />
+            <SafeImage src={`${API_CONFIG.baseUrl}${slide.img}`} className="w-full h-full object-cover" style={{ filter: "brightness(0.95)" }} />
             <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, #F8FAFC 30%, transparent 100%)" }} />
           </motion.div>
         </AnimatePresence>
@@ -236,7 +236,7 @@ const HeadmasterGreeting = () => {
   const { data: profile } = useQuery({
     queryKey: ['schoolProfile'],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah`);
       const data = await res.json();
       return data.data;
     },
@@ -248,7 +248,7 @@ const HeadmasterGreeting = () => {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-[320px,1fr] gap-12 items-center bg-slate-50 p-8 md:p-16 rounded-[3rem]">
           <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200">
-            <SafeImage src={profile?.photoHeadmasterUrl ? `${API_CONFIG.BASE_URL}${profile.photoHeadmasterUrl}` : "/defaultProfile.png"} className="w-full h-full object-cover" />
+            <SafeImage src={profile?.photoHeadmasterUrl ? `${API_CONFIG.baseUrl}${profile.photoHeadmasterUrl}` : "/defaultProfile.png"} className="w-full h-full object-cover" />
           </div>
           <div>
             <span className="text-blue-500 font-bold text-sm uppercase tracking-widest">Kepala Sekolah</span>
@@ -337,7 +337,7 @@ const Page = () => {
   const { data: profile } = useQuery({
     queryKey: ['schoolProfile'],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah`);
       const data = await res.json();
       return data.data;
     },

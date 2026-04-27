@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Theme CSS Variables - Default colors, will be overridden by JS */
+/* Theme CSS Variables - Dynamic colors overridden by JS ThemeProvider */
 :root {
+  /* Base theme colors */
   --theme-primary: #1B5E20;
   --theme-accent: #FFFFEB3B;
   --theme-bg: #FFFFFF;
@@ -11,6 +12,39 @@
   --theme-surface-text: #212121;
   --theme-subtle: #757575;
   --theme-pop: #FF8A00;
+
+  /* Extended palette */
+  --theme-color-primary: #2D7263;
+  --theme-color-primary-text: #ffffff;
+  --theme-color-secondary: #54cab2;
+  --theme-color-secondary2: #b3f8d0;
+  --theme-color-secondary3: #EEF4F3;
+  --theme-color-danger: #FF396F;
+  --theme-color-success: #2D7263;
+  --theme-color-info: #a8cbc4;
+  --theme-color-warning: #FFB400;
+  --theme-color-gray: #e0e0e0;
+  --theme-color-border: #e0e0e0;
+  --theme-color-light: #ffffff;
+  --theme-color-dark: #222222;
+
+  /* Semantic colors */
+  --theme-color-text-primary: #212121;
+  --theme-color-text-secondary: #475569;
+  --theme-color-text-muted: #757575;
+  --theme-color-text-inverse: #ffffff;
+}
+
+/* Dark theme override */
+.dark {
+  --theme-color-text-primary: #f8fafc;
+  --theme-color-text-secondary: #e2e8f0;
+  --theme-color-text-muted: #94a3b8;
+  --theme-color-text-inverse: #0f172a;
+  --theme-color-bg: #0f172a;
+  --theme-color-surface: #1e293b;
+  --theme-color-border: #334155;
+  --theme-color-gray: #475569;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
@@ -238,7 +272,7 @@ h1, h2 {
 }
 
 .grid-box:hover {
-  background-color: white !important;
+  background-color: var(--theme-color-light, white) !important;
   border-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
   transition: all 0.2s ease;
@@ -303,17 +337,17 @@ h1, h2 {
 
 .ck-editor-wrapper .ck-editor__editable {
   min-height: 300px;
-  background: #fff;
-  border: 1px solid #ccc;
-  color: #000 !important;
+  background: var(--theme-color-light, #fff);
+  border: 1px solid var(--theme-color-border, #ccc);
+  color: var(--theme-color-text-primary, #000) !important;
   display: block !important;
 }
 .ck-editor-wrapper .ck-editor__top {
-  background: #f8f8f8;
-  border-bottom: 1px solid #ccc;
+  background: var(--theme-color-surface, #f8f8f8);
+  border-bottom: 1px solid var(--theme-color-border, #ccc);
 }
 .ck-editor-wrapper .ck-content {
-  color: #000 !important;
+  color: var(--theme-color-text-primary, #000) !important;
 }
 /*  */
 
@@ -338,7 +372,7 @@ h1, h2 {
   z-index: 50;
 }
 .modal-content {
-  background: white;
+  background: var(--theme-color-light, white);
   padding: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -346,13 +380,13 @@ h1, h2 {
 }
 .progress-bar-container {
   width: 100%;
-  background: #e5e7eb;
+  background: var(--theme-color-gray, #e5e7eb);
   border-radius: 9999px;
   height: 1rem;
   margin-bottom: 1rem;
 }
 .progress-bar {
-  background: #3b82f6;
+  background: var(--theme-color-primary, #3b82f6);
   height: 1rem;
   border-radius: 9999px;
   transition: width 0.3s ease;

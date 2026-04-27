@@ -27,6 +27,8 @@ export const applyTheme = (theme: SchoolTheme) => {
   if (typeof document === 'undefined') return;
 
   const root = document.documentElement;
+
+  // Core theme variables (backward compatible)
   root.style.setProperty('--theme-primary', theme.themePrimary);
   root.style.setProperty('--theme-accent', theme.themeAccent);
   root.style.setProperty('--theme-bg', theme.themeBg);
@@ -34,6 +36,17 @@ export const applyTheme = (theme: SchoolTheme) => {
   root.style.setProperty('--theme-surface-text', theme.themeSurfaceText);
   root.style.setProperty('--theme-subtle', theme.themeSubtle);
   root.style.setProperty('--theme-pop', theme.themePop);
+
+  // Semantic aliases for consistency with theme-provider
+  root.style.setProperty('--theme-color-primary', theme.themePrimary);
+  root.style.setProperty('--theme-color-text-primary', theme.themeSurfaceText);
+  root.style.setProperty('--theme-color-text-secondary', theme.themeSubtle);
+  root.style.setProperty('--theme-color-bg', theme.themeBg);
+  root.style.setProperty('--theme-color-surface', theme.themeSurface);
+  root.style.setProperty('--theme-color-border', theme.themeSubtle);
+  root.style.setProperty('--theme-color-gray', theme.themeSubtle);
+  root.style.setProperty('--theme-color-accent', theme.themeAccent);
+  root.style.setProperty('--theme-color-pop', theme.themePop);
 };
 
 /**

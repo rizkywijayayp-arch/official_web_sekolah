@@ -25,7 +25,7 @@ export const MENU_STAFF: VokadashProps["menus"] = [
   },
   {
     title: lang.text('graduation'),
-    url: "/pemngumuman-kelulusan",
+    url: "/pengumuman-kelulusan",
     icon: "GraduationCap",
     // status: "demo",
     disabled: "false",
@@ -49,6 +49,36 @@ export const MENU_STAFF: VokadashProps["menus"] = [
     url: "/ppid",
     icon: "Bullhorn",
     // status: "demo",
+    disabled: "false",
+  },
+  {
+    title: "Layanan Persuratan",
+    url: "/layanan-persuratan",
+    icon: "FileText",
+    disabled: "false",
+  },
+  {
+    title: "Kelola Permohonan Surat",
+    url: "/admin/permohonan",
+    icon: "FileCheck",
+    disabled: "false",
+  },
+  {
+    title: "Pengaturan Sekolah",
+    url: "/schools/settings",
+    icon: "Settings",
+    disabled: "false",
+  },
+  {
+    title: "Data Kelulusan",
+    url: "/admin/kelulusan",
+    icon: "Award",
+    disabled: "false",
+  },
+  {
+    title: "Lokasi Siswa",
+    url: "/admin/lokasi-siswa",
+    icon: "MapPin",
     disabled: "false",
   },
   {

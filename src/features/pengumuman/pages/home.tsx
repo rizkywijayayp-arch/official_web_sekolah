@@ -12,7 +12,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -265,7 +265,7 @@ function AnnouncementsSection() {
       try {
         setLoading(true);
         const schoolId = getSchoolIdSync();
-        const res = await fetch(`${API_CONFIG.BASE_URL}/pengumuman?schoolId=${schoolId}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/pengumuman?schoolId=${schoolId}`);
         const result = await res.json();
         if (result.success) {
           const mapped = result.data.map((item: any) => ({

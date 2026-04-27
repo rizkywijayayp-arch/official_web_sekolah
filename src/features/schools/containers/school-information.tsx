@@ -48,7 +48,6 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
     },
   });
 
-  console.log('detail sekolah', detail?.data?.[0])
   const student = useBiodata();
   const classroom = useClassroom();
   const teacher = useBiodataGuru();
@@ -62,6 +61,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
   const [initialValues, setInitialValues] = useState<z.infer<typeof schoolUpdateFormSchema> | null>(null);
   const [ckEditorError, setCkEditorError] = useState<string | null>(null);
   const sigCanvas = useRef<SignatureCanvas | null>(null);
+  const faviconInputRef = useRef<HTMLInputElement | null>(null);
 
   const students = student.data?.filter(
     (d) => Number(d?.user?.sekolah?.id) === Number(props.id)
@@ -94,6 +94,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
       urlYoutube2: "",
       urlYoutube3: "",
       file: "",
+      favicon: "", // Favicon field
       ttdKepalaSekolah: "",
       libraryServer: "",
       libraryName: "",
@@ -147,7 +148,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
   // Populate form and store initial values
   useEffect(() => {
     if (detail.data?.[0]) {
-      
+
       const newValues = {
         provinceId: String(detail.data?.[0]?.provinceId) || "",
         schoolName: detail.data?.[0]?.namaSekolah || "",
@@ -162,6 +163,7 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
         urlYoutube2: detail.data?.[0]?.urlYutubeSecond || "",
         urlYoutube3: detail.data?.[0]?.urlYutubeThird || "",
         file: detail.data?.[0]?.file || null,
+        favicon: detail.data?.[0]?.faviconUrl || null,
         ttdKepalaSekolah: detail.data?.[0]?.ttdKepalaSekolah || null,
         libraryServer: detail.data?.[0]?.serverPerpustakaan || "",
         libraryName: detail.data?.[0]?.namaPerpustakaan || "",
@@ -292,6 +294,16 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
           hasChanges = true;
         }
       }
+      // Handle favicon upload
+      if (data.favicon !== undefined) {
+        if (data.favicon instanceof File) {
+          formData.append("favicon", data.favicon);
+          hasChanges = true;
+        } else if (data.favicon === null || data.favicon === "") {
+          formData.append("favicon", "");
+          hasChanges = true;
+        }
+      }
       if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
         const signatureData = sigCanvas.current.getTrimmedCanvas().toDataURL("image/png");
         const byteString = atob(signatureData.split(",")[1]);
@@ -380,12 +392,12 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                     <FileUploader
                       value={field.value}
                       onChange={(v) => {
-                        
+
                         field.onChange(v);
                       }}
                       buttonPlaceholder="Upload logo sekolah"
                       onError={(e) => {
-                        
+
                         form.setError("file", { message: e });
                       }}
                       showButton={false}
@@ -398,6 +410,42 @@ export const SchoolInformation = (props: UseSchoolDetailProps) => {
                           alt="Current logo"
                           className="w-32 h-32 object-contain"
                         />
+                      </div>
+                    )}
+                  </FormItem>
+                )}
+              />
+              {/* Favicon Upload */}
+              <FormField
+                control={form.control}
+                name="favicon"
+                render={({ field, fieldState }) => (
+                  <FormItem className="mt-4">
+                    <FormLabel>Favicon Website</FormLabel>
+                    <p className="text-xs text-gray-500 mb-2">Icon kecil di tab browser (PNG/SVG, maks 64x64px)</p>
+                    <FileUploader
+                      value={field.value}
+                      onChange={(v) => {
+                        field.onChange(v);
+                      }}
+                      buttonPlaceholder="Upload favicon"
+                      onError={(e) => {
+                        form.setError("favicon", { message: e });
+                      }}
+                      showButton={false}
+                      error={fieldState.error?.message}
+                    />
+                    {detail.data?.[0]?.faviconUrl && (
+                      <div className="mt-2 w-full flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                        <img
+                          src={getStaticFile(String(detail.data?.[0]?.faviconUrl))}
+                          alt="Current favicon"
+                          className="w-8 h-8 object-contain"
+                        />
+                        <div>
+                          <p className="text-xs text-gray-500">Favicon saat ini</p>
+                          <p className="text-xs text-gray-400">{detail.data?.[0]?.faviconUrl}</p>
+                        </div>
                       </div>
                     )}
                   </FormItem>

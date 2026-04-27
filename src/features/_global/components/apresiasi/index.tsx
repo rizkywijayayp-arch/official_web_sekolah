@@ -10,7 +10,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -40,7 +40,7 @@ function HallOfFameSection() {
 
         // Memanggil API Hall of Fame sesuai base url anda
         const response = await fetch(
-          `${API_CONFIG.BASE_URL}/siswa/hall-of-fame?schoolId=${schoolId}`,
+          `${API_CONFIG.baseUrl}/siswa/hall-of-fame?schoolId=${schoolId}`,
           { method: "GET", cache: "no-store" }
         );
 

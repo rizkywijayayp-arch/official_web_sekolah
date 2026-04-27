@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const BASE_URL = `${API_CONFIG.BASE_URL}/ppdb`;
+const BASE_URL = `${API_CONFIG.baseUrl}/ppdb`;
 const SCHOOL_ID = getSchoolIdSync();
 
 const useProfile = () => {
@@ -25,7 +25,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },

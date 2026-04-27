@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { getThemeColor, getContrastColor } from "@/core/libs/theme/hooks/useThemeColors";
+import { API_CONFIG } from "@/config/api";
+import { DEFAULTS } from "@/core/configs/defaults";
 
 /****************************
  * THEME & SAFETY GUARDS
  ****************************/
 const THEMES = {
   smkn13: {
-    name: "SMKN 13 Jakarta",
+    name: DEFAULTS.school.name,
     primary: "#1F3B76",
     primaryText: "#ffffff",
     accent: "#F2C94C",
@@ -129,10 +132,13 @@ const useOnClickOutside = (ref, handler) => {
 /*********
  * BADGE
  *********/
-const Badge = ({ children, theme }) => (
-  <span className="flex items-center px-2 py-2 h-max text-xs rounded-md border"
-    style={{ background: theme.accent, color: "#1b1b1b", borderColor: theme.accent }}>{children}</span>
-);
+const Badge = ({ children, theme }) => {
+  const textColor = getContrastColor(theme?.accent || '#F2C94C');
+  return (
+    <span className="flex items-center px-2 py-2 h-max text-xs rounded-md border"
+      style={{ background: theme.accent, color: textColor, borderColor: theme.accent }}>{children}</span>
+  );
+};
 
 /****************
  * LOGIN MENU (header yellow button with submenu)
@@ -150,16 +156,16 @@ const LoginMenu = ({ theme }) => {
   return (
     <div className="relative" ref={ref}>
       <button className="text-sm font-medium rounded-xl px-3 py-2"
-              style={{ background: theme.smkn13.accent, color: "#1b1b1b" }}
+              style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
               onClick={() => setOpen(v => !v)} aria-haspopup="menu" aria-expanded={open}>Login ▾</button>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.16 }}
             className="absolute right-0 mt-2 w-48 rounded-xl border shadow-xl p-2"
-            style={{ background: "rgba(255,255,255,0.95)", borderColor: THEMES.smkn13.subtle }} role="menu">
+            style={{ background: getThemeColor('--theme-color-light', 'rgba(255,255,255,0.95)'), borderColor: THEMES.smkn13.subtle }} role="menu">
             {items.map((i) => (
               <Link key={i.label} href={i.href} target="_blank" rel="noopener noreferrer"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5" style={{ color: "#111827" }} role="menuitem">{i.label}</Link>
+                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5" style={{ color: getThemeColor('--theme-color-text-primary', '#111827') }} role="menuitem">{i.label}</Link>
             ))}
           </motion.div>
         )}
@@ -257,7 +263,7 @@ const MobileAccordion = ({ item, theme }) => {
 /***********
  * NAVBAR
  ***********/
-const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey = "smkn13" }) => {
+const Navbar = ({ theme = THEMES.smkn13, schoolProfile, onTenantChange = () => {}, currentKey = "smkn13" }) => {
   const safeTheme = theme || THEMES.smkn13;
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileRef = useMobileMenu(mobileOpen, () => setMobileOpen(false)); // Baru: Hook untuk tutup saat click outside
@@ -271,8 +277,8 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between py-3 md:py-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: "#111827" }}>13</div>
-              <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>SMKN 13 Jakarta</div></div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
+              <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div></div>
             </div>
             <div className="hidden lg:flex items-center gap-6 xl:gap-8">
               {navItems.map(item => <NavDropdown key={item.label} item={item} theme={safeTheme} />)}
@@ -319,7 +325,7 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
             >
               <div className="flex items-center justify-between mb-6 pt-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-2xl flex items-center justify-center font-bold text-xs" style={{ background: safeTheme.accent, color: "#111827" }}>13</div>
+                  <div className="w-8 h-8 rounded-2xl flex items-center justify-center font-bold text-xs" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
                   <div className="text-sm font-semibold" style={{ color: safeTheme.primaryText }}>Menu</div>
                 </div>
                 <button 
@@ -350,7 +356,7 @@ const SITE_SINCE = Number.parseInt(
 /****************
  * FOOTER
  ****************/
-const Footer = ({ theme }) => {
+const Footer = ({ theme, schoolProfile }) => {
   const now = new Date().getFullYear();
   const from = Number.isFinite(SITE_SINCE) ? SITE_SINCE : now;
   const yearLabel = from < now ? `${from} — ${now}` : `${now}`;
@@ -360,10 +366,10 @@ const Footer = ({ theme }) => {
         <div className="grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.smkn13.accent, color: "#111827" }}>13</div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>13</div>
               <div>
-                <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>SMKN 13 Jakarta</div>
-                <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>Sekolah Menengah Kejuruan Negeri</div>
+                <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div>
+                <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolTypeLabel || 'Sekolah Menengah Kejuruan Negeri'}</div>
               </div>
             </div>
             <p className="mt-3 text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>Mewujudkan lulusan berkarakter, kompeten, dan siap kerja melalui lingkungan belajar yang modern dan inklusif.</p>
@@ -380,14 +386,14 @@ const Footer = ({ theme }) => {
           <div>
             <div className="text-sm font-semibold mb-2" style={{ color: THEMES.smkn13.primaryText }}>Kontak</div>
             <div className="text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>
-              Jl. Contoh No. 13, Jakarta Pusat<br />
-              (021) 987‑654<br />
-              info@smkn13.sch.id
+              {schoolProfile?.address || 'Jl. Contoh No. 13, Jakarta Pusat'}<br />
+              {schoolProfile?.phoneNumber || '(021) 987-654'}<br />
+              {schoolProfile?.email || 'info@smkn13.sch.id'}
             </div>
           </div>
         </div>
         <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — SMKN 13 Jakarta. All rights reserved.</div>
+          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — {schoolProfile?.schoolName || 'Nayaka Website'}. All rights reserved.</div>
           <div className="text-xs" style={{ color: THEMES.smkn13.primaryText }}>Powered by <span className="font-semibold">Xpresensi</span></div>
         </div>
       </div>
@@ -402,6 +408,24 @@ const Footer = ({ theme }) => {
  ****************************/
 export default function KandidatOsisPage() {
   const theme = getSafeTheme();
+
+  // School profile from API
+  const [schoolProfile, setSchoolProfile] = useState<any>(null);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          setSchoolProfile(result.data);
+        }
+      } catch (err) {
+        console.error('Gagal load profile:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   // ======= STATE untuk bagian kandidat (interaktif, non-voting) =======
   const [kandidat, setKandidat] = useState(initialKandidat);
@@ -476,7 +500,7 @@ export default function KandidatOsisPage() {
   return (
     <div className="min-h-screen" style={{ background: theme.bg }}>
 
-      <Navbar theme={THEMES} />
+      <Navbar theme={THEMES} schoolProfile={schoolProfile} />
 
       {/* HERO */}
       <section className="py-16 md:py-20">
@@ -500,7 +524,7 @@ export default function KandidatOsisPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-xl text-sm font-medium"
-              style={{ background: theme.accent, color: "#111827" }}
+              style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
             >
               Login Pemilih (Siswa)
             </a>
@@ -509,7 +533,7 @@ export default function KandidatOsisPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-xl text-sm font-medium"
-              style={{ background: theme.accent, color: "#111827" }}
+              style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
             >
               Login Guru
             </a>
@@ -518,7 +542,7 @@ export default function KandidatOsisPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-xl text-sm font-medium"
-              style={{ background: theme.accent, color: "#111827" }}
+              style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
             >
               Login Panitia Admin
             </a>
@@ -582,13 +606,13 @@ export default function KandidatOsisPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Cari nama/kelas/tema..."
                 className="px-3 py-2 rounded-lg text-sm border"
-                style={{ borderColor: theme.subtle, background: "white", color: "#111" }}
+              style={{ borderColor: theme.subtle, background: "white", color: getThemeColor('--theme-color-text-primary', '#111827') }}
               />
               <select
                 value={sortKey}
                 onChange={(e) => setSortKey(e.target.value)}
                 className="px-3 py-2 rounded-lg text-sm border"
-                style={{ borderColor: theme.subtle, background: "white", color: "#111" }}
+              style={{ borderColor: theme.subtle, background: "white", color: getThemeColor('--theme-color-text-primary', '#111827') }}
               >
                 <option value="nama">Urut: Nama</option>
                 <option value="kelas">Urut: Kelas</option>
@@ -656,7 +680,7 @@ export default function KandidatOsisPage() {
                     onClick={() => giveSupport(k.id)}
                     disabled={!!supportedOnce[k.id]}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-60"
-                    style={{ background: theme.accent, color: "#111827" }}
+                    style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
                   >
                     {supportedOnce[k.id] ? "Terima kasih!" : "Dukung (Promo)"}
                   </button>
@@ -688,7 +712,7 @@ export default function KandidatOsisPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 rounded-lg text-xs font-medium"
-                    style={{ background: theme.accent, color: "#111827" }}
+                    style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
                   >
                     Xpresensi (Siswa)
                   </a>
@@ -799,7 +823,7 @@ export default function KandidatOsisPage() {
           >
             <div
               className="max-w-xl mx-auto mt-20 rounded-2xl border p-5 relative"
-              style={{ background: "white", color: "#111", borderColor: theme.subtle }}
+              style={{ background: getThemeColor('--theme-color-light', 'white'), color: getThemeColor('--theme-color-text-primary', '#111827'), borderColor: theme.subtle }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -840,7 +864,7 @@ export default function KandidatOsisPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 rounded-xl text-sm font-medium"
-                  style={{ background: theme.accent, color: "#111827" }}
+                  style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
                 >
                   Dukung di Xpresensi (Siswa)
                 </a>
@@ -849,7 +873,7 @@ export default function KandidatOsisPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 rounded-xl text-sm border"
-                  style={{ borderColor: theme.subtle, color: "#111" }}
+                  style={{ borderColor: theme.subtle, color: getThemeColor('--theme-color-text-primary', '#111827') }}
                 >
                   Guru
                 </a>
@@ -858,7 +882,7 @@ export default function KandidatOsisPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 rounded-xl text-sm border"
-                  style={{ borderColor: theme.subtle, color: "#111" }}
+                  style={{ borderColor: theme.subtle, color: getThemeColor('--theme-color-text-primary', '#111827') }}
                 >
                   Admin
                 </a>
@@ -916,7 +940,7 @@ export default function KandidatOsisPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex px-4 py-2 rounded-xl text-sm font-medium"
-                style={{ background: theme.accent, color: "#111827" }}
+                style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
               >
                 Portal Xpresensi Siswa
               </a>
@@ -925,7 +949,7 @@ export default function KandidatOsisPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex px-4 py-2 rounded-xl text-sm font-medium"
-                style={{ background: theme.accent, color: "#111827" }}
+                style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
               >
                 Portal Xpresensi Guru
               </a>
@@ -934,7 +958,7 @@ export default function KandidatOsisPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex px-4 py-2 rounded-xl text-sm font-medium"
-                style={{ background: theme.accent, color: "#111827" }}
+                style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
               >
                 Portal Xpresensi Admin
               </a>
@@ -957,7 +981,7 @@ export default function KandidatOsisPage() {
         </div>
       </section>
 
-      <Footer theme={THEMES} />
+      <Footer theme={THEMES} schoolProfile={schoolProfile} />
     </div>
   );
 }

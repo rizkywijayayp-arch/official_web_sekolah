@@ -20,7 +20,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -51,7 +51,7 @@ const VotingOsisPage = () => {
     const checkVotingStatus = async () => {
       try {
         const statusRes = await fetch(
-          `${API_CONFIG.BASE_URL}/voting/voting-status?schoolId=${schoolId}`
+          `${API_CONFIG.baseUrl}/voting/voting-status?schoolId=${schoolId}`
         );
 
         if (!statusRes.ok) throw new Error("Gagal memeriksa status");
@@ -68,7 +68,7 @@ const VotingOsisPage = () => {
 
             // Fetch hasil lengkap untuk chart
             const resultsRes = await fetch(
-              `${API_CONFIG.BASE_URL}/voting/suara?schoolId=${schoolId}`
+              `${API_CONFIG.baseUrl}/voting/suara?schoolId=${schoolId}`
             );
             const resultsData = await resultsRes.json();
 
@@ -96,7 +96,7 @@ const VotingOsisPage = () => {
     const checkVotingStatus = async () => {
       try {
         const statusRes = await fetch(
-          `${API_CONFIG.BASE_URL}/voting/voting-status?schoolId=${schoolId}`
+          `${API_CONFIG.baseUrl}/voting/voting-status?schoolId=${schoolId}`
         );
 
         if (!statusRes.ok) throw new Error("Gagal memeriksa status voting");
@@ -184,7 +184,7 @@ const VotingOsisPage = () => {
     setError("");
 
     try {
-      const verifyRes = await fetch(`${API_CONFIG.BASE_URL}/voting/verifikasi-kode`, {
+      const verifyRes = await fetch(`${API_CONFIG.baseUrl}/voting/verifikasi-kode`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: voteCode.toUpperCase(), schoolId }),
@@ -199,7 +199,7 @@ const VotingOsisPage = () => {
 
       // Kode valid → ambil kandidat
       const candidateRes = await fetch(
-        `${API_CONFIG.BASE_URL}/voting/kandidat?schoolId=${schoolId}`
+        `${API_CONFIG.baseUrl}/voting/kandidat?schoolId=${schoolId}`
       );
 
       const candidateResult = await candidateRes.json();
@@ -224,7 +224,7 @@ const VotingOsisPage = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/voting/submit`, {
+      const res = await fetch(`${API_CONFIG.baseUrl}/voting/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

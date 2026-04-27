@@ -6,13 +6,14 @@ import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import { getThemeColor, getContrastColor } from "@/core/libs/theme/hooks/useThemeColors";
 
 const useProfile = () => {
   const schoolId = getSchoolIdSync();
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -125,7 +126,7 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
       if (!schoolId) return;
       try {
         setLoading(true);
-        const response = await fetch(`${API_CONFIG.BASE_URL}/jadwal?schoolId=${schoolId}`, {
+        const response = await fetch(`${API_CONFIG.baseUrl}/jadwal?schoolId=${schoolId}`, {
           method: "GET",
           cache: 'no-store',
         });
@@ -276,7 +277,7 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
               disabled={loading}
             >
               {["Semua", ...DAYS].map((d) => (
-                <option key={d} value={d} style={{ color: "#111827" }}>
+                <option key={d} value={d} style={{ color: getThemeColor('--theme-color-text-primary', '#111827') }}>
                   {d}
                 </option>
               ))}

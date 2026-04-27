@@ -11,7 +11,7 @@ import { ArrowRight, ChevronDown, GraduationCap, Sparkles } from "lucide-react";
 const useSchoolProfile = () => {
   const schoolId = getSchoolIdSync(); // ← sesuaikan dengan ID sekolah yang ada di database
 
-  const API_BASE = API_CONFIG.BASE_URL;
+  const API_BASE = API_CONFIG.baseUrl;
 
   return useQuery({
     queryKey: ['schoolProfile', schoolId],

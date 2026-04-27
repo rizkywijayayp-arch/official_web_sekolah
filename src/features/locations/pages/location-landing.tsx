@@ -3,16 +3,17 @@ import {
     lang
 } from "@/core/libs";
 import { DashboardPageLayout } from "@/features/_global";
-import { SchoolMap } from "../containers";
+import { StudentLocationMap } from "../containers/student-location-map";
 
 export const LocationLanding = () => {
   return (
     <DashboardPageLayout
-      siteTitle={`${lang.text("schoolDistribution")} | ${APP_CONFIG.appName}`}
-      breadcrumbs={[{ label: lang.text("schoolDistribution"), url: "/locations" }]}
-      title={lang.text("schoolDistribution")}
+      siteTitle={`Lokasi Siswa | ${APP_CONFIG.appName}`}
+      breadcrumbs={[{ label: "Lokasi Siswa", url: "/admin/lokasi-siswa" }]}
+      title="Lokasi Siswa"
+      description="Pantau lokasi siswa secara real-time dengan peta interaktif"
     >
-      <SchoolMap />
+      <StudentLocationMap />
     </DashboardPageLayout>
   );
 };

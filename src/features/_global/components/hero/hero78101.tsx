@@ -7,7 +7,7 @@ import { getSchoolIdSync } from "../../hooks/getSchoolId";
 // Hook profil sekolah
 const useSchoolProfile = () => {
   const schoolId = getSchoolIdSync();
-  const API_BASE = API_CONFIG.BASE_URL;
+  const API_BASE = API_CONFIG.baseUrl;
 
   return useQuery({
     queryKey: ['schoolProfile', schoolId],

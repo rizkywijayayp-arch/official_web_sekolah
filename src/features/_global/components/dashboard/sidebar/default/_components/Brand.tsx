@@ -9,8 +9,7 @@ interface BrandProps {
 
 export const Brand = React.memo(({ isCollapsed }: BrandProps) => {
   const school = useSchool();
-
-  console.log('scholl', school)
+  const hasLogo = !!school.data?.[0]?.file;
 
   return (
     <div
@@ -26,27 +25,25 @@ export const Brand = React.memo(({ isCollapsed }: BrandProps) => {
           isCollapsed && "justify-center",
         )}
       >
-        {
-        school.data?.[0]?.file && 
-          (
-            <Avatar>
-                <>
-                  <AvatarImage
-                    src={`https://dev.kiraproject.id${school?.data?.[0]?.file}`}
-                    alt={school.data?.[0]?.namaSekolah || 'SUPER ADMIN'}
-                    className="object-cover object-center bg-white"
-                  />
-                </>
-            </Avatar>
-          )
-        }
+        {/* Logo - hanya tampilkan jika ada logo */}
+        {hasLogo && (
+          <Avatar className="w-8 h-8 lg:w-9 lg:h-9">
+            <AvatarImage
+              src={`https://dev.kiraproject.id${school.data?.[0]?.file}`}
+              alt={school.data?.[0]?.namaSekolah || 'Logo'}
+              className="object-cover object-center bg-white"
+            />
+          </Avatar>
+        )}
         <div className="flex flex-col">
           <p className="relative top-[2px] text-sm whitespace-nowrap font-bold">
-            XPRESENSI GURU
+            {school.data?.[0]?.namaSekolah || 'Sekolah'}
           </p>
-          <p className="text-[10px] font-normal opacity-75">
-            {school.data?.[0]?.namaSekolah || 'SUPER ADMIN'}
-          </p>
+          {hasLogo && (
+            <p className="text-[10px] font-normal opacity-75">
+              Admin Dashboard
+            </p>
+          )}
         </div>
       </Link>
     </div>

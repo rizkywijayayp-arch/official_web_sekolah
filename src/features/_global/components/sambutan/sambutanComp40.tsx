@@ -12,7 +12,7 @@ import { API_CONFIG } from "@/config/api";
 //   useEffect(() => {
 //     const fetchProfile = async () => {
 //       try {
-//         const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${SCHOOL_ID}`);
+//         const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${SCHOOL_ID}`);
 //         const result = await res.json();
 //         if (result.success) setProfile(result.data);
 //       } catch (err) {
@@ -161,7 +161,7 @@ const SambutanComp40 = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${SCHOOL_ID}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${SCHOOL_ID}`);
         const result = await res.json();
         if (result.success) setProfile(result.data);
       } catch (err) {

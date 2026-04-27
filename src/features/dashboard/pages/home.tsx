@@ -14,8 +14,8 @@ import GalleryComp from "@/features/_global/components/galeri";
 import { SambutanComp } from "@/features/_global/components/sambutan";
 import TugasComp from "@/features/_global/components/tugas";
 
-const BASE_URL = `${API_CONFIG.BASE_URL}/profileSekolah`;
-const BASE_URL2 = API_CONFIG.BASE_URL;
+const BASE_URL = `${API_CONFIG.baseUrl}/profileSekolah`;
+const BASE_URL2 = API_CONFIG.baseUrl;
 
 interface SchoolProfile {
   schoolId?: number;
@@ -71,7 +71,7 @@ export function useNews(schoolId: string | number | undefined) {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${API_CONFIG.BASE_URL}/berita?schoolId=${schoolId}`, {
+        const res = await fetch(`${API_CONFIG.baseUrl}/berita?schoolId=${schoolId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -146,7 +146,7 @@ const FasilitasSection = () => {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${API_CONFIG.BASE_URL}/fasilitas?schoolId=${schoolId}`, {
+        const res = await fetch(`${API_CONFIG.baseUrl}/fasilitas?schoolId=${schoolId}`, {
           cache: "no-store",
           headers: {
             "Content-Type": "application/json",
@@ -290,7 +290,7 @@ const PengurusSection = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const SCHOOL_ID = getSchoolIdSync(); 
-  const API_URL = `${API_CONFIG.BASE_URL}/guruTendik?schoolId=${SCHOOL_ID}`;
+  const API_URL = `${API_CONFIG.baseUrl}/guruTendik?schoolId=${SCHOOL_ID}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -675,7 +675,7 @@ const ArrowRight = ({ className, size }: any) => (
 
 // --- FETCHING LOGIC ---
 const fetchStats = async (schoolId: string) => {
-  const { data } = await axios.get(`${API_CONFIG.BASE_URL}/siswa/summary-attendances`, {
+  const { data } = await axios.get(`${API_CONFIG.baseUrl}/siswa/summary-attendances`, {
     params: { schoolId }
   });
   
@@ -777,7 +777,7 @@ const StatsBar = ({ schoolId }: { schoolId: string }) => {
 };
 
 const useComments = (schoolId: number) => {   // parameter tetap number
-  const API_BASE = API_CONFIG.BASE_URL;
+  const API_BASE = API_CONFIG.baseUrl;
 
   const query = useQuery({
     queryKey: ['comments', schoolId],
@@ -827,7 +827,7 @@ const CommentSection = () => {
 
   useEffect(() => {
     // Fetch setting dari backend
-    fetch(`${API_CONFIG.BASE_URL}/rating/settings?schoolId=${schoolId}`)
+    fetch(`${API_CONFIG.baseUrl}/rating/settings?schoolId=${schoolId}`)
       .then(res => res.json())
       .then(json => {
         if(json.success) setShowStats(json.data.showRatingStats);
@@ -1000,7 +1000,7 @@ const SponsorMarqueeSection = () => {
     const fetchSponsors = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_CONFIG.BASE_URL}/partner?schoolId=${schoolId}`, {
+        const res = await fetch(`${API_CONFIG.baseUrl}/partner?schoolId=${schoolId}`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Gagal memuat sponsor");
@@ -1136,7 +1136,7 @@ const useFAQs = (schoolId: string | number) => {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${API_CONFIG.BASE_URL}/faq?schoolId=${schoolId}`, {
+        const res = await fetch(`${API_CONFIG.baseUrl}/faq?schoolId=${schoolId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           cache: "no-store",
@@ -1325,7 +1325,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },

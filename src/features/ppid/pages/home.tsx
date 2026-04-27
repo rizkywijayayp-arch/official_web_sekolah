@@ -16,7 +16,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -62,7 +62,7 @@ const Section = ({ id, title, icon, children }: { id: string; title: string; ico
 /****************************
  * API CONFIG PPID
  ****************************/
-const PPID_API_BASE = `${API_CONFIG.BASE_URL}/ppid`;
+const PPID_API_BASE = `${API_CONFIG.baseUrl}/ppid`;
 const SCHOOL_ID = getSchoolIdSync();
 
 const fetchPPIDDocuments = async () => {

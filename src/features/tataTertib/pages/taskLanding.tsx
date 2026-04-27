@@ -12,7 +12,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -23,7 +23,7 @@ const useProfile = () => {
 // Asumsi schoolId dari config atau hardcode (ganti dengan nilai real dari DB/config/hook)
 const SCHOOL_ID = getSchoolIdSync(); // <-- GANTI DENGAN SCHOOL ID REAL ANDA
 
-const BASE_URL = `${API_CONFIG.BASE_URL}/tata-tertib`;
+const BASE_URL = `${API_CONFIG.baseUrl}/tata-tertib`;
 
 /*********
  * BADGE

@@ -24,7 +24,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -78,7 +78,7 @@ const OsisPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/osis?schoolId=${schoolId}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/osis?schoolId=${schoolId}`);
         const result = await res.json();
         if (result.success) setApiData(result.data);
       } catch (err) {

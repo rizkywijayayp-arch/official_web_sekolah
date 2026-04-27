@@ -7,13 +7,16 @@ const Link = ({ href, className, style, children, target, rel }) => (
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 let useSwipeable;
 try { useSwipeable = require("react-swipeable").useSwipeable; } catch { useSwipeable = () => ({}) }
+import { getThemeColor, getContrastColor } from "@/core/libs/theme/hooks/useThemeColors";
+import { API_CONFIG } from "@/config/api";
+import { DEFAULTS } from "@/core/configs/defaults";
 
 /****************************
  * THEME PRESETS (per-tenant)
  ****************************/
 const THEMES = {
   smkn13: {
-    name: "SMKN 13 Jakarta",
+    name: DEFAULTS.school.name,
     primary: "#1F3B76",
     primaryText: "#ffffff",
     accent: "#F2C94C",
@@ -24,7 +27,7 @@ const THEMES = {
     pop: "#E63946",
   },
   default: {
-    name: "Default",
+    name: DEFAULTS.school.name,
     primary: "#0E7490",
     primaryText: "#ffffff",
     accent: "#f59e0b",
@@ -160,10 +163,13 @@ const GLOBAL_DATA = {
 /*********
  * BADGE
  *********/
-const Badge = ({ children, theme }) => (
-  <span className="px-2 py-1 text-xs rounded-full border"
-    style={{ background: theme.accent, color: "#1b1b1b", borderColor: theme.accent }}>{children}</span>
-);
+const Badge = ({ children, theme }) => {
+  const textColor = getContrastColor(theme?.accent || '#FFFFEB3B');
+  return (
+    <span className="px-2 py-1 text-xs rounded-full border"
+      style={{ background: theme?.accent || '#FFFFEB3B', color: textColor, borderColor: theme?.accent || '#FFFFEB3B' }}>{children}</span>
+  );
+};
 
 /****************
  * LOGIN MENU (header yellow button with submenu)
@@ -181,7 +187,7 @@ const LoginMenu = ({ theme }) => {
   return (
     <div className="relative" ref={ref}>
       <button className="text-sm font-medium rounded-xl px-3 py-2"
-              style={{ background: theme.accent, color: "#1b1b1b" }}
+              style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
               onClick={() => setOpen(v => !v)} aria-haspopup="menu" aria-expanded={open}>Login ▾</button>
       <AnimatePresence>
         {open && (
@@ -190,7 +196,7 @@ const LoginMenu = ({ theme }) => {
             style={{ background: "rgba(255,255,255,0.95)", borderColor: theme.subtle }} role="menu">
             {items.map((i) => (
               <Link key={i.label} href={i.href} target="_blank" rel="noopener noreferrer"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5" style={{ color: "#111827" }} role="menuitem">{i.label}</Link>
+                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5" style={{ color: getThemeColor('--theme-color-text-primary', '#111827') }} role="menuitem">{i.label}</Link>
             ))}
           </motion.div>
         )}
@@ -278,7 +284,7 @@ const MobileAccordion = ({ item, theme }) => {
 /***********
  * NAVBAR
  ***********/
-const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey = "smkn13" }) => {
+const Navbar = ({ theme = THEMES.smkn13, schoolProfile, onTenantChange = () => {}, currentKey = "smkn13" }) => {
   const safeTheme = theme || THEMES.smkn13;
   const [mobileOpen, setMobileOpen] = useState(false);
   const ppdbActive = isWithinPeriod(new Date(), PPDB_PERIOD);
@@ -288,8 +294,8 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between py-3 md:py-4">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: "#111827" }}>13</div>
-            <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>SMKN 13 Jakarta</div></div>
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
+            <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div></div>
           </div>
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
             {navItems.map(item => <NavDropdown key={item.label} item={item} theme={safeTheme} />)}
@@ -316,7 +322,7 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
  * HERO SLIDER (6 slides)
  ****************/
 const heroSlides = [
-  { title: "Portal Resmi SMKN 13 Jakarta", desc: "Website multi‑tenant terintegrasi Xpresensi.", img: LOCAL_IMAGES.hero[0], cta1: { href: "#pengumuman", label: "Lihat Pengumuman" }, cta2: { href: "#galeri", label: "Jelajah Galeri" }},
+  { title: "Portal Resmi", desc: "Website multi‑tenant terintegrasi Xpresensi.", img: LOCAL_IMAGES.hero[0], cta1: { href: "#pengumuman", label: "Lihat Pengumuman" }, cta2: { href: "#galeri", label: "Jelajah Galeri" }},
   { title: "Pengumuman Terbaru", desc: "Informasi akademik & kesiswaan.", img: LOCAL_IMAGES.hero[1], cta1: { href: "#pengumuman", label: "Cek Info" }, cta2: { href: "#", label: "Kalender" }},
   { title: "Sambutan Kepala Sekolah", desc: "Lingkungan belajar unggul & berkarakter.", img: LOCAL_IMAGES.hero[2], cta1: { href: "#profil", label: "Baca Sambutan" }, cta2: { href: "#profil", label: "Profil Sekolah" }},
   { title: "Galeri Kegiatan", desc: "Dokumentasi kegiatan & prestasi.", img: LOCAL_IMAGES.hero[3], cta1: { href: "#galeri", label: "Lihat Galeri" }, cta2: { href: "#kesiswaan", label: "Ekskul" }},
@@ -349,7 +355,7 @@ const Hero = ({ theme }) => {
               <h1 className="text-3xl md:text-5xl font-bold leading-tight" style={{ color: THEMES.smkn13.primaryText }}>{slide.title}</h1>
               <p className="mt-4 text-base md:text-lg opacity-90" style={{ color: THEMES.smkn13.primaryText }}>{slide.desc}</p>
               <div className="mt-6 flex items-center gap-3">
-                <a className="rounded-xl px-5 py-3 text-sm font-semibold" style={{ background: THEMES.smkn13.accent, color: "#1b1b1b" }} href={slide.cta1.href}>{slide.cta1.label}</a>
+                <a className="rounded-xl px-5 py-3 text-sm font-semibold" style={{ background: THEMES.smkn13.accent, color: getContrastColor(THEMES.smkn13.accent) }} href={slide.cta1.href}>{slide.cta1.label}</a>
                 <a className="rounded-xl px-5 py-3 text-sm font-semibold border" style={{ borderColor: THEMES.smkn13.accent, color: THEMES.smkn13.primaryText }} href={slide.cta2.href}>{slide.cta2.label}</a>
               </div>
             </motion.div>
@@ -394,9 +400,9 @@ const GlobalInfoBar = ({ theme }) => {
   const urgent = GLOBAL_DATA.announcements[0];
   if (!urgent) return null;
   return (
-    <div className="w-full border-b" style={{ background: THEMES.smkn13.accent, borderColor: theme.subtle, color: "#111827" }}>
+    <div className="w-full border-b" style={{ background: THEMES.smkn13.accent, borderColor: theme.subtle, color: getContrastColor(THEMES.smkn13.accent) }}>
       <div className="max-w-6xl mx-auto px-4 py-2 text-sm flex items-center gap-2">
-        <span className="px-2 py-0.5 rounded-full text-xs font-semibold border" style={{ borderColor: "#111827" }}>DINAS</span>
+        <span className="px-2 py-0.5 rounded-full text-xs font-semibold border" style={{ borderColor: getContrastColor(THEMES.smkn13.accent) }}>DINAS</span>
         <span className="truncate">{urgent.title}</span>
         <a href="#pengumuman" className="underline text-xs">Lihat</a>
       </div>
@@ -407,7 +413,7 @@ const GlobalInfoBar = ({ theme }) => {
 /****************
  * HEADMASTER GREETING
  ****************/
-const HeadmasterGreeting = ({ theme }) => {
+const HeadmasterGreeting = ({ theme, schoolProfile }) => {
   const prefersReducedMotion = useReducedMotion();
   const variants = {
     container: { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: prefersReducedMotion ? 0 : 0.08 } } },
@@ -434,14 +440,14 @@ const HeadmasterGreeting = ({ theme }) => {
           <div>
             <motion.div variants={variants.up} className="mb-2 border-b border-white/10 pb-3">
               <h2 className="text-2xl md:text-3xl font-bold text-white">Sambutan Kepala Sekolah</h2>
-              <p className="text-sm opacity-70 text-white">Ucapan selamat datang dan komitmen layanan pendidikan di SMKN 13 Jakarta</p>
+              <p className="text-sm opacity-70 text-white">Ucapan selamat datang dan komitmen layanan pendidikan di {schoolProfile?.schoolName || 'Nayaka Website'}</p>
             </motion.div>
             <motion.div variants={variants.up}>
               <div className="text-base font-semibold" style={{ color: THEMES.smkn13.surfaceText }}>{HEADMASTER.name}</div>
-              <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.surfaceText }}>Kepala SMKN 13 Jakarta • {HEADMASTER.tenure}</div>
+              <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.surfaceText }}>Kepala {schoolProfile?.schoolName || 'Nayaka Website'} • {HEADMASTER.tenure}</div>
             </motion.div>
             <motion.div variants={variants.up} className="mt-4 space-y-3 leading-relaxed text-sm md:text-base" style={{ color: THEMES.smkn13.surfaceText }}>
-              <p>Assalamu’alaikum warahmatullahi wabarakatuh. Selamat datang di website resmi <strong>SMKN 13 Jakarta</strong>. Situs ini kami hadirkan sebagai pusat informasi dan layanan digital bagi siswa, orang tua, guru, dan masyarakat.</p>
+              <p>Assalamu’alaikum warahmatullahi wabarakatuh. Selamat datang di website resmi <strong>{schoolProfile?.schoolName || ‘Nayaka Website’}</strong>. Situs ini kami hadirkan sebagai pusat informasi dan layanan digital bagi siswa, orang tua, guru, dan masyarakat.</p>
               <p>Kami berkomitmen menyelenggarakan pendidikan vokasi yang <em>relevan dengan industri</em>, menjunjung karakter, serta berorientasi pada <em>link and match</em>. Program dan kemitraan kami rancang untuk menyiapkan lulusan yang kompeten, adaptif, dan berdaya saing.</p>
               <blockquote className="border-l-4 pl-3 italic" style={{ borderColor: THEMES.smkn13.accent }}>
                 "Bersama, kita bangun budaya belajar yang unggul, inklusif, dan kolaboratif."
@@ -476,7 +482,7 @@ const ProfileVisionMission = ({ theme }) => {
   ];
   const values = ["Integritas", "Disiplin", "Kolaborasi", "Inovasi", "Pelayanan"];
   return (
-    <Section id="profil-visimisi" title="Visi & Misi" subtitle="Arah pengembangan SMKN 13 Jakarta" theme={theme}>
+    <Section id="profil-visimisi" title="Visi & Misi" subtitle={`Arah pengembangan ${schoolProfile?.schoolName || 'Nayaka Website'}`} theme={theme}>
       <div className="grid md:grid-cols-2 gap-6">
         <div className="rounded-2xl p-5 border" style={{ background: theme.surface, borderColor: theme.subtle }}>
           <h3 className="text-lg font-semibold" style={{ color: theme.surfaceText }}>Visi</h3>
@@ -624,7 +630,7 @@ const News = ({ theme }) => {
   ];
   const items = [...GLOBAL_DATA.news, ...local];
   return (
-    <Section id="berita" title="Berita" subtitle="Kabar terbaru SMKN 13 Jakarta" theme={theme} viewAllHref="/berita">
+    <Section id="berita" title="Berita" subtitle={`Kabar terbaru ${schoolProfile?.schoolName || 'Nayaka Website'}`} theme={theme} viewAllHref="/berita">
       <div className="grid md:grid-cols-3 gap-4">
         {items.map((n) => (
           <article key={n.title} className="rounded-2xl overflow-hidden border shadow-sm hover:shadow-md transition" style={{ background: theme.surface, borderColor: theme.subtle }}>
@@ -673,7 +679,7 @@ const Gallery = ({ theme }) => {
 /****************
  * FOOTER
  ****************/
-const Footer = ({ theme }) => {
+const Footer = ({ theme, schoolProfile }) => {
   const now = new Date().getFullYear();
   const from = Number.isFinite(SITE_SINCE) ? SITE_SINCE : now;
   const yearLabel = from < now ? `${from} — ${now}` : `${now}`;
@@ -683,10 +689,10 @@ const Footer = ({ theme }) => {
         <div className="grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: "#111827" }}>13</div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>13</div>
               <div>
-                <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>SMKN 13 Jakarta</div>
-                <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>Sekolah Menengah Kejuruan Negeri</div>
+                <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div>
+                <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolTypeLabel || 'Sekolah Menengah Kejuruan Negeri'}</div>
               </div>
             </div>
             <p className="mt-3 text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>Mewujudkan lulusan berkarakter, kompeten, dan siap kerja melalui lingkungan belajar yang modern dan inklusif.</p>
@@ -703,14 +709,14 @@ const Footer = ({ theme }) => {
           <div>
             <div className="text-sm font-semibold mb-2" style={{ color: THEMES.smkn13.primaryText }}>Kontak</div>
             <div className="text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>
-              Jl. Contoh No. 13, Jakarta Pusat<br />
-              (021) 987‑654<br />
-              info@smkn13.sch.id
+              {schoolProfile?.address || 'Jl. Contoh No. 13, Jakarta Pusat'}<br />
+              {schoolProfile?.phoneNumber || '(021) 987-654'}<br />
+              {schoolProfile?.email || 'info@smkn13.sch.id'}
             </div>
           </div>
         </div>
         <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — SMKN 13 Jakarta. All rights reserved.</div>
+          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — {schoolProfile?.schoolName || 'Nayaka Website'}. All rights reserved.</div>
           <div className="text-xs" style={{ color: THEMES.smkn13.primaryText }}>Powered by <span className="font-semibold">Xpresensi</span></div>
         </div>
       </div>
@@ -732,12 +738,31 @@ const SafeImage = ({ src, alt, className, style }) => {
 /****************
  * PAGE
  ****************/
-const Sambutan = ({ theme = THEMES.smkn13 }) => (
+const Sambutan = ({ theme = THEMES.smkn13 }) => {
+  // School profile from API
+  const [schoolProfile, setSchoolProfile] = useState<any>(null);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          setSchoolProfile(result.data);
+        }
+      } catch (err) {
+        console.error('Gagal load profile:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  return (
   <div className="min-h-screen" style={{ background: theme.primary }}>
-    <Navbar theme={theme} />
+    <Navbar theme={theme} schoolProfile={schoolProfile} />
     {/* Tampilkan hanya sambutan + riwayat sesuai arahan terakhir */}
     <main>
-      <HeadmasterGreeting theme={theme} />
+      <HeadmasterGreeting theme={theme} schoolProfile={schoolProfile} />
       <ProfilePrincipalsHistory theme={theme} />
       {/* Bagian profil lain siap diaktifkan jika perlu */}
       {/* <ProfileVisionMission theme={theme} /> */}
@@ -747,7 +772,7 @@ const Sambutan = ({ theme = THEMES.smkn13 }) => (
       {/* <News theme={theme} /> */}
       {/* <Gallery theme={theme} /> */}
     </main>
-    <Footer theme={theme} />
+    <Footer theme={theme} schoolProfile={schoolProfile} />
   </div>
 );
 

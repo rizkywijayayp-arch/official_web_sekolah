@@ -8,7 +8,7 @@ import { clsx } from "clsx";
 // Konstanta
 // ──────────────────────────────────────────────────────────────
 
-const BASE_URL = `${API_CONFIG.BASE_URL}/osis`;
+const BASE_URL = `${API_CONFIG.baseUrl}/osis`;
 const SCHOOL_ID = "1"; // Ganti dengan nilai dinamis dari useSchool() atau auth
 
 // ──────────────────────────────────────────────────────────────

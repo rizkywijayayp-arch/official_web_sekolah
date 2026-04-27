@@ -10,7 +10,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -42,7 +42,7 @@ function TugasSection({ theme, schoolName }: { theme: any; schoolName: string })
         const schoolId = getSchoolIdSync();
         // Memanggil API Tugas
         const response = await fetch(
-          `${API_CONFIG.BASE_URL}/tugas?schoolId=${schoolId}`,
+          `${API_CONFIG.baseUrl}/tugas?schoolId=${schoolId}`,
           { method: "GET", cache: "no-store" }
         );
 

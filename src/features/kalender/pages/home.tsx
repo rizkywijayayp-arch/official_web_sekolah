@@ -13,7 +13,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -77,7 +77,7 @@ const useCalendarEvents = (year, month) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_CONFIG.BASE_URL}/kalender?schoolId=${schoolId}`, {
+        const response = await fetch(`${API_CONFIG.baseUrl}/kalender?schoolId=${schoolId}`, {
           method: "GET",
           cache: 'no-store',
         });
@@ -199,7 +199,7 @@ export const CalendarSection = ({ schoolName }: { schoolName: string }) => {
   useEffect(() => {
     const fetchCal = async () => {
       try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/kalender?schoolId=${SCHOOL_ID}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/kalender?schoolId=${SCHOOL_ID}`);
         const json = await res.json();
         if (json.success) setEvents(json.data);
       } finally { setLoading(false); }

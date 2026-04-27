@@ -11,7 +11,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -20,7 +20,7 @@ const useProfile = () => {
 };
 
 /* ================= CONFIG ================= */
-const BASE_URL = API_CONFIG.BASE_URL;
+const BASE_URL = API_CONFIG.baseUrl;
 
 const getSchoolIdCall = () => getSchoolIdSync();
 

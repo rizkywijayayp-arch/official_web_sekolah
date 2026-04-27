@@ -13,7 +13,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -130,7 +130,7 @@ const StrukturOrganisasi = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/organisasi?schoolId=${SCHOOL_ID}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/organisasi?schoolId=${SCHOOL_ID}`);
         const json = await res.json();
         if (json.success) setTreeData(json.data);
       } catch (err) {

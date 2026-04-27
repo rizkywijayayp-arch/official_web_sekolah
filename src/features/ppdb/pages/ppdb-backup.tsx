@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_CONFIG } from "@/config/api";
 
 /**
  * PPDB PAGE (Single-file React component)
@@ -300,6 +301,23 @@ const DataTable: React.FC<{ rows: any[] }> = ({ rows }) => {
 
 // ——— Komponen Utama ———
 export default function PPDBPage() {
+  // ===== School profile from API =====
+  const [schoolProfile, setSchoolProfile] = useState<any>(null);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          setSchoolProfile(result.data);
+        }
+      } catch (err) {
+        console.error('Gagal load profile:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
   // ===== Demo helpers untuk Rekap & Tabel =====
   const makeRows = (jenjangLabel: string) => {
     const N = 125; // per jenjang (demo)
@@ -307,7 +325,7 @@ export default function PPDBPage() {
       SD: ["SDN 01", "SDN 02", "SD Islam Al-Azhar", "SD Tarakanita"],
       SMP: ["SMPN 3", "SMP GPI Solokanjeruk", "SMP Al-Hidayah"],
       SMA: ["SMAN 5", "SMA Pribadi", "SMA Muhammadiyah"],
-      SMK: ["SMKN 13 Jakarta", "SMK Al-Mufassir", "SMK Telkom"],
+      SMK: ["SMK Demo 1", "SMK Al-Mufassir", "SMK Telkom"],
       MTs: ["MTS Al-Ihsan", "MTs Al-Mufassir"],
       MTsN: ["MTsN 1 Jakarta", "MTsN 2 Bandung"],
       MA: ["MAN 2 Bandung", "MA Persis"],
@@ -483,7 +501,7 @@ export default function PPDBPage() {
         <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <h1 className="text-3xl md:text-5xl font-bold leading-tight">PPDB {new Date().getFullYear()}<br /> SMKN 13 Jakarta</h1>
+              <h1 className="text-3xl md:text-5xl font-bold leading-tight">PPDB {new Date().getFullYear()}<br /> {schoolProfile?.schoolName || 'Nayaka Website'}</h1>
               <p className="text-white/80 mt-3 md:text-lg">Terbuka dan transparan. Akses pendaftaran 24/7, pemantauan status real‑time, dan bantuan langsung dari panitia.</p>
               <div className="flex items-center gap-2 mt-4">
                 <Chip>Counter pendaftar: <b className="ml-1">{pendaftar.toLocaleString()}</b></Chip>

@@ -12,7 +12,7 @@ const DynamicSambutan = () => {
     const fetchProfile = async () => {
       const schoolId = getSchoolIdSync();
       try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
         const result = await res.json();
         if (result.success) setProfile(result.data);
       } catch (err) {

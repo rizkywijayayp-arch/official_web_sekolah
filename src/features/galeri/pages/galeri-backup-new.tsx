@@ -1,12 +1,15 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { getThemeColor, getContrastColor } from "@/core/libs/theme/hooks/useThemeColors";
+import { API_CONFIG } from "@/config/api";
+import { DEFAULTS } from "@/core/configs/defaults";
 
 /****************************
  * THEME & SAFETY GUARDS
  ****************************/
 const THEMES = {
   smkn13: {
-    name: "SMKN 13 Jakarta",
+    name: DEFAULTS.school.name,
     primary: "#1F3B76",
     primaryText: "#ffffff",
     accent: "#F2C94C",
@@ -136,10 +139,13 @@ const useOnClickOutside = (ref, handler) => {
 /*********
  * BADGE
  *********/
-const Badge = ({ children, theme }) => (
-  <span className="flex items-center px-2 py-2 h-max text-xs rounded-md border"
-    style={{ background: theme.accent, color: "#1b1b1b", borderColor: theme.accent }}>{children}</span>
-);
+const Badge = ({ children, theme }) => {
+  const textColor = getContrastColor(theme?.accent || '#F2C94C');
+  return (
+    <span className="flex items-center px-2 py-2 h-max text-xs rounded-md border"
+      style={{ background: theme.accent, color: textColor, borderColor: theme.accent }}>{children}</span>
+  );
+};
 
 /****************
  * LOGIN MENU (header yellow button with submenu)
@@ -157,16 +163,16 @@ const LoginMenu = ({ theme }) => {
   return (
     <div className="relative" ref={ref}>
       <button className="text-sm font-medium rounded-xl px-3 py-2"
-              style={{ background: theme.accent, color: "#1b1b1b" }}
+              style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
               onClick={() => setOpen(v => !v)} aria-haspopup="menu" aria-expanded={open}>Login ▾</button>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.16 }}
             className="absolute right-0 mt-2 w-48 rounded-xl border shadow-xl p-2"
-            style={{ background: "rgba(255,255,255,0.95)", borderColor: THEMES.smkn13.subtle }} role="menu">
+            style={{ background: getThemeColor('--theme-color-light', 'rgba(255,255,255,0.95)'), borderColor: THEMES.smkn13.subtle }} role="menu">
             {items.map((i) => (
               <Link key={i.label} href={i.href} target="_blank" rel="noopener noreferrer"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5" style={{ color: "#111827" }} role="menuitem">{i.label}</Link>
+                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5" style={{ color: getThemeColor('--theme-color-text-primary', '#111827') }} role="menuitem">{i.label}</Link>
             ))}
           </motion.div>
         )}
@@ -264,7 +270,7 @@ const MobileAccordion = ({ item, theme }) => {
 /***********
  * NAVBAR
  ***********/
-const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey = "smkn13" }) => {
+const Navbar = ({ theme = THEMES.smkn13, schoolProfile, onTenantChange = () => {}, currentKey = "smkn13" }) => {
   const safeTheme = theme || THEMES.smkn13;
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileRef = useMobileMenu(mobileOpen, () => setMobileOpen(false)); // Baru: Hook untuk tutup saat click outside
@@ -278,8 +284,8 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between py-3 md:py-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: "#111827" }}>13</div>
-              <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>SMKN 13 Jakarta</div></div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
+              <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div></div>
             </div>
             <div className="hidden lg:flex items-center gap-6 xl:gap-8">
               {navItems.map(item => <NavDropdown key={item.label} item={item} theme={safeTheme} />)}
@@ -326,7 +332,7 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
             >
               <div className="flex items-center justify-between mb-6 pt-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-2xl flex items-center justify-center font-bold text-xs" style={{ background: safeTheme.accent, color: "#111827" }}>13</div>
+                  <div className="w-8 h-8 rounded-2xl flex items-center justify-center font-bold text-xs" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
                   <div className="text-sm font-semibold" style={{ color: safeTheme.primaryText }}>Menu</div>
                 </div>
                 <button 
@@ -358,7 +364,7 @@ const SITE_SINCE = Number.parseInt(
 /****************
  * FOOTER
  ****************/
-const Footer = ({ theme }) => {
+const Footer = ({ theme, schoolProfile }) => {
   const now = new Date().getFullYear();
   const from = Number.isFinite(SITE_SINCE) ? SITE_SINCE : now;
   const yearLabel = from < now ? `${from} — ${now}` : `${now}`;
@@ -368,10 +374,10 @@ const Footer = ({ theme }) => {
         <div className="grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: "#111827" }}>13</div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>13</div>
               <div>
-                <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>SMKN 13 Jakarta</div>
-                <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>Sekolah Menengah Kejuruan Negeri</div>
+                <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div>
+                <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolTypeLabel || 'Sekolah Menengah Kejuruan Negeri'}</div>
               </div>
             </div>
             <p className="mt-3 text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>Mewujudkan lulusan berkarakter, kompeten, dan siap kerja melalui lingkungan belajar yang modern dan inklusif.</p>
@@ -388,14 +394,14 @@ const Footer = ({ theme }) => {
           <div>
             <div className="text-sm font-semibold mb-2" style={{ color: THEMES.smkn13.primaryText }}>Kontak</div>
             <div className="text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>
-              Jl. Contoh No. 13, Jakarta Pusat<br />
-              (021) 987‑654<br />
-              info@smkn13.sch.id
+              {schoolProfile?.address || 'Jl. Contoh No. 13, Jakarta Pusat'}<br />
+              {schoolProfile?.phoneNumber || '(021) 987-654'}<br />
+              {schoolProfile?.email || 'info@smkn13.sch.id'}
             </div>
           </div>
         </div>
         <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — SMKN 13 Jakarta. All rights reserved.</div>
+          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — {schoolProfile?.schoolName || 'Nayaka Website'}. All rights reserved.</div>
           <div className="text-xs" style={{ color: THEMES.smkn13.primaryText }}>Powered by <span className="font-semibold">Xpresensi</span></div>
         </div>
       </div>
@@ -407,12 +413,12 @@ const Footer = ({ theme }) => {
  * GALLERY DATA (demo)
  ****************************/
 const GALLERY = [
-  { id: 'img-1', type: 'photo', title: 'Upacara Bendera', album: 'Kegiatan Sekolah', date: '2025-08-22', src: makeSvg(1600, 1000, '#1F3B76', '#2C3F6B', 'Upacara Bendera', 'Lapangan SMKN 13'), w:1600, h:1000 },
+  { id: 'img-1', type: 'photo', title: 'Upacara Bendera', album: 'Kegiatan Sekolah', date: '2025-08-22', src: makeSvg(1600, 1000, '#1F3B76', '#2C3F6B', 'Upacara Bendera', 'Lapangan'), w:1600, h:1000 },
   { id: 'img-2', type: 'photo', title: 'Lomba Futsal', album: 'Olahraga', date: '2025-08-15', src: makeSvg(1600, 1000, '#0B1733', '#102347', 'Turnamen Futsal', 'Provinsi DKI Jakarta'), w:1600, h:1000 },
   { id: 'img-3', type: 'photo', title: 'Pameran Karya RPL', album: 'Akademik', date: '2025-07-30', src: makeSvg(1600, 1000, '#F2C94C', '#1F3B76', 'Pameran Karya', 'Jurusan RPL'), w:1600, h:1000 },
   { id: 'img-4', type: 'photo', title: 'Kegiatan Pramuka', album: 'Kesiswaan', date: '2025-07-12', src: makeSvg(1600, 1000, '#2C3F6B', '#0B1733', 'Latihan Pramuka', 'Lapangan Belakang'), w:1600, h:1000 },
   { id: 'vid-1', type: 'video', title: 'Profil Sekolah', album: 'Video', date: '2025-07-10', embed: 'https://www.youtube.com/embed/5qap5aO4i9A' },
-  { id: 'img-5', type: 'photo', title: 'Wisuda Siswa', album: 'Kegiatan Sekolah', date: '2025-06-25', src: makeSvg(1600, 1000, '#1F3B76', '#F2C94C', 'Wisuda 2025', 'SMKN 13 Jakarta'), w:1600, h:1000 },
+  { id: 'img-5', type: 'photo', title: 'Wisuda Siswa', album: 'Kegiatan Sekolah', date: '2025-06-25', src: makeSvg(1600, 1000, '#1F3B76', '#F2C94C', 'Wisuda 2025', 'Wisuda'), w:1600, h:1000 },
   { id: 'img-6', type: 'photo', title: 'Lomba Inovasi', album: 'Akademik', date: '2025-06-10', src: makeSvg(1600, 1000, '#1F3B76', '#4CAF50', 'Inovasi Teknologi', 'Juara 1 Kota'), w:1600, h:1000 },
 ];
 
@@ -1062,6 +1068,24 @@ const GalleryPage = () => {
   const appTheme = getSafeTheme();
   const prefersReducedMotion = useReducedMotion();
 
+  // School profile from API
+  const [schoolProfile, setSchoolProfile] = useState<any>(null);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          setSchoolProfile(result.data);
+        }
+      } catch (err) {
+        console.error('Gagal load profile:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   useEffect(()=>{
     try {
       console.assert(typeof GallerySection === 'function', 'GallerySection harus ada');
@@ -1081,11 +1105,11 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen" style={{ background: appTheme.bg }}>
-      <Navbar theme={appTheme} />
+      <Navbar theme={appTheme} schoolProfile={schoolProfile} />
       <main>
         <GallerySection theme={appTheme} />
       </main>
-      <Footer theme={appTheme} />
+      <Footer theme={appTheme} schoolProfile={schoolProfile} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { RootPage } from "../dashboard";
 // Load Component for Pages
 import { Default404, Vokadash } from "@/features/_global";
 import { Otp } from "@/features/otp";
-import { SchoolRegister } from "@/features/schools";
+import { SchoolRegister, SchoolSettings } from "@/features/schools";
 import { QueryClientProvider } from "@tanstack/react-query";
 import AgendaPage from "../agenda/pages/home";
 import { BukuAlumni } from "../alumni/pages/home";
@@ -37,7 +37,13 @@ import AturanTataTertibPage from "../tataTertib/pages/taskLanding";
 import VisiMisiPage from "../visiMisi/pages/home";
 import VotingOsisPage from "../voting/pages/home";
 import { queryClient } from "./queryClient";
-import { PengumumanKelulusan } from "../graduation/pages";
+import { PengumumanKelulusan, GraduationAdminDashboard } from "../graduation";
+import { LayananPersuratanPage } from "../layanan-persuratan/pages/home";
+import { PermohonanAdminLanding } from "../layanan-persuratan/pages/admin-landing";
+import { PermohonanPrintPage } from "../layanan-persuratan/pages/print-page";
+import { VerifyPage } from "../layanan-persuratan/pages/verify-page";
+import { KeteranganLulusPrintPage } from "../layanan-persuratan/pages/keterangan-lulus-print";
+import { LocationLanding } from "../locations/pages/location-landing";
 
 const router = createBrowserRouter(
   [
@@ -147,6 +153,10 @@ const router = createBrowserRouter(
           element: <PPIDMain />,
         },
         {
+          path: "layanan-persuratan", // Layanan Administrasi Persuratan
+          element: <LayananPersuratanPage />,
+        },
+        {
           path: "pengumuman-kelulusan", // Relative: menjadi "/ppdb"
           element: <PengumumanKelulusan />,
         },
@@ -169,6 +179,34 @@ const router = createBrowserRouter(
         {
           path: "kelulusan", // Relative: menjadi "/ppdb"
           element: <KelulusanPage />,
+        },
+        {
+          path: "admin/permohonan",
+          element: <PermohonanAdminLanding />,
+        },
+        {
+          path: "admin/permohonan/print/:id",
+          element: <PermohonanPrintPage />,
+        },
+        {
+          path: "verify/:id",
+          element: <VerifyPage />,
+        },
+        {
+          path: "admin/kelulusan",
+          element: <GraduationAdminDashboard />,
+        },
+        {
+          path: "admin/kelulusan/print/:id",
+          element: <KeteranganLulusPrintPage />,
+        },
+        {
+          path: "admin/lokasi-siswa",
+          element: <LocationLanding />,
+        },
+        {
+          path: "schools/settings",
+          element: <SchoolSettings />,
         },
       ],
     },

@@ -11,7 +11,7 @@ import { API_CONFIG } from "@/config/api";
 //   const host = typeof window !== "undefined" ? window.location.hostname : getXHostHeader();
 //   const domain = host?.toLowerCase().replace(/^https?:\/\//, "");
 
-//   // === SMKN 13 Jakarta ===
+//   // === Nayaka Platform ===
 //   if (
 //     domain === "smkn13jkt.kiraproject.id" ||
 //     domain === "smkn13jakarta.sch.id" ||  // TAMBAHAN
@@ -21,14 +21,14 @@ import { API_CONFIG } from "@/config/api";
 //       type: "SMKN",
 //       number: "13",
 //       city: "Jakarta",
-//       fullName: "SMKN 13 Jakarta",
+//       fullName: "Nayaka Platform",
 //       shortName: "SMKN 13",
 //       npsn: "20102234",
 //       email: "ppid@smkn13.sch.id",
 //       phone: "+62 21 1234567",
 //       hours: "07:00 – 15:00",
 //       theme: {
-//         name: "SMKN 13 Jakarta",
+//         name: "Nayaka Platform",
 //         primary: "#1F3B76",
 //         primaryText: "#ffffff",
 //         accent: "#F2C94C",
@@ -552,7 +552,7 @@ const getSchoolInfoFromDomain = () => {
   const host = typeof window !== "undefined" ? window.location.hostname : getXHostHeader();
   const domain = host?.toLowerCase().replace(/^https?:\/\//, "");
 
-  // === SMKN 13 Jakarta ===
+  // === Nayaka Platform ===
   if (
     domain === "smkn13jkt.kiraproject.id" ||
     domain === "smkn13jakarta.sch.id" ||  // TAMBAHAN
@@ -562,7 +562,7 @@ const getSchoolInfoFromDomain = () => {
       type: "SMKN",
       number: "13",
       city: "Jakarta",
-      fullName: "SMKN 13 Jakarta",
+      fullName: "Nayaka Platform",
       shortName: "SMKN 13",
       npsn: "20102234",
       email: "ppid@smkn13.sch.id",
@@ -570,7 +570,7 @@ const getSchoolInfoFromDomain = () => {
       hours: "07:00 – 15:00",
       kelulusanPeriod: { start: "2025-06-01T00:00:00+07:00", end: "2025-12-31T23:59:59+07:00" },
       theme: {
-        name: "SMKN 13 Jakarta",
+        name: "Nayaka Platform",
         primary: "#1F3B76",
         primaryText: "#ffffff",
         accent: "#F2C94C",
@@ -658,7 +658,7 @@ const getSchoolInfoFromDomain = () => {
 /****************************
  * API CONFIG
  ****************************/
-const API_BASE = API_CONFIG.BASE_URL;
+const API_BASE = API_CONFIG.baseUrl;
 const headers = { "Cache-Control": "no-store" };
 
 const fetchGraduations = async () => {
@@ -1002,6 +1002,24 @@ let school: any = {};
 export default function KelulusanPage() {
   school = getSchoolInfoFromDomain();
   theme = school.theme;
+
+  // School profile from API
+  const [schoolProfile, setSchoolProfile] = useState<any>(null);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const schoolId = getSchoolIdSync();
+        const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+          setSchoolProfile(result.data);
+        }
+      } catch (err) {
+        console.error('Gagal load profile:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--brand-primary", theme.primary);

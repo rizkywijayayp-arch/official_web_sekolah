@@ -27,7 +27,7 @@ export const LoginPage = () => {
   //   if (barcodeToken) return;
   //   try {
   //     setIsLoadingBarcode(true);
-  //     const response = await fetch(`${API_CONFIG.BASE_URL}/generate-barcode`, {
+  //     const response = await fetch(`${API_CONFIG.baseUrl}/generate-barcode`, {
   //       method: 'GET',
   //       headers: {
   //         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export const LoginPage = () => {
 
   // Initialize socket connection - disabled for public website
   // useEffect(() => {
-  //   const socketConnection = io(API_CONFIG.BASE_URL);
+  //   const socketConnection = io(API_CONFIG.baseUrl);
 
   //   socketConnection.on('connect', () => {
   //     setSocket(socketConnection);

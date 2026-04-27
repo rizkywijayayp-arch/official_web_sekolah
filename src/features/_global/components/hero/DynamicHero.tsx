@@ -13,7 +13,7 @@ interface DynamicHeroProps {
 
 const useSchoolProfile = () => {
   const schoolId = getSchoolIdSync();
-  const API_BASE = API_CONFIG.BASE_URL;
+  const API_BASE = API_CONFIG.baseUrl;
   return useQuery({
     queryKey: ['schoolProfile', schoolId],
     queryFn: async () => {
@@ -100,10 +100,8 @@ export const DynamicHero = ({ id, titleProps, subTitleProps }: DynamicHeroProps)
           </>
         ) : (
           <>
-            {/* Fallback background when no video */}
+            {/* Fallback background when no video - empty default, wait from admin */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900" />
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920')] bg-cover bg-center opacity-30" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-black/80" />
           </>
         )}
       </div>

@@ -116,7 +116,7 @@ function BeritaSection() {
       try {
         setLoading(true);
         const schoolId = getSchoolIdSync();
-        const res = await fetch(`${API_CONFIG.BASE_URL}/berita?schoolId=${schoolId}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/berita?schoolId=${schoolId}`);
         const result = await res.json();
 
         if (result.success) {
@@ -263,7 +263,7 @@ const BeritaPage = () => {
   const { data: profile } = useQuery({
     queryKey: ['schoolProfile'],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah`);
       const data = await res.json();
       return data.data;
     },

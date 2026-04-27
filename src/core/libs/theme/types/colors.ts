@@ -13,6 +13,14 @@ export interface RawColors {
   gray?: string;
   dark?: string;
   light?: string;
+  // Semantic colors from backend
+  bg?: string;
+  surface?: string;
+  surfaceText?: string;
+  subtle?: string;
+  primaryText?: string;
+  accent?: string;
+  pop?: string;
 }
 
 export type Theme = "dark" | "light" | "system";

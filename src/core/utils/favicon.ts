@@ -3,6 +3,11 @@ import { API_CONFIG } from "@/config/api";
 /**
  * Set favicon berdasarkan logo sekolah atau favicon URL custom
  * Call ini setiap kali schoolData di-load
+ *
+ * RULES:
+ * - Jika ada faviconUrl custom dari admin, pakai itu
+ * - Jika ada logoUrl, pakai logo sebagai favicon
+ * - Jika TIDAK ADA logo dan TIDAK ADA favicon, JANGAN tampilkan favicon
  */
 export const setFavicon = (logoUrl: string | null, schoolName?: string, faviconUrl?: string | null) => {
   // Hapus link icon yang existing
@@ -11,13 +16,27 @@ export const setFavicon = (logoUrl: string | null, schoolName?: string, faviconU
     existingLink.remove();
   }
 
+  // Jika tidak ada logo dan tidak ada favicon, jangan tampilkan favicon
+  if (!faviconUrl && !logoUrl) {
+    console.log('[Favicon] No logo/favicon provided - skipping favicon');
+    return;
+  }
+
   // Buat link element baru
   const link = document.createElement("link");
   link.rel = "icon";
 
   if (faviconUrl) {
     // Pakai favicon custom dari admin
-    link.type = faviconUrl.toLowerCase().endsWith('.png') ? "image/png" : "image/x-icon";
+    if (faviconUrl.toLowerCase().endsWith('.png')) {
+      link.type = "image/png";
+    } else if (faviconUrl.toLowerCase().endsWith('.svg')) {
+      link.type = "image/svg+xml";
+    } else if (faviconUrl.toLowerCase().endsWith('.ico')) {
+      link.type = "image/x-icon";
+    } else {
+      link.type = "image/x-icon";
+    }
     link.href = faviconUrl;
   } else if (logoUrl) {
     // Pakai logo dari API sebagai favicon
@@ -37,40 +56,10 @@ export const setFavicon = (logoUrl: string | null, schoolName?: string, faviconU
     }
     // Add cache-busting timestamp
     link.href = logoUrl.includes('?') ? `${logoUrl}&t=${Date.now()}` : `${logoUrl}?t=${Date.now()}`;
-  } else if (schoolName) {
-    // Generate favicon dari inisial sekolah
-    link.type = "image/svg+xml";
-    link.href = generateInitialFavicon(schoolName);
-  } else {
-    // Fallback
-    link.type = "image/x-icon";
-    link.href = "/logo.ico";
   }
 
   document.head.appendChild(link);
-};
-
-/**
- * Generate SVG favicon dari inisial sekolah
- */
-const generateInitialFavicon = (schoolName: string): string => {
-  // Ambil 2 karakter pertama dari kata pertama schoolName
-  const words = schoolName.trim().split(/\s+/);
-  let initials = words.slice(0, 2).map(w => w.charAt(0).toUpperCase()).join("");
-
-  // Fallback kalau kosong
-  if (!initials) initials = "SC";
-
-  // Generate SVG
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-    <rect width="100" height="100" rx="20" fill="#1B5E20"/>
-    <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
-          font-family="Arial Black, sans-serif" font-size="50" font-weight="bold" fill="white">
-      ${initials}
-    </text>
-  </svg>`;
-
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+  console.log('[Favicon] Set successfully');
 };
 
 /**
@@ -84,4 +73,14 @@ export const setFaviconFromProfile = (profile: any) => {
   const faviconUrl = profile.faviconUrl || null;
   const schoolName = profile.schoolName || "";
   setFavicon(logoUrl, schoolName, faviconUrl);
+};
+
+/**
+ * Clear favicon (remove dari head)
+ */
+export const clearFavicon = () => {
+  const existingLink = document.querySelector("link[rel='icon']");
+  if (existingLink) {
+    existingLink.remove();
+  }
 };

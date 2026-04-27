@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Calendar, ChevronDown, Filter, MapPin, Search, Star, Trophy, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { getThemeColor, getContrastColor } from "@/core/libs/theme/hooks/useThemeColors";
 
 const Modal = ({ open, onClose, theme, title, children }) => {
   if (!open) return null;
@@ -78,7 +79,7 @@ const PrestasiCard = ({ item, theme, onOpen }) => {
         </p>
         <span
           className="inline-block mt-7 px-4 py-2 rounded-full text-sm font-medium transition-all"
-          style={{ background: theme.accent, color: "#111827" }}
+          style={{ background: theme.accent, color: getContrastColor(theme.accent) }}
         >
           Lihat Detail →
         </span>
@@ -92,7 +93,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -112,7 +113,7 @@ const PrestasiSection = () => {
   useEffect(() => {
     const fetchPrestasi = async () => {
       try {
-        const res = await fetch(`${API_CONFIG.BASE_URL}/prestasi?schoolId=${schoolId}`);
+        const res = await fetch(`${API_CONFIG.baseUrl}/prestasi?schoolId=${schoolId}`);
         const json = await res.json();
         if (json.success) {
           const mapped = json.data.map((item: any) => ({

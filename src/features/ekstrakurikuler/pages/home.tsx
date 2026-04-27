@@ -12,7 +12,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -124,7 +124,7 @@ const EkskulSection = () => {
   const { data: clubs = [], isLoading } = useQuery({
     queryKey: ['ekskul-premium', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/ekstrakurikuler?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/ekstrakurikuler?schoolId=${schoolId}`);
       const json = await res.json();
       return json.data.map((item: any) => ({
         ...item,

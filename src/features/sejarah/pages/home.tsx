@@ -12,7 +12,7 @@ const useProfile = () => {
   return useQuery({
     queryKey: ['school-profile', schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
       const json = await res.json();
       return json.success ? json.data : null;
     },
@@ -206,7 +206,7 @@ const SejarahPage = () => {
   useEffect(() => {
     const getSejarah = async () => {
       try {
-        const response = await fetch(`${API_CONFIG.BASE_URL}/sejarah?schoolId=${schoolId}`);
+        const response = await fetch(`${API_CONFIG.baseUrl}/sejarah?schoolId=${schoolId}`);
         const result = await response.json();
         if (result.success) {
           setData(result.data);
