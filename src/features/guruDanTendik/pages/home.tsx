@@ -4,7 +4,6 @@ import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
 import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { useQuery } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { BookOpen, ChevronRight, Info, Mail, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
