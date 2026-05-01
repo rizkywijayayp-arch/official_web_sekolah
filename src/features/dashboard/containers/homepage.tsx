@@ -281,13 +281,14 @@ const Navbar = ({ theme = THEMES.smkn13, onTenantChange = () => {}, currentKey =
   const [mobileOpen, setMobileOpen] = useState(false);
   const ppdbActive = isWithinPeriod(new Date(), PPDB_PERIOD);
   const navItems = NAV.map(it => it.children ? ({ ...it, children: it.children.filter(c => c.label !== 'PPDB1' || ppdbActive) }) : it);
-  const schoolName = schoolData?.schoolName || 'Nayaka Website';
+  const schoolName = schoolData?.schoolName || 'Web';
+  const schoolInitials = schoolName.split(' ').filter(w => w[0]).map(w => w[0].toUpperCase()).slice(0, 2).join('');
   return (
     <div className="w-full sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/5" style={{ background: "rgba(0,0,0,0.25)", borderBottom: `1px solid ${safeTheme.subtle}` }}>
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between py-3 md:py-4">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>{schoolInitials}</div>
             <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>{schoolName}</div></div>
           </div>
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
@@ -670,9 +671,9 @@ const Footer = ({ theme, schoolData }) => {
   // Use school data from API or fallback defaults
   const schoolName = schoolData?.schoolName || 'Nayaka Website';
   const schoolTypeLabel = schoolData?.schoolTypeLabel || 'Sekolah Menengah Kejuruan Negeri';
-  const address = schoolData?.address || 'Jl. Contoh No. 13, Jakarta Pusat';
-  const phone = schoolData?.phoneNumber || '(021) 987-654';
-  const email = schoolData?.email || 'info@smkn13.sch.id';
+  const address = schoolData?.address || 'Alamat sekolah belum diatur';
+  const phone = schoolData?.phoneNumber || '-';
+  const email = schoolData?.email || '-';
 
   return (
     <footer className="mt-8">
@@ -680,7 +681,7 @@ const Footer = ({ theme, schoolData }) => {
         <div className="grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>13</div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>{schoolName.split(' ').filter(w => w[0]).map(w => w[0].toUpperCase()).slice(0, 2).join('')}</div>
               <div>
                 <div className="text-base font-semibold" style={{ color: theme.primaryText }}>{schoolName}</div>
                 <div className="text-xs opacity-80" style={{ color: theme.primaryText }}>{schoolTypeLabel}</div>
@@ -779,10 +780,10 @@ const Homepage = () => {
   // School data from API or fallback
   const schoolData = {
     schoolName: schoolProfile?.schoolName || 'Nayaka Website',
-    schoolTypeLabel: schoolProfile?.schoolTypeLabel || 'Sekolah Menengah Kejuruan Negeri',
-    address: schoolProfile?.address || 'Jl. Contoh No. 13, Jakarta Pusat',
-    phoneNumber: schoolProfile?.phoneNumber || '(021) 987-654',
-    email: schoolProfile?.email || 'info@smkn13.sch.id',
+    schoolTypeLabel: schoolProfile?.schoolTypeLabel || schoolProfile?.schoolType || 'Sekolah',
+    address: schoolProfile?.address || '',
+    phoneNumber: schoolProfile?.phoneNumber || '',
+    email: schoolProfile?.email || '',
   };
 
   return <Page theme={theme} onTenantChange={setKey} currentKey={key} schoolData={schoolData} />;

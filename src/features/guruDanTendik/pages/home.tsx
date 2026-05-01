@@ -43,12 +43,7 @@ const makeAvatar = (name: string, theme: any) => {
 /****************************
  * DEMO DATA (Fallback)
  ****************************/
-const DEMO_PEOPLE = [
-  { id: 1, name: "Drs. Andi Pratama", unit: "RPL", subjects: ["RPL"], status: "PNS", years: 12, email: "andi@smkn13.sch.id" },
-  { id: 2, name: "Sari Wulandari, M.Pd", unit: "Umum", subjects: ["MTK"], status: "PNS", years: 10, email: "sari@smkn13.sch.id" },
-  { id: 3, name: "Budi Santoso", unit: "RPL", subjects: ["RPL"], status: "PPPK", years: 6, email: "budi@smkn13.sch.id" },
-  { id: 4, name: "Siti Rahma", unit: "Umum", subjects: [], role: "TU – Administrasi", status: "PNS", years: 7, email: "siti@smkn13.sch.id" },
-];
+const DEMO_PEOPLE: any[] = [];
 
 /****************************
  * REACT QUERY HOOK - Terintegrasi dengan API guruTendik
@@ -102,7 +97,7 @@ const useTeacherStaff = () => {
  * FILTER & SORT
  ****************************/
 const DEPARTMENTS = ["Guru", "Wali Kelas", "Kepala Sekolah", "Kepala Tata Usaha", "Administrasi"];
-const SUBJECTS = ["RPL", "TKJ", "MM", "MTK", "B. Indonesia", "B. Inggris", "PPKn", "Sejarah", "Agama", "PJOK", "BK", "Kewirausahaan"];
+const SUBJECTS = ["Semua", "RPL", "TKJ", "MM", "MTK", "B. Indonesia", "B. Inggris", "PPKn", "Sejarah", "Agama", "PJOK", "BK", "Kewirausahaan"];
 
 const filterPeople = (people: any[], q: string, unit: string, subject: string) => {
   const nq = q.trim().toLowerCase();

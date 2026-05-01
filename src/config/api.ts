@@ -1,16 +1,22 @@
 // Centralized API Configuration for Multi-Tenant
-// Use relative paths for API calls to avoid Mixed Content errors
-// nginx proxy handles forwarding to backend
+// Single source of truth: VITE_API_BASE_URL must point to production backend
 
 const API_CONFIG = {
-  get baseUrl() { // ← samakan nama dengan yang dipakai di component
-    // const base = import.meta.env.VITE_API_BASE_URL || '';
-    const base = "https://admin.kiraproject.id/api";
+  get baseUrl() {
+    const base = import.meta.env.VITE_API_BASE_URL || 'https://be.school.kiraproject.id';
     return base.replace(/\/$/, '');
+  },
+
+  get adminUrl() {
+    return import.meta.env.VITE_ADMIN_PORTAL_URL || 'https://admin.kiraproject.id';
   },
 
   withSchoolId(schoolId: string) {
     return `${this.baseUrl}/profileSekolah?schoolId=${schoolId}`;
+  },
+
+  get perpusBaseUrl() {
+    return import.meta.env.VITE_PERPUS_BASE_URL || 'https://be-perpus.kiraproject.id';
   }
 };
 

@@ -241,7 +241,7 @@ const HeadmasterGreeting = () => {
       return data.data;
     },
   });
-  const sambutan = kepalaSekolah?.data;
+  const sambutan = sambutanQuery?.data;
 
   return (
     <section className="py-20 bg-white">

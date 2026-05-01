@@ -1,107 +1,88 @@
-// Dynamic schoolId resolution from backend API
-// No hardcoded domain mappings - all resolved via API
+// Dynamic schoolId resolution — automatically detects from URL domain
+// Zero hardcoded school numbers. All fallbacks reference DEFAULT_SCHOOL_ID.
 
-const DEFAULT_SCHOOL_ID = "55"; // fallback if API fails
+import { DEFAULT_SCHOOL_ID } from "@/core/configs/defaults";
 
+// ── Backend base URL (single source of truth) ────────────────────────────────
+const _getBackendBase = (): string => {
+  try {
+    return import.meta.env.VITE_API_BASE_URL || 'https://be-school.kiraproject.id';
+  } catch {
+    return 'https://be-school.kiraproject.id';
+  }
+};
+
+// ── Async: resolve schoolId from backend API by domain ───────────────────────
 export const getSchoolId = async (): Promise<string> => {
   const hostname = window.location.hostname;
 
-  // Skip localhost default - always try to extract from subdomain
   if (hostname !== "localhost" && hostname !== "127.0.0.1") {
     try {
-      // Fetch schoolId from backend API based on current domain
-      const response = await fetch(`https://be-school.kiraproject.id/school/resolve?domain=${hostname}`);
-
+      const response = await fetch(
+        `${_getBackendBase()}/school/resolve?domain=${encodeURIComponent(hostname)}`
+      );
       if (response.ok) {
         const data = await response.json();
-        if (data.schoolId) {
-          return data.schoolId;
-        }
+        if (data.schoolId) return data.schoolId;
       }
-    } catch (error) {
-      
+    } catch {
+      // fall through to regex extraction
     }
 
-    // Extract from various subdomain patterns
+    // Extract from subdomain patterns
     const patterns = [
-      /sman(\d+)/i,                    // sman40, sman40jkt, NEW.sman40-jkt
-      /smpn(\d+)/i,                    // smpn12
-      /smkn(\d+)/i,                    // smkn13
-      /(\d+)-?jkt/i,                  // 40-jkt, 40jkt
+      /sman(\d+)/i,
+      /smpn(\d+)/i,
+      /smkn(\d+)/i,
+      /(\d+)-?jkt/i,
     ];
-
     for (const pattern of patterns) {
       const match = hostname.match(pattern);
-      if (match && match[1]) {
-        return match[1];
-      }
-    }
-  }
-
-  // For localhost, try subdomain patterns first
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
-    const localhostMatch = hostname.match(/(\d+)/);
-    if (localhostMatch && localhostMatch[1]) {
-      // Check if it's a school number pattern (e.g., localhost with 40 in it)
-      const num = localhostMatch[1];
-      if (num.length >= 2 && num !== "5173" && num !== "3000" && num !== "5005") {
-        return num;
-      }
+      if (match?.[1]) return match[1];
     }
   }
 
   return DEFAULT_SCHOOL_ID;
 };
 
-// Synchronous version for components that need it immediately
+// ── Sync: lightweight regex-only extraction for immediate use ────────────────
 export const getSchoolIdSync = (): string => {
-  // If already called before, return cached value to avoid recalculation
-  if (typeof window !== 'undefined' && (window as any).__cachedSchoolId) {
-    return (window as any).__cachedSchoolId;
-  }
+  if (typeof window === 'undefined') return DEFAULT_SCHOOL_ID;
+
+  // Return cached value to avoid recalculation
+  const cached = (window as any).__cachedSchoolId;
+  if (cached) return cached;
 
   const hostname = window.location.hostname;
 
-  // Skip localhost default - always try to extract from subdomain
   if (hostname !== "localhost" && hostname !== "127.0.0.1") {
-    // Extract from various subdomain patterns - include sch.id domains
     const patterns = [
-      /sman(\d+)/i,                    // sman40, sman40jkt, sman40-jkt.sch.id
-      /smpn(\d+)/i,                    // smpn12
-      /smkn(\d+)/i,                    // smkn13
-      /(\d+)-?jkt/i,                   // 40-jkt, 40jkt (including sch.id)
-      /(\d+)jakarta/i,                 // sman40jakarta
+      /sman(\d+)/i,
+      /smpn(\d+)/i,
+      /smkn(\d+)/i,
+      /(\d+)-?jkt/i,
+      /(\d+)jakarta/i,
     ];
-
     for (const pattern of patterns) {
       const match = hostname.match(pattern);
-      if (match && match[1]) {
+      if (match?.[1]) {
         const id = match[1];
-        // Cache the result
-        if (typeof window !== 'undefined') {
-          (window as any).__cachedSchoolId = id;
-        }
+        (window as any).__cachedSchoolId = id;
         return id;
       }
     }
   }
 
-  // For localhost, use default (user should change this in local dev)
+  // Localhost dev override via localStorage
   if (hostname === "localhost" || hostname === "127.0.0.1") {
-    // Can be overridden by localStorage if needed
-    const localSchoolId = localStorage.getItem('devSchoolId');
-    if (localSchoolId) {
-      if (typeof window !== 'undefined') {
-        (window as any).__cachedSchoolId = localSchoolId;
-      }
-      return localSchoolId;
+    const devOverride = localStorage.getItem('devSchoolId');
+    if (devOverride) {
+      (window as any).__cachedSchoolId = devOverride;
+      return devOverride;
     }
   }
 
-  // ALWAYS return default schoolId - never return undefined
-  const defaultId = DEFAULT_SCHOOL_ID;
-  if (typeof window !== 'undefined') {
-    (window as any).__cachedSchoolId = defaultId;
-  }
-  return defaultId;
+  // FINAL FALLBACK — never return undefined
+  (window as any).__cachedSchoolId = DEFAULT_SCHOOL_ID;
+  return DEFAULT_SCHOOL_ID;
 };

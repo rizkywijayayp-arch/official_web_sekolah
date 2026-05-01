@@ -6,6 +6,7 @@ import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { X } from "lucide-react";
 
 const useProfile = () => {
   const schoolId = getSchoolIdSync();
@@ -115,7 +116,7 @@ const ClubCard = ({ club, onOpen }: any) => {
 /****************************
  * EKSKUL SECTION — PAKAI API BARU
  **************************/
-const EkskulSection = () => {
+const EkskulSection = ({ waNumber }: { waNumber?: string }) => {
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState("Semua");
   const [selected, setSelected] = useState<any>(null);
@@ -238,7 +239,7 @@ const EkskulSection = () => {
                     <div className="grid grid-cols-2 gap-8 mb-6 pt-8 border-t border-gray-100">
                       <div>
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">Mentor</p>
-                        <p className="font-bold text-gray-900">{selected.coach || 'Ibu Siti Aminah'}</p>
+                        <p className="font-bold text-gray-900">{selected.coach || "Guru Pembina"}</p>
                       </div>
                       <div>
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">Schedule</p>
@@ -246,7 +247,7 @@ const EkskulSection = () => {
                       </div>
                     </div>
                     <a 
-                      href={`https://wa.me/628123456789?text=Halo, saya tertarik mendaftar ekskul ${selected.name}`}
+                      href={`https://wa.me/${waNumber || "628123456789"}?text=Halo, saya tertarik mendaftar ekskul ${selected.name}`}
                       target="_blank"
                       className="block w-full py-5 mt-auto bg-blue-600 text-white text-center rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-colors shadow-lg shadow-blue-200"
                     >
@@ -269,13 +270,14 @@ const EkskulSection = () => {
 const EkskulPage = () => {
   const { data: profile } = useProfile();
   const theme = profile?.theme || { bg: '#ffffff', primary: '#1e3a8a', primaryText: '#1e293b', subtle: '#e2e8f0', surface: '#ffffff', surfaceText: '#475569', accent: '#3b82f6' };
+  const waNumber = profile?.whatsappNumber || profile?.phoneNumber?.replace(/\D/g, '') || undefined;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavbarComp theme={theme} />
       <HeroComp titleProps="Ekstrakurikuler" id="#ekstra" />
       <main className="flex-1 relative z-[1]" id="ekstra">
-        <EkskulSection />
+        <EkskulSection waNumber={waNumber} />
       </main>
       <FooterComp />
     </div>

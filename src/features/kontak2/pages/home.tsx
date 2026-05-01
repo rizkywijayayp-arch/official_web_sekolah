@@ -135,13 +135,13 @@ export function KontakMain() {
   };
 
   const seed: ContactState = {
-    alamat: 'Jl. Contoh No. 13, Jakarta Pusat',
-    telp: '(021) 987-654',
-    email: 'info@smkn13.sch.id',
-    mapsEmbed: 'https://www.google.com/maps/embed?pb=...',
+    alamat: '',
+    telp: '',
+    email: '',
+    mapsEmbed: '',
     socials: [
-      { platform: 'Facebook', url: 'https://facebook.com/smkn13jakarta' },
-      { platform: 'Instagram', url: 'https://instagram.com/smkn13jakarta' },
+      { platform: 'Facebook', url: '' },
+      { platform: 'Instagram', url: '' },
     ],
   };
 

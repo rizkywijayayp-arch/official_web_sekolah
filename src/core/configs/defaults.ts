@@ -1,8 +1,10 @@
 /**
- * Default values for tenant websites
- * Used as fallback when API data is unavailable
- * Can be customized per deployment
+ * Central default values for multi-tenant school platform.
+ * All schoolId fallbacks MUST reference DEFAULT_SCHOOL_ID — never hardcode a number.
+ * Override via VITE_DEFAULT_SCHOOL_ID in .env for deployment-specific defaults.
  */
+export const DEFAULT_SCHOOL_ID = import.meta.env.VITE_DEFAULT_SCHOOL_ID || "1001";
+
 export const DEFAULTS = {
   school: {
     name: "Nayaka Website",

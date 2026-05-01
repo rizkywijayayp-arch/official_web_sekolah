@@ -547,112 +547,89 @@ const HeroSection = () => {
 
 /****************************
  * DETEKSI SEKOLAH BERDASARKAN DOMAIN
+ * Semua identitas sekolah (nama, NPSN, tema) diambil dari API — tidak ada hardcode
  ****************************/
-const getSchoolInfoFromDomain = () => {
-  const host = typeof window !== "undefined" ? window.location.hostname : getXHostHeader();
-  const domain = host?.toLowerCase().replace(/^https?:\/\//, "");
+const DEFAULT_SCHOOL_INFO = {
+  type: "SMK",
+  number: "",
+  city: "",
+  fullName: "Sekolah Anda",
+  shortName: "Sekolah",
+  npsn: "-",
+  email: "",
+  phone: "",
+  hours: "07:00 – 15:00",
+  kelulusanPeriod: { start: new Date().getFullYear() + "-06-01T00:00:00+07:00", end: new Date().getFullYear() + "-12-31T23:59:59+07:00" },
+  theme: {
+    name: "Sekolah",
+    primary: "#1F3B76",
+    primaryText: "#ffffff",
+    accent: "#F2C94C",
+    bg: "#0B1733",
+    surface: "#102347",
+    surfaceText: "#ffffff",
+    subtle: "#2C3F6B",
+    border: "#1E376B",
+    gold: "#F2C94C",
+    pop: "#E63946",
+  },
+};
 
-  // === Nayaka Platform ===
-  if (
-    domain === "smkn13jkt.kiraproject.id" ||
-    domain === "smkn13jakarta.sch.id" ||  // TAMBAHAN
-    domain === "localhost"
-  ) {
-    return {
-      type: "SMKN",
-      number: "13",
-      city: "Jakarta",
-      fullName: "Nayaka Platform",
-      shortName: "SMKN 13",
-      npsn: "20102234",
-      email: "ppid@smkn13.sch.id",
-      phone: "+62 21 1234567",
-      hours: "07:00 – 15:00",
-      kelulusanPeriod: { start: "2025-06-01T00:00:00+07:00", end: "2025-12-31T23:59:59+07:00" },
-      theme: {
-        name: "Nayaka Platform",
-        primary: "#1F3B76",
-        primaryText: "#ffffff",
-        accent: "#F2C94C",
-        bg: "#0B1733",
-        surface: "#102347",
-        surfaceText: "#ffffff",
-        subtle: "#2C3F6B",
-        border: "#1E376B",
-        gold: "#F2C94C",
-        pop: "#E63946",
-      },
-    };
+// Cache so it only fetches once per page load
+let _cachedSchoolInfo: any = null;
+
+const getSchoolInfoFromDomain = async () => {
+  if (_cachedSchoolInfo) return _cachedSchoolInfo;
+
+  const hostname = window.location.hostname;
+
+  // localhost/dev — use default hardcoded fallback (no backend available)
+  if (!hostname || hostname === "localhost" || hostname === "127.0.0.1") {
+    _cachedSchoolInfo = DEFAULT_SCHOOL_INFO;
+    return _cachedSchoolInfo;
   }
 
-  // === SMAN dari .sch.id (new. atau tanpa new.) + jakarta.sch.id ===
-  const smanMatch = domain?.match(/^(new\.)?sman(\d+)-jkt\.sch\.id$/) ||
-                    domain?.match(/^sman(\d+)jakarta\.sch\.id$/); // TAMBAHAN
-
-  if (smanMatch) {
-    const number = smanMatch[2] || smanMatch[1]; // legacy: [2], jakarta: [1]
-    const validNumbers = ["25", "65", "68", "78"];
-    if (validNumbers.includes(number)) {
-      const npsnMap: Record<string, string> = {
-        "25": "20102235",
-        "65": "20102236",
-        "68": "20102237",
-        "78": "20102238",
-      };
-      return {
-        type: "SMAN",
-        number,
-        city: "Jakarta",
-        fullName: `SMAN ${number} Jakarta`,
-        shortName: `SMAN ${number}`,
-        npsn: npsnMap[number],
-        email: `ppid@sman${number}.sch.id`,
-        phone: `+62 21 7654${number}`,
-        hours: "07:00 – 14:00",
-        kelulusanPeriod: { start: "2025-06-01T00:00:00+07:00", end: "2025-12-31T23:59:59+07:00" },
-        theme: {
-          name: `SMAN ${number} Jakarta`,
-          primary: "#1F3B76",
-          primaryText: "#ffffff",
-          accent: "#F2C94C",
-          bg: "#0B1733",
-          surface: "#102347",
-          surfaceText: "#ffffff",
-          subtle: "#2C3F6B",
-          border: "#1E376B",
-          gold: "#F2C94C",
-          pop: "#E63946",
-        },
-      };
+  try {
+    const response = await fetch(
+      `${API_CONFIG.baseUrl}/school/info?domain=${encodeURIComponent(hostname)}`
+    );
+    if (response.ok) {
+      const json = await response.json();
+      if (json.success && json.data) {
+        _cachedSchoolInfo = {
+          type: json.data.type || "SMK",
+          number: json.data.number || "",
+          city: json.data.city || "",
+          fullName: json.data.fullName || "Official Website Sekolah",
+          shortName: json.data.shortName || "Sekolah",
+          npsn: json.data.npsn || "20102234",
+          email: json.data.email || "",
+          phone: json.data.phone || "",
+          hours: json.data.hours || "07:00 – 15:00",
+          kelulusanPeriod: json.data.kelulusanPeriod || DEFAULT_SCHOOL_INFO.kelulusanPeriod,
+          theme: {
+            name: json.data.themeName || json.data.fullName || "Official Website",
+            primary: json.data.themePrimary || DEFAULT_SCHOOL_INFO.theme.primary,
+            primaryText: json.data.themePrimaryText || DEFAULT_SCHOOL_INFO.theme.primaryText,
+            accent: json.data.themeAccent || DEFAULT_SCHOOL_INFO.theme.accent,
+            bg: json.data.themeBg || DEFAULT_SCHOOL_INFO.theme.bg,
+            surface: json.data.themeSurface || DEFAULT_SCHOOL_INFO.theme.surface,
+            surfaceText: json.data.themeSurfaceText || DEFAULT_SCHOOL_INFO.theme.surfaceText,
+            subtle: json.data.themeSubtle || DEFAULT_SCHOOL_INFO.theme.subtle,
+            border: json.data.themeBorder || DEFAULT_SCHOOL_INFO.theme.border,
+            gold: json.data.themeGold || DEFAULT_SCHOOL_INFO.theme.gold,
+            pop: json.data.themePop || DEFAULT_SCHOOL_INFO.theme.pop,
+          },
+        };
+        return _cachedSchoolInfo;
+      }
     }
+  } catch (_) {
+    // Network error — fall through to default
   }
 
-  // === Fallback Default (SMAN 1 Jakarta) ===
-  return {
-    type: "SMAN",
-    number: "1",
-    city: "Jakarta",
-    fullName: "SMAN 1 Jakarta",
-    shortName: "SMAN 1",
-    npsn: "20102239",
-    email: "ppid@sman1.sch.id",
-    phone: "+62 21 1111111",
-    hours: "07:00 – 14:00",
-    kelulusanPeriod: { start: "2025-06-01T00:00:00+07:00", end: "2025-12-31T23:59:59+07:00" },
-    theme: {
-      name: "Default",
-      primary: "#1F3B76",
-      primaryText: "#ffffff",
-      accent: "#F2C94C",
-      bg: "#0B1733",
-      surface: "#102347",
-      surfaceText: "#ffffff",
-      subtle: "#2C3F6B",
-      border: "#1E376B",
-      gold: "#F2C94C",
-      pop: "#E63946",
-    },
-  };
+  _cachedSchoolInfo = DEFAULT_SCHOOL_INFO;
+  return _cachedSchoolInfo;
 };
 
 /****************************
@@ -667,7 +644,19 @@ const fetchGraduations = async () => {
   if (!res.ok) throw new Error("Gagal memuat data kelulusan");
   const json = await res.json();
   if (!Array.isArray(json.data)) throw new Error("Data tidak valid");
-  return json.data;
+  // Normalize: backend may return tahunLulus → map to tahun
+  return json.data.map((item: any) => ({
+    ...item,
+    tahun: item.tahun || item.tahunLulus,
+    nama: item.nama,
+    nisn: item.nisn,
+    status: item.status,
+    kelas: item.kelas,
+    jurusan: item.jurusan,
+    peserta: item.peserta || item.noPeserta || "",
+    sekolah: item.sekolah || item.schoolName || "",
+    ket: item.ket || item.keterangan || "",
+  }));
 };
 
 /****************************
@@ -770,8 +759,8 @@ const KelulusanSection = () => {
   });
 
   const KELULUSAN_PERIOD = {
-    start: new Date(school.kelulusanPeriod.start),
-    end: new Date(school.kelulusanPeriod.end)
+    start: new Date(DEFAULT_SCHOOL_INFO.kelulusanPeriod.start),
+    end: new Date(DEFAULT_SCHOOL_INFO.kelulusanPeriod.end)
   };
 
   const isOpen = now >= KELULUSAN_PERIOD.start && now <= KELULUSAN_PERIOD.end;
@@ -996,12 +985,20 @@ const KelulusanSection = () => {
 /****************************
  * MAIN PAGE DENGAN HERO
  ****************************/
-let theme: any = {};
-let school: any = {};
+const DEFAULT_THEME = DEFAULT_SCHOOL_INFO.theme;
 
 export default function KelulusanPage() {
-  school = getSchoolInfoFromDomain();
-  theme = school.theme;
+  const [school, setSchool] = useState<any>(null);
+  const [theme, setTheme] = useState<any>(DEFAULT_THEME);
+
+  useEffect(() => {
+    const loadSchool = async () => {
+      const info = await getSchoolInfoFromDomain();
+      setSchool(info);
+      setTheme(info.theme);
+    };
+    loadSchool();
+  }, []);
 
   // School profile from API
   const [schoolProfile, setSchoolProfile] = useState<any>(null);
@@ -1026,7 +1023,18 @@ export default function KelulusanPage() {
     document.documentElement.style.setProperty("--brand-accent", theme.gold);
     document.documentElement.style.setProperty("--brand-bg", theme.bg);
     document.documentElement.style.setProperty("--brand-surface", 'black');
-  }, []);
+  }, [theme]);
+
+  if (!school) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0B1733]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+          <span className="text-yellow-400 text-sm font-bold uppercase tracking-widest">Memuat...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">

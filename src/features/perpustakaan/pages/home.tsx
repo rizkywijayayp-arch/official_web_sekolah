@@ -351,6 +351,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, ChevronLeft, ChevronRight, BookOpen, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { API_CONFIG } from "@/config/api";
 
 const useProfile = () => {
   const schoolId = getSchoolIdSync();
@@ -479,7 +480,7 @@ export default function LibrarySection() {
     const fetchGutenberg = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`https://be-perpus.kiraproject.id/gutenberg/books?search=${query}&limit=${limit}&page=${page}`);
+        const res = await fetch(`${API_CONFIG.perpusBaseUrl}/gutenberg/books?search=${query}&limit=${limit}&page=${page}`);
         const result = await res.json();
         
         if (result.success) {

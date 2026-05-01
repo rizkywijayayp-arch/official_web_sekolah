@@ -181,17 +181,17 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getSchoolId } from "../../hooks/getSchoolId";
+import { getSchoolId, getSchoolIdSync } from "../../hooks/getSchoolId";
+import { API_CONFIG } from "@/config/api";
 
 // ─── School Profile Hook ─────────────────────────────────────────────────────
 const useSchoolProfile = () => {
   const schoolId = getSchoolId();
-  const API_BASE = "https://be-school.kiraproject.id";
 
   return useQuery({
     queryKey: ["schoolProfile", schoolId],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE}/profileSekolah?schoolId=${schoolId}`, { cache: "no-store" });
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`, { cache: "no-store" });
       if (!res.ok) throw new Error(`Gagal mengambil profil: ${res.status}`);
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Response tidak valid");
@@ -213,16 +213,16 @@ const FooterOrnament = () => (
   </div>
 );
 
-// ─── MAIN FOOTER COMPONENT WITH CONDITION ────────────────────────────────────
+// ─── MAIN FOOTER COMPONENT ──────────────────────────────────────────────────
 export const FooterComp = () => {
-  const schoolId: any = getSchoolId();
+  const schoolId = getSchoolIdSync();
   const { data: profile, isPending } = useSchoolProfile();
 
-  const isIslamicSchool = schoolId === "3";   // ← Kondisi utama
+  const isIslamicSchool = !!(profile?.isIslamicSchool || profile?.isIslamic || profile?.schoolType === "islamic");
 
   // Cleaning function
   const cleanSchoolName = (name: string) => {
-    if (!name) return isIslamicSchool ? "Sekolah Islam Terpadu" : "Ceria Academy";
+    if (!name) return isIslamicSchool ? "Sekolah Islam Terpadu" : "Official Website";
     const pattern = /\b(jakarta|barat|timur|utara|selatan|pusat)\b/gi;
     return name.replace(pattern, "").replace(/\s\s+/g, ' ').trim();
   };

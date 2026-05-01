@@ -83,8 +83,8 @@ const NAV = [
  * UTILITIES
  ****************/
 const PPDB_PERIOD = {
-  start: new Date("2025-05-01T00:00:00+07:00"),
-  end: new Date("2025-07-31T23:59:59+07:00"),
+  start: schoolProfile?.ppdbStart ? new Date(schoolProfile.ppdbStart) : new Date(new Date().getFullYear() + "-05-01T00:00:00+07:00"),
+  end: schoolProfile?.ppdbEnd ? new Date(schoolProfile.ppdbEnd) : new Date(new Date().getFullYear() + "-07-31T23:59:59+07:00"),
 };
 const isWithinPeriod = (now, { start, end }) => now >= start && now <= end;
 const useOnClickOutside = (ref, handler) => {
@@ -110,20 +110,15 @@ const makeSvg = (w, h, c1, c2, label) => {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };
 
-// Kepala sekolah (data bisa diisi dari CMS/API)
+// Kepala sekolah (data dari profile API)
 const HEADMASTER = {
-  name: "Drs. Deky Noviar, M.M",
-  tenure: "2024–sekarang",
-  // Foto resmi kepala sekolah
-  photo: 'data:image/jpeg;base64,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',
+  name: '',
+  tenure: '',
+  photo: '',
   placeholder: false,
-  priorities: [
-    "Penguatan teaching factory & kelas industri",
-    "Sertifikasi kompetensi (BNSP/industri)",
-    "PKL terpadu & penempatan kerja",
-    "Budaya sekolah aman & anti-perundungan",
-  ],
+  priorities: [],
 };
+
 
 // Local images for hero/news/gallery
 const LOCAL_IMAGES = {
@@ -294,7 +289,7 @@ const Navbar = ({ theme = THEMES.smkn13, schoolProfile, onTenantChange = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between py-3 md:py-4">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>13</div>
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: safeTheme.accent, color: getContrastColor(safeTheme.accent) }}>{schoolProfile?.schoolName?.split(" ").filter(w => w[0]).map(w => w[0].toUpperCase()).slice(0, 2).join("") || ""}</div>
             <div className="leading-none"><div className="text-base md:text-lg font-semibold" style={{ color: safeTheme.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div></div>
           </div>
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
@@ -535,9 +530,9 @@ const ProfileHistory = ({ theme }) => {
  ****************/
 const ProfileStructure = ({ theme }) => {
   const contacts = [
-    { role: "Waka Kurikulum", email: "wakakur@smkn13.sch.id" },
-    { role: "Waka Kesiswaan", email: "waksis@smkn13.sch.id" },
-    { role: "Humas", email: "humas@smkn13.sch.id" },
+    { role: "Waka Kurikulum", email: schoolProfile?.wakaKurikulumEmail || "" },
+    { role: "Waka Kesiswaan", email: schoolProfile?.wakaKesiswaanEmail || "" },
+    { role: "Humas", email: schoolProfile?.humasEmail || "" },
   ];
   return (
     <Section id="profil-struktur" title="Struktur Organisasi" subtitle="Unit kerja & kontak layanan" theme={theme}>
@@ -567,13 +562,9 @@ const ProfileStructure = ({ theme }) => {
  * PROFIL — RIWAYAT KEPALA SEKOLAH
  ****************/
 const ProfilePrincipalsHistory = ({ theme }) => {
-  const principals = [
-    { name: "Drs. A. Setiawan", tenure: "2005–2009", note: "Penguatan fondasi kurikulum dan sarana praktik" },
-    { name: "Dra. B. Lestari", tenure: "2009–2013", note: "Ekspansi jurusan & awal kemitraan industri" },
-    { name: "Drs. C. Prabowo, M.Pd.", tenure: "2013–2018", note: "Akreditasi A & revitalisasi laboratorium" },
-    { name: "Ir. D. Syafril, M.T.", tenure: "2018–2022", note: "Implementasi teaching factory & sertifikasi" },
-    { name: HEADMASTER.name, tenure: "2022–sekarang", note: "Transformasi digital & kolaborasi Link & Match" },
-  ];
+  const principals = schoolProfile?.principalHistory?.length
+    ? schoolProfile.principalHistory
+    : [{ name: schoolProfile?.headmasterName || "", tenure: schoolProfile?.headmasterTenure || "", note: "" }];
   return (
     <Section id="profil-kepala-sekolah" title="Riwayat Kepala Sekolah" subtitle="Apresiasi kepemimpinan dari masa ke masa" theme={theme}>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -689,7 +680,7 @@ const Footer = ({ theme, schoolProfile }) => {
         <div className="grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>13</div>
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold" style={{ background: theme.accent, color: getContrastColor(theme.accent) }}>{schoolProfile?.schoolName?.split(" ").filter(w => w[0]).map(w => w[0].toUpperCase()).slice(0, 2).join("") || ""}</div>
               <div>
                 <div className="text-base font-semibold" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolName || 'Nayaka Website'}</div>
                 <div className="text-xs opacity-80" style={{ color: THEMES.smkn13.primaryText }}>{schoolProfile?.schoolTypeLabel || 'Sekolah Menengah Kejuruan Negeri'}</div>
@@ -709,15 +700,15 @@ const Footer = ({ theme, schoolProfile }) => {
           <div>
             <div className="text-sm font-semibold mb-2" style={{ color: THEMES.smkn13.primaryText }}>Kontak</div>
             <div className="text-sm opacity-85" style={{ color: THEMES.smkn13.primaryText }}>
-              {schoolProfile?.address || 'Jl. Contoh No. 13, Jakarta Pusat'}<br />
-              {schoolProfile?.phoneNumber || '(021) 987-654'}<br />
-              {schoolProfile?.email || 'info@smkn13.sch.id'}
+              {schoolProfile?.address || ''}<br />
+              {schoolProfile?.phoneNumber || ''}<br />
+              {schoolProfile?.email || ''}
             </div>
           </div>
         </div>
         <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — {schoolProfile?.schoolName || 'Nayaka Website'}. All rights reserved.</div>
-          <div className="text-xs" style={{ color: THEMES.smkn13.primaryText }}>Powered by <span className="font-semibold">Xpresensi</span></div>
+          <div className="text-sm opacity-80" style={{ color: THEMES.smkn13.primaryText }}>© {yearLabel} — {schoolProfile?.schoolName || ''} All rights reserved.</div>
+          <div className="text-xs" style={{ color: THEMES.smkn13.primaryText }}>Powered by <span className="font-semibold">Nayaka</span></div>
         </div>
       </div>
     </footer>

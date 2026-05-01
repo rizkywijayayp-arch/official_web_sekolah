@@ -89,13 +89,13 @@ export const HeroComp13 = ({titleProps, subTitleProps, id}: {titleProps?: string
           >
             <Sparkles size={14} className="text-blue-400" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-100">
-              Official Website Sekolah SLTA - Jakarta
+              Official Website {profile?.city ? `— ${profile.city}` : ""}
             </span>
           </motion.div>
 
           {/* Headline dengan Efek Text Reveal */}
           {(() => {
-            const fullTitle = titleProps ? titleProps : profile?.heroTitle || "SELAMAT DATANG DI SEKOLAH YANG BERKARAKTER";
+            const fullTitle = titleProps ? titleProps : profile?.heroTitle || "";
             const words = fullTitle.split(" ");
             
             // Jika hanya satu kata, tampilkan langsung dengan underline
@@ -138,7 +138,7 @@ export const HeroComp13 = ({titleProps, subTitleProps, id}: {titleProps?: string
             transition={{ duration: 1, delay: 0.8 }}
             className="text-md md:text-xl text-blue-100/60 mx-auto max-w-4xl mb-12 leading-relaxed font-light italic"
           >
-            {subTitleProps ? subTitleProps : profile?.heroSubTitle || "Menghadirkan standar pendidikan internasional dengan nilai-nilai luhur budaya bangsa."}
+            {subTitleProps ? subTitleProps : profile?.heroSubTitle || ""}
           </motion.p>
 
           {/* Button Group */}
