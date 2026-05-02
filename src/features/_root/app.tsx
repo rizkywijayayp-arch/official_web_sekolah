@@ -15,12 +15,22 @@ import BeritaPage from "../berita/pages/home";
 import Homepage from "../dashboard/pages/home";
 import EkskulPage from "../ekstrakurikuler/pages/home";
 import GalleryPage from "../galeri/pages/home";
+import { GraduationAdminDashboard, PengumumanKelulusan } from "../graduation";
 import TeacherStaffPage from "../guruDanTendik/pages/home";
 import SchedulePage from "../jadwal/pages/home";
 import CalendarPage from "../kalender/pages/home";
 import KandidatOsisPage from "../kandidatosis/pages/home";
 import KelulusanPage from "../kelulusan/pages/home";
 import CurriculumPage from "../kurikulum/pages/home";
+import {
+  CekStatusPage,
+  KeteranganLulusPrintPage,
+  LayananPersuratanPageNew,
+  PermohonanAdminLanding, PermohonanPrintPage,
+  ServiceTypesAdminPage,
+  VerifyPage
+} from "../layanan-persuratan";
+import { LocationLanding } from "../locations/pages/location-landing";
 import OsisPage from "../osis/pages/home";
 import PengumumanPage from "../pengumuman/pages/home";
 import PerpustakaanPage from "../perpustakaan/pages/home";
@@ -36,13 +46,6 @@ import AturanTataTertibPage from "../tataTertib/pages/taskLanding";
 import VisiMisiPage from "../visiMisi/pages/home";
 import VotingOsisPage from "../voting/pages/home";
 import { queryClient } from "./queryClient";
-import { PengumumanKelulusan, GraduationAdminDashboard } from "../graduation";
-import { LocationLanding } from "../locations/pages/location-landing";
-import {
-  LayananPersuratanPage, LayananPersuratanPageNew, CekStatusPage,
-  ServiceTypesAdminPage, PermohonanAdminLanding, PermohonanPrintPage,
-  VerifyPage, KeteranganLulusPrintPage
-} from "../layanan-persuratan";
 
 const router = createBrowserRouter(
   [
