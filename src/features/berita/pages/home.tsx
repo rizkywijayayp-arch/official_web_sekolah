@@ -263,7 +263,7 @@ const BeritaPage = () => {
   const { data: profile } = useQuery({
     queryKey: ['schoolProfile'],
     queryFn: async () => {
-      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah`);
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${getSchoolIdSync()}`);
       const data = await res.json();
       return data.data;
     },

@@ -64,6 +64,12 @@ export const MENU_STAFF: VokadashProps["menus"] = [
     disabled: "false",
   },
   {
+    title: "Arsip Surat",
+    url: "/admin/arsip-surat",
+    icon: "Archive",
+    disabled: "false",
+  },
+  {
     title: "Manajemen Jenis Layanan",
     url: "/admin/permohonan/service-types",
     icon: "Settings",

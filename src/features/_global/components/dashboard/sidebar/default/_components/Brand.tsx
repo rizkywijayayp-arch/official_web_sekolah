@@ -1,15 +1,33 @@
 import { Avatar, AvatarImage, cn } from "@/core/libs";
-import { useSchool } from "@/features/schools";
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
+import { getSchoolIdSync } from "../../../../hooks/getSchoolId";
+import { API_CONFIG } from "@/config/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface BrandProps {
   isCollapsed?: boolean;
 }
 
 export const Brand = React.memo(({ isCollapsed }: BrandProps) => {
-  const school = useSchool();
-  const hasLogo = !!school.data?.[0]?.file;
+  const schoolId = getSchoolIdSync();
+
+  // Tenant-aware: fetch schoolName from API (works without auth for admin portal)
+  const { data: profileData } = useQuery({
+    queryKey: ["brandProfile", schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
+      const json = await res.json();
+      return json.data;
+    },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
+  });
+
+  const logoUrl = profileData?.logoUrl || null;
+  const schoolName = profileData?.schoolName || profileData?.headmasterName || "Admin Dashboard";
+  const hasLogo = !!logoUrl;
 
   return (
     <div
@@ -25,19 +43,19 @@ export const Brand = React.memo(({ isCollapsed }: BrandProps) => {
           isCollapsed && "justify-center",
         )}
       >
-        {/* Logo - hanya tampilkan jika ada logo */}
+        {/* Logo — tenant-aware: show only if logoUrl exists */}
         {hasLogo && (
           <Avatar className="w-8 h-8 lg:w-9 lg:h-9">
             <AvatarImage
-              src={`https://dev.kiraproject.id${school.data?.[0]?.file}`}
-              alt={school.data?.[0]?.namaSekolah || 'Logo'}
+              src={logoUrl}
+              alt={schoolName}
               className="object-cover object-center bg-white"
             />
           </Avatar>
         )}
         <div className="flex flex-col">
           <p className="relative top-[2px] text-sm whitespace-nowrap font-bold">
-            {school.data?.[0]?.namaSekolah || 'Sekolah'}
+            {schoolName}
           </p>
           {hasLogo && (
             <p className="text-[10px] font-normal opacity-75">

@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getThemeColor, getContrastColor } from "@/core/libs/theme/hooks/useThemeColors";
 import { API_CONFIG } from "@/config/api";
 import { DEFAULTS } from "@/core/configs/defaults";
+import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";
+import { useQuery } from "@tanstack/react-query";
 
 /****************************
  * THEME & SAFETY GUARDS
@@ -23,7 +25,32 @@ const THEMES = {
 const getSafeTheme = (t) => ({ ...THEMES.smkn13, ...(t || {}) });
 
 /****************************
- * DATA DEMO
+ * DATA FROM API (real kandidat)
+ ****************************/
+const useKandidatOsis = () => {
+  const schoolId = getSchoolIdSync();
+  return useQuery({
+    queryKey: ['kandidat-osis', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_CONFIG.baseUrl}/voting/kandidat?schoolId=${schoolId}`);
+      const json = await res.json();
+      return (json.data || []).map((k: any) => ({
+        id: k.id,
+        nama: k.name || k.nama || 'Kandidat',
+        kelas: k.class || k.kelas || '-',
+        foto: k.photo || k.foto || k.imageUrl || '/defaultImage.png',
+        visi: k.visi || k.vision || k.statement || '-',
+        misi: k.misi || k.mission || '-',
+        program: k.program || [],
+        tag: k.tag || [],
+      }));
+    },
+    staleTime: 2 * 60 * 1000,
+  });
+};
+
+/****************************
+ * DATA DEMO (fallback if API empty)
  ****************************/
 const initialKandidat = [
   {
@@ -408,6 +435,7 @@ const Footer = ({ theme, schoolProfile }) => {
  ****************************/
 export default function KandidatOsisPage() {
   const theme = getSafeTheme();
+  const { data: apiKandidat = [] } = useKandidatOsis();
 
   // School profile from API
   const [schoolProfile, setSchoolProfile] = useState<any>(null);
@@ -428,7 +456,7 @@ export default function KandidatOsisPage() {
   }, []);
 
   // ======= STATE untuk bagian kandidat (interaktif, non-voting) =======
-  const [kandidat, setKandidat] = useState(initialKandidat);
+  const [kandidat, setKandidat] = useState<any[]>([]);
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("nama"); // "nama" | "kelas"
   const [selectedId, setSelectedId] = useState(null);
@@ -436,6 +464,20 @@ export default function KandidatOsisPage() {
   const [supports, setSupports] = useState({}); // { [id]: number }
   const [supportedOnce, setSupportedOnce] = useState({}); // { [id]: true }
   const SUPPORT_LS = "promo_support_counts_osis";
+
+  // Sync API kandidat → state (only if empty and API has data)
+  useEffect(() => {
+    if (apiKandidat.length > 0 && kandidat.length === 0) {
+      setKandidat(apiKandidat);
+    }
+  }, [apiKandidat, kandidat.length]);
+
+  // If no API data, fall back to demo data
+  useEffect(() => {
+    if (kandidat.length === 0 && apiKandidat.length === 0) {
+      setKandidat(initialKandidat);
+    }
+  }, [kandidat.length, apiKandidat.length]);
 
   useEffect(() => {
     // SMOKE TESTS + load dukungan

@@ -169,6 +169,32 @@ export function PermohonanTable({ statusFilter }: PermohonanTableProps) {
     }
   };
 
+  // Auto-archive to arsip_surat when status is "selesai"
+  const handleAutoArchive = async (permohonanId: number) => {
+    try {
+      const schoolId = selectedPermohonan?.sekolahId || 1;
+      const res = await fetch(
+        `${API_CONFIG.baseUrl}/arsip-surat/from-permohonan/${permohonanId}?schoolId=${schoolId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // Use optionalAuth header for tenant-aware request
+            'X-School-Id': String(schoolId),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.success) {
+        console.log(`[arsip-surat] Auto-archived permohonan #${permohonanId} → arsip #${json.data?.id}`);
+      } else {
+        console.warn(`[arsip-surat] Failed to auto-archive: ${json.message}`);
+      }
+    } catch (err) {
+      console.error('[arsip-surat] Auto-archive error:', err);
+    }
+  };
+
   const handleStatusUpdate = async () => {
     if (!selectedPermohonan || !newStatus) return;
 
@@ -183,6 +209,10 @@ export function PermohonanTable({ statusFilter }: PermohonanTableProps) {
     });
 
     if (success) {
+      // Auto-archive: when status = "selesai", create arsip_surat record
+      if (newStatus === 'selesai') {
+        await handleAutoArchive(selectedPermohonan.id);
+      }
       setIsStatusDialogOpen(false);
       refetch();
     }

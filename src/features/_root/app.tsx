@@ -15,7 +15,8 @@ import BeritaPage from "../berita/pages/home";
 import Homepage from "../dashboard/pages/home";
 import EkskulPage from "../ekstrakurikuler/pages/home";
 import GalleryPage from "../galeri/pages/home";
-import { GraduationAdminDashboard, PengumumanKelulusan } from "../graduation";
+import { PengumumanKelulusan, GraduationAdminDashboard } from "../graduation";
+import { ArsipSuratMain } from "../arsip-surat";
 import TeacherStaffPage from "../guruDanTendik/pages/home";
 import SchedulePage from "../jadwal/pages/home";
 import CalendarPage from "../kalender/pages/home";
@@ -197,6 +198,10 @@ const router = createBrowserRouter(
         {
           path: "admin/permohonan/print/:id",
           element: <PermohonanPrintPage />,
+        },
+        {
+          path: "admin/arsip-surat",
+          element: <ArsipSuratMain />,
         },
         {
           path: "verify/:id",

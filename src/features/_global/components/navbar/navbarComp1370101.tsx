@@ -1,32 +1,95 @@
 import { API_CONFIG } from "@/config/api";
-import { useQuery } from "@tanstack/react-query";
+import { useTenantNav } from "../../hooks/useTenantNav";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogInIcon, Mail, MapPin, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { getSchoolIdSync } from "../../hooks/getSchoolId";
 import { setFaviconFromProfile } from "@/core/utils/favicon";
 
-// Theme Tokens for Multiple Schools
-const THEME_TOKENS = {
-  sdn09: {
-    name: "SDN 09 JAKARTA",
-    "--brand-primary": "#457B9D",
-    "--brand-primaryText": "#ffffff",
-    "--brand-accent": "#F4A261",
-    "--brand-bg": "#E5E7EB",
-    "--brand-surface": "#ffffff",
-    "--brand-surfaceText": "#1F2937",
-    "--brand-subtle": "#9CA3AF",
-    "--brand-pop": "#DC2626",
-  }
+// ─── NAV CONFIGURATION (Tenant-Aware) ─────────────────────────────────────────
+// Each section checks `requiresData` before rendering.
+// Safety: Array.isArray() guard on all dynamic data.
+// "Satu Kode Web untuk Seribu Sekolah"
+interface NavItem {
+  label: string;
+  href?: string;
+  children?: NavItem[];
+  requiresData?: string;
+}
+
+const NAV_CONFIG: NavItem[] = [
+  {
+    label: "Profil Sekolah",
+    children: [
+      { label: "Halaman Utama", href: "/halaman-utama" },
+      { label: "Sambutan", href: "/sambutan" },
+      { label: "Visi & Misi", href: "/visiMisi" },
+      { label: "Galeri", href: "/galeri", requiresData: "hasGallery" },
+      { label: "Sejarah", href: "/sejarah" },
+      { label: "Tata tertib", href: "/tata-tertib" },
+      { label: "Struktur", href: "/struktur" },
+    ],
+  },
+  {
+    label: "Akademik",
+    children: [
+      { label: "Prestasi", href: "/prestasi", requiresData: "hasPrestasi" },
+      { label: "Kurikulum", href: "/kurikulum" },
+      { label: "Kalender", href: "/kalender" },
+      { label: "Jadwal", href: "/jadwal" },
+      { label: "Guru & Tendik", href: "/guru-tendik", requiresData: "hasGuru" },
+    ],
+  },
+  { label: "Program", href: "/program", requiresData: "hasProker" },
+  {
+    label: "Kegiatan",
+    children: [
+      { label: "OSIS", href: "/osis" },
+      { label: "Voting OSIS", href: "/voting-osis", requiresData: "hasVoting" },
+      { label: "Ekstrakurikuler", href: "/ekstrakulikuler", requiresData: "hasEkskul" },
+      { label: "Pramuka", href: "/pramuka" },
+    ],
+  },
+  { label: "Perpus", href: "/perpustakaan", requiresData: "hasPerpus" },
+  {
+    label: "Informasi",
+    children: [
+      { label: "Pengumuman", href: "/pengumuman", requiresData: "hasPengumuman" },
+      { label: "Info Kelulusan", href: "/pengumuman-kelulusan", requiresData: "hasKelulusan" },
+      { label: "Ruang Apresiasi", href: "/ruang-apresiasi" },
+      { label: "Berita", href: "/berita", requiresData: "hasBerita" },
+      { label: "Buku Alumni", href: "/buku-alumni" },
+      { label: "PPDB", href: "/ppdb", requiresData: "hasPPDB" },
+      { label: "PPID", href: "/ppid", requiresData: "hasPPID" },
+      { label: "Layanan", href: "/layanan-persuratan" },
+    ],
+  },
+];
+
+// Filter NAV based on tenant data availability
+const filterNav = (nav: NavItem[], tenant: any): NavItem[] => {
+  return nav
+    .map((item) => {
+      if (Array.isArray(item.children) && item.children.length > 0) {
+        const filteredChildren = item.children
+          .filter((child) => {
+            if (!child.requiresData) return true;
+            return tenant?.[child.requiresData] === true;
+          })
+          .map((child) => ({ ...child, requiresData: undefined }));
+        if (filteredChildren.length === 0) return null;
+        return { ...item, children: filteredChildren, requiresData: undefined };
+      }
+      if (item.requiresData) {
+        if (tenant?.[item.requiresData] !== true) return null;
+        return { ...item, requiresData: undefined };
+      }
+      return { ...item, requiresData: undefined };
+    })
+    .filter(Boolean) as NavItem[];
 };
 
-// Get theme based on domain
-const getThemeKey = () => {
-  return "sdn09"; // Default
-};
-
-// Shim Link (ganti dengan next/link bila pakai Next.js)
+// Shim Link
 const Link = ({ href, className, style, children, target, rel }) => (
   <a href={href} className={className} style={style} target={target} rel={rel}>
     {children}
@@ -49,89 +112,15 @@ const useOnClickOutside = (ref, handler) => {
   }, [ref, handler]);
 };
 
-// Hook untuk ambil profil sekolah (sama seperti di homepage)
-const useSchoolProfile = () => {
-  const schoolId = getSchoolIdSync(); // ← sesuaikan dengan ID sekolah SDN 09 di database
-
-  const API_BASE = API_CONFIG.baseUrl;
-
-  return useQuery({
-    queryKey: ['schoolProfile', schoolId],
-    queryFn: async () => {
-      const res = await fetch(`${API_BASE}/profileSekolah?schoolId=${schoolId}`, {
-        cache: 'no-store',
-      });
-      if (!res.ok) throw new Error(`Gagal mengambil profil sekolah: ${res.status}`);
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || "Response tidak valid");
-      return data.data; // null atau objek profil
-    },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  });
-};
-
-// === DATA NAVIGASI ===
-const NAV = [
-  {
-    label: "Profil Sekolah",
-    children: [
-      { label: "Halaman Utama", href: "/halaman-utama" },
-      { label: "Sambutan", href: "/sambutan" },
-      { label: "Visi & Misi", href: "/visiMisi" },
-      { label: "Galeri", href: "/galeri" },
-      { label: "Sejarah", href: "/sejarah" },
-      { label: "Tata tertib", href: "/tata-tertib" },
-      { label: "Struktur", href: "/struktur" },
-    ],
-  },
-  {
-    label: "Akademik",
-    children: [
-      { label: "Prestasi", href: "/prestasi" },
-      { label: "Kurikulum", href: "/kurikulum" },
-      { label: "Kalender", href: "/kalender" },
-      { label: "Jadwal", href: "/jadwal" },
-      { label: "Guru & Tendik", href: "/guru-tendik" },
-    ],
-  },
-  { label: "Program", href: "/program" },
-  {
-    label: "Kegiatan",
-    children: [
-      { label: "OSIS", href: "/osis" },
-      { label: "Voting OSIS", href: "/voting-osis" },
-      { label: "Ekstrakurikuler", href: "/ekstrakulikuler" },
-      { label: "Pramuka", href: "/pramuka" },
-    ],
-  },
-  { label: "Perpus", href: "/perpustakaan" },
-  {
-    label: "Informasi",
-    children: [
-      { label: "Pengumuman", href: "/pengumuman" },
-      { label: "Info Kelulusan", href: "/pengumuman-kelulusan" },
-      { label: "Ruang Apresiasi", href: "/ruang-apresiasi" },
-      { label: "Berita", href: "/berita" },
-      // { label: "Agenda", href: "/agenda" },
-      { label: "Buku Alumni", href: "/buku-alumni" },
-      { label: "PPDB", href: "/ppdb" },
-      { label: "PPID", href: "/ppid" },
-      { label: "Layanan", href: "/layanan-persuratan" },
-      // { label: "Kelulusan", href: "/kelulusan" },
-    ],
-  },
-];
-
 // === LOGIN MENU ===
-const LoginMenu = ({ theme }) => {
+const LoginMenu = ({ theme, schoolId }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   useOnClickOutside(ref, () => setOpen(false));
 
   return (
     <div className="relative" ref={ref}>
-      <a href={`${API_CONFIG.adminUrl}/auth/login`} target="__blank">
+      <a href={`https://admin.kiraproject.id/?schoolId=${schoolId}`} target="_blank" rel="noopener noreferrer">
         <button
           className="text-sm font-medium rounded-lg bg-white border border-blue-700 gap-3 text-blue-700 pl-2 hover:text-white hover:bg-blue-600 pr-3 py-2 hidden md:flex items-center"
           style={{ background: theme.accent }}
@@ -148,17 +137,19 @@ const LoginMenu = ({ theme }) => {
 };
 
 // === DROPDOWN (Desktop) ===
-const NavDropdown = ({ item, theme }) => {
+const NavDropdown = ({ item, theme }: { item: NavItem; theme: any }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   useOnClickOutside(ref, () => setOpen(false));
-  const hasChild = Array.isArray(item.children) && item.children.length > 0;
+  // Safety: ensure children is always an array
+  const children = Array.isArray(item.children) ? item.children : [];
+  const hasChild = children.length > 0;
 
   if (!hasChild) {
     const isRoute = typeof item.href === "string" && item.href.startsWith("/");
     return isRoute ? (
       <Link
-        href={item.href}
+        href={item.href || "#"}
         className="text-sm px-1 w-max py-1 uppercase hover:underline"
         style={{ color: 'black' }}
       >
@@ -166,7 +157,7 @@ const NavDropdown = ({ item, theme }) => {
       </Link>
     ) : (
       <a
-        href={item.href}
+        href={item.href || "#"}
         className="text-sm px-1 w-max py-1 uppercase hover:underline"
         style={{ color: 'black' }}
       >
@@ -202,12 +193,13 @@ const NavDropdown = ({ item, theme }) => {
             className="bg-blue-800 absolute left-0 mt-2 w-44 rounded-2xl shadow-3xl uppercase border border-white p-2"
             style={{ borderColor: theme.subtle }}
           >
-            {item.children.map((c) => {
+            {/* Safety: Array.isArray() before .map() */}
+            {children.map((c: NavItem) => {
               const isRoute = typeof c.href === "string" && c.href.startsWith("/");
               return isRoute ? (
                 <Link
                   key={c.label}
-                  href={c.href}
+                  href={c.href || "#"}
                   className="block px-3 py-2 rounded-lg text-sm uppercase hover:bg-white/10"
                   style={{ color: 'white' }}
                 >
@@ -216,9 +208,9 @@ const NavDropdown = ({ item, theme }) => {
               ) : (
                 <a
                   key={c.label}
-                  href={c.href}
+                  href={c.href || "#"}
                   className="block px-3 py-2 rounded-lg text-sm uppercase hover:bg-white/10"
-                  style={{ color: 'black' }}
+                  style={{ color: 'white' }}
                 >
                   {c.label}
                 </a>
@@ -232,15 +224,17 @@ const NavDropdown = ({ item, theme }) => {
 };
 
 // === MOBILE ACCORDION ===
-const MobileAccordion = ({ item, theme }) => {
+const MobileAccordion = ({ item, theme }: { item: NavItem; theme: any }) => {
   const [open, setOpen] = useState(false);
-  const hasChild = Array.isArray(item.children) && item.children.length > 0;
+  // Safety: ensure children is always an array
+  const children = Array.isArray(item.children) ? item.children : [];
+  const hasChild = children.length > 0;
 
   if (!hasChild) {
     const isRoute = typeof item.href === "string" && item.href.startsWith("/");
     return isRoute ? (
       <Link
-        href={item.href}
+        href={item.href || "#"}
         className="block px-4 py-3 rounded-lg uppercase hover:bg-white/10 transition-colors"
         style={{ color: 'white' }}
       >
@@ -248,7 +242,7 @@ const MobileAccordion = ({ item, theme }) => {
       </Link>
     ) : (
       <a
-        href={item.href}
+        href={item.href || "#"}
         className="block px-4 py-3 rounded-lg uppercase hover:bg-white/10 transition-colors"
         style={{ color: 'white' }}
       >
@@ -276,12 +270,13 @@ const MobileAccordion = ({ item, theme }) => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden pl-4"
           >
-            {item.children.map((c) => {
+            {/* Safety: Array.isArray() before .map() */}
+            {children.map((c: NavItem) => {
               const isRoute = typeof c.href === "string" && c.href.startsWith("/");
               return isRoute ? (
                 <Link
                   key={c.label}
-                  href={c.href}
+                  href={c.href || "#"}
                   className="block px-4 py-2 uppercase rounded-lg text-sm hover:bg-white/5 transition-colors mt-1"
                   style={{ color: 'white' }}
                 >
@@ -290,7 +285,7 @@ const MobileAccordion = ({ item, theme }) => {
               ) : (
                 <a
                   key={c.label}
-                  href={c.href}
+                  href={c.href || "#"}
                   className="block px-4 py-2 uppercase rounded-lg text-sm hover:bg-white/5 transition-colors mt-1"
                   style={{ color: 'white' }}
                 >
@@ -314,42 +309,34 @@ const useMobileMenu = (isOpen, onClose) => {
 
 // === NAVBAR COMPONENT ===
 export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, currentKey = "smkn13" }) => {
-  const themeKey = getThemeKey();
-  const safeTheme = THEME_TOKENS[themeKey]  
+  const schoolId = getSchoolIdSync();
+  const { data: tenant, isPending } = useTenantNav();
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileRef = useMobileMenu(mobileOpen, () => setMobileOpen(false));
 
-  // Ambil data profil sekolah dari hook API profil baru
-  const { data: profile, isPending } = useSchoolProfile();
+  // Filter NAV based on tenant data
+  const filteredNav = tenant ? filterNav(NAV_CONFIG, tenant) : NAV_CONFIG;
 
   // === FUNGSI PEMBERSIH NAMA SEKOLAH ===
   const getCleanName = (name: string) => {
     if (!name) return "";
-    // Menghapus Jakarta, wilayah arah mata angin, dan Pusat (case-insensitive)
     const pattern = /\b(jakarta|barat|timur|utara|selatan|pusat)\b/gi;
     return name.replace(pattern, "").replace(/\s\s+/g, ' ').trim();
   };
 
-  const cleanedSchoolName = getCleanName(profile?.schoolName || safeTheme.name);
+  const cleanedSchoolName = getCleanName(tenant?.schoolName || "Official Website");
 
-  const navItems = NAV.map((it) =>
+  const navItems = filteredNav.map((it) =>
     it.children ? { ...it } : it
   );
 
   useEffect(() => {
-    if (themeKey !== currentKey) {
-      onTenantChange(themeKey);
-    }
-  }, [themeKey, currentKey, onTenantChange]);
-
-  // Set favicon when profile loads
-  useEffect(() => {
-    if (profile) setFaviconFromProfile(profile);
-  }, [profile]);
+    if (tenant?.schoolName) setFaviconFromProfile(tenant);
+  }, [tenant]);
 
   return (
     <div className="relative top-0 left-0 w-full z-[999999]">
-      {/* Top Header - Sekarang dinamis dari Profile Sekolah */}
+      {/* Top Header - Dynamic from tenant API */}
       <header className="w-full text-[10px] md:text-xs px-4 md:px-16 uppercase font-medium bg-blue-700 text-white hidden md:flex items-center justify-center p-3">
         {isPending ? (
           <p className="animate-pulse tracking-widest">Sinkronisasi data sekolah...</p>
@@ -357,15 +344,15 @@ export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, curre
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
               <Phone size={12} className="opacity-70" />
-              {profile?.phoneNumber || "+62 21 1234 5678"}
+              {tenant?.phoneNumber || "+62 21 1234 5678"}
             </span>
             <span className="flex items-center gap-2">
               <Mail size={12} className="opacity-70" />
-              {profile?.email || "info@sekolah.sch.id"}
+              {tenant?.email || "info@sekolah.sch.id"}
             </span>
             <span className="flex items-center gap-2">
               <MapPin size={12} className="opacity-70" />
-              {profile?.address || "Alamat sekolah belum diatur"}
+              {tenant?.address || "Alamat sekolah belum diatur"}
             </span>
           </div>
         )}
@@ -375,29 +362,35 @@ export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, curre
       <div className="w-full relative top-0 z-[4] backdrop-blur shadow-xl justify-between bg-white">
         <div className="max-w-7xl mx-auto md:px-1">
           <div className="w-full flex items-center justify-between px-5 md:px-0 py-3 md:py-3">
-            {/* Logo & Nama Sekolah */}
+            {/* Logo & Nama Sekolah — tenant-aware */}
             <div className="flex items-center gap-2 w-[40%] md:w-[30%]">
               <div className="leading-none flex gap-4 items-center">
                 <div
                   className="flex items-center gap-3 text-sm md:text-lg font-bold tracking-tighter"
                   style={{ color: 'black' }}
                 >
-                  <img src={profile?.logoUrl} alt="Logo Sekolah" className="w-8 h-8 md:w-10 md:h-10 md:flex hidden object-contain" />
+                  <img
+                    src={tenant?.logoUrl || ""}
+                    alt="Logo Sekolah"
+                    className="w-8 h-8 md:w-10 md:h-10 md:flex hidden object-contain"
+                    onError={(e) => e.currentTarget.style.display = 'none'}
+                  />
                   <span className="uppercase md:text-[15px] text-[16px] w-max">{cleanedSchoolName}</span>
                 </div>
               </div>
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation — tenant-filtered */}
             <div className="hidden md:flex uppercase items-center w-max gap-6 xl:gap-8">
-              {navItems.map((item) => (
-                <NavDropdown key={item.label} item={item} theme={safeTheme} />
+              {/* Safety: Array.isArray() before .map() */}
+              {Array.isArray(navItems) && navItems.map((item) => (
+                <NavDropdown key={item.label} item={item} theme={theme} />
               ))}
             </div>
 
-            {/* Right Menu (Login + Toggle) */}
+            {/* Right Menu (Login + Toggle) — tenant-aware */}
             <div className="flex items-center w-[30%] uppercase justify-end gap-4">
-              <LoginMenu theme={safeTheme} />
+              <LoginMenu theme={theme} schoolId={schoolId} />
               <button
                 className="md:hidden flex flex-col gap-1.5 p-2"
                 aria-label="Menu"
@@ -412,7 +405,7 @@ export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, curre
         </div>
       </div>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar — tenant-filtered */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -434,10 +427,15 @@ export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, curre
               {/* Sidebar Header */}
               <div className="p-6 border-b border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                   <img src={profile?.logoUrl} alt="Logo" className="w-8 h-8 rounded" />
+                   <img
+                     src={tenant?.logoUrl || ""}
+                     alt="Logo"
+                     className="w-8 h-8 rounded"
+                     onError={(e) => e.currentTarget.style.display = 'none'}
+                   />
                    <span className="font-bold tracking-tighter uppercase text-sm">{cleanedSchoolName}</span>
                 </div>
-                <button 
+                <button
                   onClick={() => setMobileOpen(false)}
                   className="w-10 h-10 flex items-center font-black border border-white/60 hover:bg-red-700 active:scale-[1] hover:scale-[1.1] duration-200 transition-scale justify-center rounded-full bg-red-600 text-white"
                 >
@@ -445,10 +443,11 @@ export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, curre
                 </button>
               </div>
 
-              {/* Sidebar Content (Scrollable) */}
+              {/* Sidebar Content (Scrollable) — tenant-filtered */}
               <div className="flex-1 overflow-y-auto py-6 px-3 space-y-2">
-                {navItems.map((item) => (
-                  <MobileAccordion key={item.label} item={item} theme={safeTheme} />
+                {/* Safety: Array.isArray() before .map() */}
+                {Array.isArray(navItems) && navItems.map((item) => (
+                  <MobileAccordion key={item.label} item={item} theme={theme} />
                 ))}
               </div>
             </motion.div>
