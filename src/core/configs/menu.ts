@@ -64,6 +64,12 @@ export const MENU_STAFF: VokadashProps["menus"] = [
     disabled: "false",
   },
   {
+    title: "Manajemen Jenis Layanan",
+    url: "/admin/permohonan/service-types",
+    icon: "Settings",
+    disabled: "false",
+  },
+  {
     title: "Pengaturan Sekolah",
     url: "/schools/settings",
     icon: "Settings",

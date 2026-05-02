@@ -13,7 +13,7 @@ export const useParent = () => {
   const query = useQuery({
     enabled,
     queryKey: ["parents"],
-    queryFn: () => userService.getParents(),
+    queryFn: () => userService.getParents(schoolId),
     staleTime: 5 * 60 * 1000, // Data fresh selama 5 menit
     gcTime: 10 * 60 * 1000, // Data disimpan di cache selama 10 menit
     refetchOnWindowFocus: false, // Nonaktifkan refetch saat window fokus

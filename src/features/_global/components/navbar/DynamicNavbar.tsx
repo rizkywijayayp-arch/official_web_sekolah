@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogInIcon, Mail, MapPin, Menu, Phone, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSchoolIdSync } from "../../hooks/getSchoolId";
+import { setFaviconFromProfile } from "@/core/utils/favicon";
 
 const NAV = [
   {
@@ -49,7 +50,7 @@ const NAV = [
       { label: "Buku Alumni", href: "/buku-alumni" },
       { label: "PPDB", href: "/ppdb" },
       { label: "PPID", href: "/ppid" },
-      { label: "Layanan", href: "/layanan" },
+      { label: "Layanan", href: "/layanan-persuratan" },
     ],
   },
 ];
@@ -106,6 +107,13 @@ export const DynamicNavbar = () => {
     },
     staleTime: 300000,
   });
+
+  // Set favicon and document title when profile loads
+  useEffect(() => {
+    if (profile) {
+      setFaviconFromProfile(profile);
+    }
+  }, [profile]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -179,7 +187,7 @@ export const DynamicNavbar = () => {
 
           {/* Right Section */}
           <div className="flex items-center gap-4">
-            <a href="https://admin.kiraproject.id" target="_blank" className="hidden md:flex items-center gap-2 border border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white px-5 py-2.5 rounded-xl text-[11px] font-bold tracking-widest transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 uppercase">
+            <a href={`${API_CONFIG.adminUrl}`} target="_blank" className="hidden md:flex items-center gap-2 border border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white px-5 py-2.5 rounded-xl text-[11px] font-bold tracking-widest transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 uppercase">
               <LogInIcon size={14} /> Admin Portal
             </a>
 

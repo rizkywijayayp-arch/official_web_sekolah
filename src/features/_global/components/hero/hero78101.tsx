@@ -46,10 +46,9 @@ interface HeroProps {
 export const HeroComp78101 = ({ id, titleProps, subTitleProps }: HeroProps) => {
   const { data: profile, isPending } = useSchoolProfile();
 
-  // Prioritas: Props > Data API > Default Text
-  const title = titleProps || (!isPending && profile?.heroTitle) || "SEKOLAH BERPRESTASI DAN BERKARAKTER";
-  const subTitle = subTitleProps || (!isPending && profile?.heroSubTitle) || 
-    "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda.";
+  // Prioritas: Props > Data API > Default Fallback
+  const title = titleProps || profile?.heroTitle || "";
+  const subTitle = subTitleProps || profile?.heroSubTitle || "";
 
   return (
     <section id={id} className="relative h-[90vh] md:mt-[0px] md:pt-0 pt-14 w-full overflow-hidden bg-[#01040a]">

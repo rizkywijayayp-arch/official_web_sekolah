@@ -1,17 +1,8 @@
-import { DynamicHero } from "./DynamicHero";
+import { DynamicHero }         from "./DynamicHero";
+import { HeroDesignSwitcher }  from "./HeroDesignSwitcher";
 
-interface HeroProps {
-  id?: string;
-  titleProps?: string;
-  subTitleProps?: string;
-}
+// Default: uses HeroDesignSwitcher → auto-selects by schoolId
+export const HeroComp = (props: any) => <HeroDesignSwitcher {...props} />;
 
-export const HeroComp = ({ id, titleProps, subTitleProps }: HeroProps) => {
-  return (
-    <DynamicHero
-      id={id}
-      titleProps={titleProps}
-      subTitleProps={subTitleProps}
-    />
-  );
-};
+export default HeroComp;
+export { HeroDesignSwitcher };

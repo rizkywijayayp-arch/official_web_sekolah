@@ -54,7 +54,7 @@ export const applyTheme = (theme: SchoolTheme) => {
  */
 export const loadAndApplyTheme = async (schoolId: string | number): Promise<SchoolTheme> => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/profileSekolah?schoolId=${schoolId}`);
+    const response = await fetch(`${API_CONFIG.baseUrl}/profileSekolah?schoolId=${schoolId}`);
     const result = await response.json();
 
     if (result.success && result.data) {

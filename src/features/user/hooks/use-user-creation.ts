@@ -1,11 +1,16 @@
 import { UserCreationModel } from "@/core/models";
 import { userService } from "@/core/services";
+import { useAuth } from "@/features/auth";
 import { useMutation } from "@tanstack/react-query";
 
 export const useUserCreation = () => {
+  const auth = useAuth();
+  const profile = auth.profile;
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
+
   const updateMutation = useMutation({
     mutationFn: (vars: { id: number; payload: UserCreationModel }) =>
-      userService.updateUser(vars.id, vars.payload),
+      userService.updateUser(vars.id, vars.payload, schoolId),
   });
 
   const update = (id: number, payload: UserCreationModel) =>

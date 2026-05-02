@@ -13,11 +13,12 @@ export const useStudentDetail = (props?: UseStudentDetailProps) => {
   const profile = useProfile();
   const enabled =
     auth.isAuthenticated() && Boolean(profile.user?.id) && Boolean(props?.id);
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     enabled,
     queryKey: ["student-detail", { id: props?.id }],
-    queryFn: () => biodataService.siswaById(Number(props?.id)),
+    queryFn: () => biodataService.siswaById(Number(props?.id), schoolId),
   });
 
   const data = useMemo(() => query.data?.data, [query.data?.data]);

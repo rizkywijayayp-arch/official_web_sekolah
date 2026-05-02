@@ -8,11 +8,12 @@ export const useBiodataNoRefetch = () => {
   const auth = useAuth();
   const profile = useProfile();
   const enabled = auth.isAuthenticated() && Boolean(profile.user?.id);
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     enabled,
     queryKey: ['biodata-siswa'],
-    queryFn: () => biodataService.siswa(),
+    queryFn: () => biodataService.siswa(schoolId),
     staleTime: 30000, // Cache data selama 30 detik
     refetchInterval: 100000, // Refetch otomatis setiap 3 menit (180,000 ms)
     refetchOnWindowFocus: true, // Refetch saat kembali ke halaman

@@ -10,16 +10,18 @@ export const useSchedules = () => {
   const queryClient = useQueryClient();
   const enabled = auth.isAuthenticated() && Boolean(profile.user?.id);
 
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
+
   const query = useQuery({
     enabled,
     queryKey: ["schedules"],
-    queryFn: () => scheduleService.all(),
+    queryFn: () => scheduleService.all(schoolId),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   const mutation = useMutation({
-    mutationFn: (vars: any) => scheduleService.create(vars),
+    mutationFn: (vars: any) => scheduleService.create(vars, schoolId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
     },

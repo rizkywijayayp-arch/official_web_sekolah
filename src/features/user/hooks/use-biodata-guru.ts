@@ -8,11 +8,12 @@ export const useBiodataGuru = () => {
   const auth = useAuth();
   const profile = useProfile();
   const enabled = auth.isAuthenticated() && Boolean(profile.user?.id);
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     enabled,
     queryKey: ["biodata-guru"],
-    queryFn: () => biodataService.guru(),
+    queryFn: () => biodataService.guru(schoolId),
   });
 
   const data = useMemo(() => query.data?.data || [], [query.data?.data]);

@@ -99,8 +99,7 @@ export const HeroComp40 = ({ id, titleProps, subTitleProps }: any) => {
           <>
             {/* Fallback background when no video */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900" />
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920')] bg-cover bg-center opacity-30" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-black/80" />
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
           </>
         )}
       </div>

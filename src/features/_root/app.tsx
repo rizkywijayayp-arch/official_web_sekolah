@@ -20,7 +20,6 @@ import SchedulePage from "../jadwal/pages/home";
 import CalendarPage from "../kalender/pages/home";
 import KandidatOsisPage from "../kandidatosis/pages/home";
 import KelulusanPage from "../kelulusan/pages/home";
-import LayananPage from "../kontak/pages/home";
 import CurriculumPage from "../kurikulum/pages/home";
 import OsisPage from "../osis/pages/home";
 import PengumumanPage from "../pengumuman/pages/home";
@@ -38,12 +37,12 @@ import VisiMisiPage from "../visiMisi/pages/home";
 import VotingOsisPage from "../voting/pages/home";
 import { queryClient } from "./queryClient";
 import { PengumumanKelulusan, GraduationAdminDashboard } from "../graduation";
-import { LayananPersuratanPage } from "../layanan-persuratan/pages/home";
-import { PermohonanAdminLanding } from "../layanan-persuratan/pages/admin-landing";
-import { PermohonanPrintPage } from "../layanan-persuratan/pages/print-page";
-import { VerifyPage } from "../layanan-persuratan/pages/verify-page";
-import { KeteranganLulusPrintPage } from "../layanan-persuratan/pages/keterangan-lulus-print";
 import { LocationLanding } from "../locations/pages/location-landing";
+import {
+  LayananPersuratanPage, LayananPersuratanPageNew, CekStatusPage,
+  ServiceTypesAdminPage, PermohonanAdminLanding, PermohonanPrintPage,
+  VerifyPage, KeteranganLulusPrintPage
+} from "../layanan-persuratan";
 
 const router = createBrowserRouter(
   [
@@ -154,7 +153,11 @@ const router = createBrowserRouter(
         },
         {
           path: "layanan-persuratan", // Layanan Administrasi Persuratan
-          element: <LayananPersuratanPage />,
+          element: <LayananPersuratanPageNew />,
+        },
+        {
+          path: "cek-status",
+          element: <CekStatusPage />,
         },
         {
           path: "pengumuman-kelulusan", // Relative: menjadi "/ppdb"
@@ -173,8 +176,8 @@ const router = createBrowserRouter(
         //   element: <KontakMain />,
         // },
         {
-          path: "layanan", // Relative: menjadi "/ppdb"
-          element: <LayananPage />,
+          path: "layanan", // Alias untuk /layanan-persuratan
+          element: <LayananPersuratanPageNew />,
         },
         {
           path: "kelulusan", // Relative: menjadi "/ppdb"
@@ -183,6 +186,10 @@ const router = createBrowserRouter(
         {
           path: "admin/permohonan",
           element: <PermohonanAdminLanding />,
+        },
+        {
+          path: "admin/permohonan/service-types",
+          element: <ServiceTypesAdminPage />,
         },
         {
           path: "admin/permohonan/print/:id",

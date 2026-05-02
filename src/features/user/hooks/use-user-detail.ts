@@ -10,10 +10,12 @@ export const useUserDetail = (id: number) => {
   const enabled =
     auth.isAuthenticated() && Boolean(profile.user?.id) && Boolean(id);
 
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
+
   const query = useQuery({
     enabled,
     queryKey: ['user-detail', { id }],
-    queryFn: () => userService.getUserDetail(id),
+    queryFn: () => userService.getUserDetail(id, schoolId),
   });
 
   const data = useMemo(() => query.data?.data, [query.data?.data]);

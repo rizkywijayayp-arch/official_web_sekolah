@@ -8,11 +8,12 @@ export const useBiodata = () => {
   const auth = useAuth();
   const profile = useProfile();
   const enabled = auth.isAuthenticated() && Boolean(profile.user?.id);
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     enabled,
     queryKey: ['biodata-siswa'],
-    queryFn: () => biodataService.siswa(),
+    queryFn: () => biodataService.siswa(schoolId),
     // staleTime: 1 * 60 * 1000, // 1 menit
     // gcTime: 10 * 60 * 1000,
     // refetchInterval: false, // Nonaktifkan refetch otomatis

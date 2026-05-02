@@ -1,7 +1,8 @@
 import { DynamicNavbar } from "./DynamicNavbar";
+import { NavbarDesignSwitcher } from "./NavbarDesignSwitcher";
 
-const NavbarComp = () => {
-  return <DynamicNavbar />;
-};
+// Default: uses DynamicNavbar (API-driven, no hardcoded content)
+const NavbarComp = () => <NavbarDesignSwitcher />;
 
 export default NavbarComp;
+export { NavbarDesignSwitcher };

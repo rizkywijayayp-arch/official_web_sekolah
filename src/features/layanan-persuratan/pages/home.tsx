@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { FooterComp } from '@/features/_global/components/footer';
+import NavbarComp from '@/features/_global/components/navbar';
 import { useSchoolProfile } from '@/features/_global/hooks/useSchoolProfile';
 import { PermohonanForm } from '../components/PermohonanForm';
 import {
@@ -68,8 +70,14 @@ export const LayananPersuratanPage = () => {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4 md:p-6"
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar with high z-index */}
+      <div style={{ position: 'relative', zIndex: 9999999 }}>
+        <NavbarComp />
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex items-center justify-center p-4 md:p-6"
       style={{
         background: `linear-gradient(160deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`,
         fontFamily: "'Nunito', sans-serif"
@@ -169,6 +177,9 @@ export const LayananPersuratanPage = () => {
           <Mail className="w-6 h-6 text-white opacity-85" />
         </div>
       </div>
+    </div>
+      {/* Footer */}
+      <FooterComp />
     </div>
   );
 };

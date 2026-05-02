@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogInIcon, Mail, MapPin, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { getSchoolIdSync } from "../../hooks/getSchoolId";
+import { setFaviconFromProfile } from "@/core/utils/favicon";
 
 // Theme Tokens for Multiple Schools
 const THEME_TOKENS = {
@@ -116,7 +117,7 @@ const NAV = [
       { label: "Buku Alumni", href: "/buku-alumni" },
       { label: "PPDB", href: "/ppdb" },
       { label: "PPID", href: "/ppid" },
-      { label: "Layanan", href: "/layanan" },
+      { label: "Layanan", href: "/layanan-persuratan" },
       // { label: "Kelulusan", href: "/kelulusan" },
     ],
   },
@@ -130,7 +131,7 @@ const LoginMenu = ({ theme }) => {
 
   return (
     <div className="relative" ref={ref}>
-      <a href="https://admin.kiraproject.id/auth/login" target="__blank">
+      <a href={`${API_CONFIG.adminUrl}/auth/login`} target="__blank">
         <button
           className="text-sm font-medium rounded-lg bg-white border border-blue-700 gap-3 text-blue-700 pl-2 hover:text-white hover:bg-blue-600 pr-3 py-2 hidden md:flex items-center"
           style={{ background: theme.accent }}
@@ -340,6 +341,11 @@ export const NavbarComp1378101 = ({ theme = {}, onTenantChange = () => {}, curre
       onTenantChange(themeKey);
     }
   }, [themeKey, currentKey, onTenantChange]);
+
+  // Set favicon when profile loads
+  useEffect(() => {
+    if (profile) setFaviconFromProfile(profile);
+  }, [profile]);
 
   return (
     <div className="relative top-0 left-0 w-full z-[999999]">

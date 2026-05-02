@@ -51,16 +51,16 @@ export const HeroComp101 = ({ id, titleProps, subTitleProps }: HeroProps) => {
           >
             <div className="inline-block px-4 py-1.5 mb-6 rounded-full bg-blue-100 border border-blue-200">
               <span className="text-sm font-bold text-blue-700 uppercase tracking-widest">
-                🏫 Sekolah Negeri - Jakarta Barat
+                {profile?.schoolName || "Official Website Sekolah"}
               </span>
             </div>
 
             <h1 className="text-4xl lg:text-7xl w-full font-black text-slate-900 leading-tight mb-6">
-              {titleProps ? titleProps : "SMAN 101 Jakarta Barat"}
+              {titleProps ? titleProps : (profile?.heroTitle || profile?.schoolName || "Official Website")}
             </h1>
 
             <p className="text-md md:text-lg text-slate-600 ml-[2px] leading-relaxed mb-10 max-w-full">
-              {subTitleProps ? subTitleProps : "Kami menggabungkan kurikulum standar global dengan pembentukan karakter yang kuat untuk melahirkan pemimpin masa depan yang inovatif."}
+              {subTitleProps ? subTitleProps : (profile?.heroSubTitle || "")}
             </p>
 
             <div className="w-max grid grid-cols-2 gap-1 mt-12">

@@ -79,7 +79,7 @@ export function usePermohonan(params: FetchParams = {}): UsePermohonanReturn {
       if (status) queryParams.append('status', status);
       if (jenisSurat) queryParams.append('jenisSurat', jenisSurat);
 
-      const response = await fetch(`${API_CONFIG.BASE_URL}/permohonan?${queryParams}`, {
+      const response = await fetch(`${API_CONFIG.baseUrl}/permohonan?${queryParams}`, {
         headers: {
           'X-API-Key': import.meta.env.VITE_API_KEY || '',
         },
@@ -137,7 +137,7 @@ export function usePermohonanActions() {
     setError(null);
 
     try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/permohonan/${id}/status`, {
+      const response = await fetch(`${API_CONFIG.baseUrl}/permohonan/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ export function usePermohonanActions() {
     setError(null);
 
     try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/permohonan/${id}`, {
+      const response = await fetch(`${API_CONFIG.baseUrl}/permohonan/${id}`, {
         method: 'DELETE',
         headers: {
           'X-API-Key': import.meta.env.VITE_API_KEY || '',

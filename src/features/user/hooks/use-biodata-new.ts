@@ -8,11 +8,12 @@ export const useBiodataNew = (id: number) => {
   const auth = useAuth();
   const profile = useProfile();
   const enabled = auth.isAuthenticated() && Boolean(profile.user?.id);
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     enabled,
     queryKey: ['biodata-siswa-new', id],
-    queryFn: () => biodataService.checkAttendance(id),
+    queryFn: () => biodataService.checkAttendance(id, schoolId),
     staleTime: 300000, // Cache data selama 30 detik
     refetchInterval: 600000, // Refetch otomatis setiap 10 detik
     refetchOnMount: true, // Refetch saat komponen dimount

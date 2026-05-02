@@ -1,14 +1,18 @@
 export { LayananPersuratanPage } from './pages/home';
+export { LayananPersuratanPageNew } from './pages/home-new';
 export { PermohonanForm } from './components/PermohonanForm';
 export { PermohonanAdminLanding } from './pages/admin-landing';
 export { PermohonanPrintPage } from './pages/print-page';
 export { KeteranganLulusPrintPage } from './pages/keterangan-lulus-print';
 export { VerifyPage } from './pages/verify-page';
+export { CekStatusPage } from './pages/status-track';
+export { ServiceTypesAdminPage } from './pages/service-types-admin';
 export { KelulusanAdminLanding } from './pages/kelulusan-admin';
 export { KelulusanLandingPage } from './pages/kelulusan-landing';
 export { PermohonanTable } from './containers/permohonan-table';
 export { PermohonanStats, TopJenisSurat } from './containers/permohonan-stats';
 export { usePermohonan, usePermohonanActions } from './hooks/usePermohonan';
+export { useServiceTypes, useServiceTypeActions, useTrackPermohonan } from './hooks/useServiceTypes';
 export { useSchoolPreset } from './hooks/useSchoolPreset';
 export { useKelulusan, useKelulusanActions } from './hooks/useKelulusan';
 export { permohonanColumns, permohonanDataFallback } from './utils/table-column';

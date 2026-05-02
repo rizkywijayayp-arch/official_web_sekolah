@@ -4,7 +4,7 @@
  */
 import { DashboardPageLayout } from '@/features/_global';
 import { useKelulusan, useKelulusanActions, KelulusanData } from '../hooks/useKelulusan';
-import { useSchoolPreset } from './useSchoolPreset';
+import { useSchoolPreset } from '../hooks/useSchoolPreset';
 import { Button } from '@/core/libs';
 import { Input } from '@/core/libs';
 import { useState, useMemo } from 'react';

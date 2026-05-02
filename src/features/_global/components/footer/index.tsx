@@ -293,14 +293,13 @@ export const FooterComp = () => {
                     {displayData.name}
                   </h2>
                   <p className="text-xs font-semibold tracking-[0.25em] mt-1.5 text-[#D4AF72]">
-                    SEKOLAH ISLAM TERPADU
+                    {profile?.schoolType || ""}
                   </p>
                 </div>
               </div>
 
               <p className="text-amber-100/70 text-[15px] leading-relaxed max-w-md">
-                Mendidik generasi Qurani yang berilmu, berakhlak mulia, 
-                dan siap menjadi khalifah di muka bumi sesuai ajaran Islam.
+                {profile?.schoolSlogan || ""}
               </p>
 
               <div 
@@ -410,15 +409,13 @@ export const FooterComp = () => {
                   {displayData.name}
                 </h2>
                 <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mt-1">
-                  Web Pendidikan
+                  {profile?.schoolType || ""}
                 </p>
               </div>
             </div>
             
             <p className="text-slate-200 text-sm leading-relaxed max-w-sm">
-              Mewujudkan lulusan yang berkarakter Profil Pelajar Pancasila, 
-              unggul dalam prestasi, berbudaya lingkungan, dan siap menghadapi 
-              tantangan global.
+              {profile?.schoolDescription || ""}
             </p>
           </div>
 
@@ -477,7 +474,7 @@ export const FooterComp = () => {
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2 text-slate-200 text-[11px] font-bold uppercase tracking-widest">
             <ShieldCheck size={14} />
-            <span>© 2026 {displayData.name} • All Rights Reserved</span>
+            <span>© {new Date().getFullYear()} {displayData.name} • All Rights Reserved</span>
           </div>
           
           <div className="flex items-center gap-4">

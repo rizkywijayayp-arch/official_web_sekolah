@@ -1,5 +1,6 @@
 import { userService } from "@/core/services/user";
 import { useAuth } from "@/features/auth/hooks";
+import { useProfile } from "@/features/profile";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
@@ -10,12 +11,14 @@ interface MutationVars {
 
 export const useProfile = () => {
   const auth = useAuth();
+  const profile = useProfile();
   const authRef = useRef(auth);
   authRef.current = auth;
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     queryKey: ["profile"],
-    queryFn: () => userService.getProfile(),
+    queryFn: () => userService.getProfile(schoolId),
     enabled: auth.isAuthenticated(),
     staleTime: 5 * 60 * 1000, // 5 menit
     refetchOnWindowFocus: false, 
@@ -25,9 +28,9 @@ export const useProfile = () => {
     mutationFn: (vars: MutationVars) => {
       switch (vars.type) {
         case "change-password":
-          return userService.changePassword(vars.data);
+          return userService.changePassword(vars.data, schoolId);
         case "update-profile":
-          return userService.updateProfile(vars.data);
+          return userService.updateProfile(vars.data, schoolId);
         case "update-photo":
           return userService.updatePhoto(vars.data, {
             contentType: "form-data",

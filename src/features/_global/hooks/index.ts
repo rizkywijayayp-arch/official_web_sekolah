@@ -5,3 +5,5 @@ export * from "./use-param-decode";
 export * from "./use-vokadash-context";
 export * from "./use-vokadialog";
 export * from "./use-param-decode-id";
+export { useSchoolProfile } from "./useSchoolProfile";
+export { getSchoolId, getSchoolIdSync } from "./getSchoolId";

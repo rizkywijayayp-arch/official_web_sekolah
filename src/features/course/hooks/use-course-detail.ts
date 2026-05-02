@@ -13,11 +13,12 @@ export const useCourseDetail = (props?: UseCourseDetailProps) => {
   const profile = useProfile();
   const enabled =
     auth.isAuthenticated() && Boolean(profile.user?.id) && Boolean(props?.id);
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
 
   const query = useQuery({
     enabled,
     queryKey: ["course-detail", { id: Number(props?.id) }],
-    queryFn: () => courseService.get(Number(props?.id)),
+    queryFn: () => courseService.get(Number(props?.id), schoolId),
   });
 
   const data = useMemo(() => query.data, [query.data]);

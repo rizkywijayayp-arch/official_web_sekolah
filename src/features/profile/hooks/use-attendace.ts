@@ -11,6 +11,7 @@ export interface UseAttedanceProps {
 export const useAttedances = (props?: UseAttedanceProps) => {
   const auth = useAuth();
   const profile = useProfile();
+  const schoolId = profile?.user?.sekolahId ?? profile?.sekolah?.id;
   const enabled =
     auth.isAuthenticated() &&
     Boolean(profile.user?.id) &&
@@ -24,7 +25,7 @@ export const useAttedances = (props?: UseAttedanceProps) => {
       if (!props?.id) {
         throw new Error("School ID is required for attendance query");
       }
-      return biodataService.checkAttendance(props.id);
+      return biodataService.checkAttendance(props.id, schoolId);
     },
     placeholderData: [],
   });

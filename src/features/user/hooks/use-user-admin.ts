@@ -13,7 +13,7 @@ export const useUserAdmin = () => {
   const query = useQuery({
     enabled,
     queryKey: ["user-admin", profileId],
-    queryFn: () => userService.getAdmin(),
+    queryFn: () => userService.getAdmin(profileId),
   });
 
   const data = useMemo(() => query.data?.data || [], [query.data?.data]);
