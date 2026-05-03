@@ -1,9 +1,9 @@
-import { Avatar, AvatarImage, cn } from "@/core/libs";
-import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { getSchoolIdSync } from "../../../../hooks/getSchoolId";
 import { API_CONFIG } from "@/config/api";
+import { Avatar, AvatarImage, cn } from "@/core/libs";
+import { getSchoolIdSync } from "@/features/_global/hooks";
 import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import { Link } from "react-router-dom";
 
 interface BrandProps {
   isCollapsed?: boolean;

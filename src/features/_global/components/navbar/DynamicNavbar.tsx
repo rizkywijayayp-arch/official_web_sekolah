@@ -14,8 +14,7 @@ interface NavItem {
   label: string;
   href?: string;
   children?: NavItem[];
-  // Visibility control
-  requiresData?: keyof ReturnType<typeof useTenantNav> extends infer T ? T extends string ? T : never : never;
+  requiresData?: string;
 }
 
 const NAV_CONFIG: NavItem[] = [
@@ -68,30 +67,47 @@ const NAV_CONFIG: NavItem[] = [
 ];
 
 // Filter NAV based on tenant data availability
+// const filterNav = (nav: NavItem[], tenant: any): NavItem[] => {
+//   console.log("Tenant data:", tenant);
+//   return nav
+//     .map((item) => {
+//       // If item has children, filter children
+//       if (Array.isArray(item.children) && item.children.length > 0) {
+//         const filteredChildren = item.children
+//           .filter((child) => {
+//             if (!child.requiresData) return true;
+//             // Safety: use tenant[child.requiresData] if it exists, default false
+//             const hasFlag = tenant?.[child.requiresData];
+//             return hasFlag === true;
+//           })
+//           .map((child) => ({ ...child, requiresData: undefined }));
+
+//         // Only show parent if at least one child is visible
+//         if (filteredChildren.length === 0) return null;
+//         return { ...item, children: filteredChildren, requiresData: undefined };
+//       }
+
+//       // Leaf item — check requiresData
+//       if (item.requiresData) {
+//         const hasFlag = tenant?.[item.requiresData];
+//         if (hasFlag !== true) return null;
+//         return { ...item, requiresData: undefined };
+//       }
+
+//       return { ...item, requiresData: undefined };
+//     })
+//     .filter(Boolean) as NavItem[];
+// };
+
 const filterNav = (nav: NavItem[], tenant: any): NavItem[] => {
   return nav
     .map((item) => {
-      // If item has children, filter children
       if (Array.isArray(item.children) && item.children.length > 0) {
         const filteredChildren = item.children
-          .filter((child) => {
-            if (!child.requiresData) return true;
-            // Safety: use tenant[child.requiresData] if it exists, default false
-            const hasFlag = tenant?.[child.requiresData];
-            return hasFlag === true;
-          })
+          .filter(() => true) // requiresData diabaikan, semua tampil
           .map((child) => ({ ...child, requiresData: undefined }));
 
-        // Only show parent if at least one child is visible
-        if (filteredChildren.length === 0) return null;
         return { ...item, children: filteredChildren, requiresData: undefined };
-      }
-
-      // Leaf item — check requiresData
-      if (item.requiresData) {
-        const hasFlag = tenant?.[item.requiresData];
-        if (hasFlag !== true) return null;
-        return { ...item, requiresData: undefined };
       }
 
       return { ...item, requiresData: undefined };
@@ -150,6 +166,8 @@ const NavDropdown = ({ item, schoolId }: { item: NavItem; schoolId: string }) =>
 export const DynamicNavbar = () => {
   const schoolId = getSchoolIdSync();
   const { data: profile, isLoading } = useTenantNav();
+
+  console.log("schoolId:", schoolId); // ← kosong? undefined? salah?
 
   // Set favicon and document title when profile loads
   useEffect(() => {

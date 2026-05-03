@@ -1,5 +1,4 @@
 import { API_CONFIG } from "@/config/api";
-import { FooterComp } from "@/features/_global/components/footer";
 import { HeroComp } from "@/features/_global/components/hero";
 import NavbarComp from "@/features/_global/components/navbar";
 import { getSchoolIdSync } from "@/features/_global/hooks/getSchoolId";

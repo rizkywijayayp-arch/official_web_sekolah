@@ -67,23 +67,39 @@ const NAV_CONFIG: NavItem[] = [
 ];
 
 // Filter NAV based on tenant data availability
+// const filterNav = (nav: NavItem[], tenant: any): NavItem[] => {
+//   return nav
+//     .map((item) => {
+//       if (Array.isArray(item.children) && item.children.length > 0) {
+//         const filteredChildren = item.children
+//           .filter((child) => {
+//             if (!child.requiresData) return true;
+//             return tenant?.[child.requiresData] === true;
+//           })
+//           .map((child) => ({ ...child, requiresData: undefined }));
+//         if (filteredChildren.length === 0) return null;
+//         return { ...item, children: filteredChildren, requiresData: undefined };
+//       }
+//       if (item.requiresData) {
+//         if (tenant?.[item.requiresData] !== true) return null;
+//         return { ...item, requiresData: undefined };
+//       }
+//       return { ...item, requiresData: undefined };
+//     })
+//     .filter(Boolean) as NavItem[];
+// };
+
 const filterNav = (nav: NavItem[], tenant: any): NavItem[] => {
   return nav
     .map((item) => {
       if (Array.isArray(item.children) && item.children.length > 0) {
         const filteredChildren = item.children
-          .filter((child) => {
-            if (!child.requiresData) return true;
-            return tenant?.[child.requiresData] === true;
-          })
+          .filter(() => true) // requiresData diabaikan, semua tampil
           .map((child) => ({ ...child, requiresData: undefined }));
-        if (filteredChildren.length === 0) return null;
+
         return { ...item, children: filteredChildren, requiresData: undefined };
       }
-      if (item.requiresData) {
-        if (tenant?.[item.requiresData] !== true) return null;
-        return { ...item, requiresData: undefined };
-      }
+
       return { ...item, requiresData: undefined };
     })
     .filter(Boolean) as NavItem[];

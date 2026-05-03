@@ -1,4 +1,3 @@
-import { DynamicNavbar } from "./DynamicNavbar";
 import { NavbarDesignSwitcher } from "./NavbarDesignSwitcher";
 
 // Default: uses DynamicNavbar (API-driven, no hardcoded content)
